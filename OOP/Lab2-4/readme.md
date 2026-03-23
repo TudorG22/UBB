@@ -1,5 +1,8 @@
 ## 3 Buget de familie
 
+# Pentru compilare: pt Linux, ./build sau ./build-tests
+# Rulare: ./run sau ./run-with-data pentru date preintroduse
+
 Creati o aplicatie care permite gestiunea bugetului pentru o familie. Aplicatia trebuie sa
 stocheze cheltuielile pe o luna. Fiecare cheltuiala are: zi (ziua in care s-a efectuat), suma,
 tip (mancare, transport, telefon&internet, imbracaminte, altele).
