@@ -1,7 +1,7 @@
-## 3 Buget de familie
+# 3 Buget de familie
 
-# Pentru compilare: pt Linux, ./build sau ./build-tests
-# Rulare: ./run sau ./run-with-data pentru date preintroduse
+## Pentru compilare: pt Linux, ./build sau ./build-tests
+## Rulare: ./run sau ./run-with-data pentru date preintroduse
 
 Creati o aplicatie care permite gestiunea bugetului pentru o familie. Aplicatia trebuie sa
 stocheze cheltuielile pe o luna. Fiecare cheltuiala are: zi (ziua in care s-a efectuat), suma,
@@ -22,7 +22,3 @@ e) Vizualizare lista de cheltuieli ordonata dupa suma sau tip (crescator/descres
 - Dezvoltare dirijata de teste
 - Fiecare metoda trebuie specificata si testata
 - Implementati vector dinamic pentru lucru cu liste
-
-## Compilare
-cmake -S . -B compilare
-cmake --build compilare
