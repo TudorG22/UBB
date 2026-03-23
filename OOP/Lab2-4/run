@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+set -e
+./compilare/aplicatie_buget_familie

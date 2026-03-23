@@ -1,0 +1,5 @@
+utilizator,program,descriere
+2,ID carte de sters:,Se cere cartea de sters
+99,Eroare: Cartea nu exista.,Validare carte inexistenta
+1,ID carte de sters:,Se reia cu un ID existent
+1,Cartea a fost stearsa.,Confirmare stergere carte

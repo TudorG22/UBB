@@ -1,0 +1,6 @@
+utilizator,program,descriere
+3,ID carte veche:,Se cere cartea de inlocuit
+1,Introdu date pentru cartea noua:,Se cere noua carte
+ID carte: 1,Titlu: Ion revizuit,Introducere date carte noua
+Autor: Rebreanu,Descriere: editie noua,Detalii suplimentare
+Cartea a fost inlocuita.,,Confirmare inlocuire

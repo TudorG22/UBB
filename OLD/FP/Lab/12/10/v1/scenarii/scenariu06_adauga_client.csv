@@ -1,0 +1,6 @@
+utilizator,program,descriere
+6,ID client:,Se cere identificatorul clientului
+abc,Eroare: ID invalid (trebuie sa fie numar intreg).,Input invalid
+10,Nume:,Se cere numele clientului
+Popescu Mihai,CNP:,Se cere CNP
+1960203123456,Client adaugat.,Confirmare adaugare client

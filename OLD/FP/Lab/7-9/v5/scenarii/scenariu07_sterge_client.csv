@@ -1,0 +1,5 @@
+utilizator,program,descriere
+7,ID client de sters:,Se cere clientul de sters
+99,Eroare: Clientul nu exista.,Validare client inexistent
+10,ID client de sters:,Se reia cu client existent
+10,Client sters.,Confirmare stergere client

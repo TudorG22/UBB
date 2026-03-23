@@ -1,0 +1,6 @@
+- Solutie candidat: subsecventa construita pana la pasul curent (elementele alese pana la indicele i).
+    x = (x_0, x_1, ... x_m) cu xi apartine secventei originale
+- Conditie de consistenta: subsecventa partiala este intotdeauna permisa (nu exista restrictii intermediare), deci poate fi extinsa.
+- Conditie de solutie: subsecventa a carei suma este divizibila cu N.
+    x = (x_0, x_1, ... x_m)
+    (x_0 + .... + x_m) % N = 0

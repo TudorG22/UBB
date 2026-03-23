@@ -1,0 +1,5 @@
+utilizator,program,descriere
+14,ID carte:,Se cere ID pentru cautare
+1,1. 'Ion' scrisa de Rebreanu,Rezultat cautare carte existenta
+14,ID carte:,Cautare carte inexistenta
+99,Cartea nu exista.,Mesaj pentru carte inexistenta

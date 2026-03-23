@@ -1,0 +1,17 @@
+utilizator	program				descriere
+
+1		"introduceti lista"		se introduce lista: [a, b, c] se scrie 'a b c'
+
+3 5 -2 7					se salveaza lista si se asteapta o comanda noua
+
+2 		[3, 5, -2]			se afiseaza o subsecventa de numere primi de lungime maxima
+
+3		[5, -2, 7]			se afiseaza o subsecvente unde orice doua numere consecutive sunt de semn opus de lungime maxima
+
+1		"introduceti o noua lista"	se asteapta o noua lista
+
+1 2 3 4						se salveaza lista si se asteapta o comanda noua
+
+4		"Terminare program."		se opreste programul
+
+

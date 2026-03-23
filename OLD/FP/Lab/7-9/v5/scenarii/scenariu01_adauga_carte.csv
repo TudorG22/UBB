@@ -1,0 +1,7 @@
+utilizator,program,descriere
+1,ID carte:,Se cere identificatorul cartii
+abc,Eroare: ID invalid (trebuie sa fie numar intreg).,Mesaj de eroare pentru input invalid
+1,Titlu:,Se cere titlul cartii
+Ion,Autor:,Se cere autorul
+Rebreanu,Descriere:,Se cere descrierea
+roman,Cartea a fost adaugata.,Confirmare adaugare carte

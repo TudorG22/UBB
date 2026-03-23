@@ -1,0 +1,4 @@
+/home/dan/Documents/UBB/OOP/Lab2-4/compilare/CMakeFiles/aplicatie_buget_familie.dir
+/home/dan/Documents/UBB/OOP/Lab2-4/compilare/CMakeFiles/teste_buget_familie.dir
+/home/dan/Documents/UBB/OOP/Lab2-4/compilare/CMakeFiles/edit_cache.dir
+/home/dan/Documents/UBB/OOP/Lab2-4/compilare/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,10 @@
+T01, Costum Rege, Regal, 50
+T02, Rochie Epoca, Epoca, 40
+T03, Mantou Vampir, Halloween, 35
+T04, Costum Pirat, Aventura, 30
+T05, Rochie Bal, Epoca, 45
+T06, Costum Printesa, Regal, 50
+T07, Pelerina Magician, Fantasy, 25
+T08, Armura Cavaler, Medieval, 60
+T09, Masca Venetiana, Epoca, 20
+T10, Costum Zana, Fantasy, 30

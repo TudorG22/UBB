@@ -1,0 +1,33 @@
+CMakeFiles/aplicatie_buget_familie.dir/src/ui/interfata_consola.c.o: \
+ /home/dan/Documents/UBB/OOP/Lab2-4/src/ui/interfata_consola.c \
+ /usr/include/stdc-predef.h \
+ /home/dan/Documents/UBB/OOP/Lab2-4/include/ui/interfata_consola.h \
+ /home/dan/Documents/UBB/OOP/Lab2-4/include/service/service_cheltuieli.h \
+ /usr/lib/gcc/x86_64-linux-gnu/13/include/stddef.h \
+ /home/dan/Documents/UBB/OOP/Lab2-4/include/repository/repo_cheltuieli.h \
+ /home/dan/Documents/UBB/OOP/Lab2-4/include/utils/vector_dinamic.h \
+ /home/dan/Documents/UBB/OOP/Lab2-4/include/domain/cheltuiala.h \
+ /home/dan/Documents/UBB/OOP/Lab2-4/include/validation/validator_domain.h \
+ /usr/include/stdio.h \
+ /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
+ /usr/include/features.h /usr/include/features-time64.h \
+ /usr/include/x86_64-linux-gnu/bits/wordsize.h \
+ /usr/include/x86_64-linux-gnu/bits/timesize.h \
+ /usr/include/x86_64-linux-gnu/sys/cdefs.h \
+ /usr/include/x86_64-linux-gnu/bits/long-double.h \
+ /usr/include/x86_64-linux-gnu/gnu/stubs.h \
+ /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
+ /usr/lib/gcc/x86_64-linux-gnu/13/include/stdarg.h \
+ /usr/include/x86_64-linux-gnu/bits/types.h \
+ /usr/include/x86_64-linux-gnu/bits/typesizes.h \
+ /usr/include/x86_64-linux-gnu/bits/time64.h \
+ /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/__FILE.h \
+ /usr/include/x86_64-linux-gnu/bits/types/FILE.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h \
+ /usr/include/x86_64-linux-gnu/bits/types/cookie_io_functions_t.h \
+ /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/floatn.h \
+ /usr/include/x86_64-linux-gnu/bits/floatn-common.h

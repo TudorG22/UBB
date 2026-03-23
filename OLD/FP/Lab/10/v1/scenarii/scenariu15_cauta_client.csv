@@ -1,0 +1,5 @@
+utilizator,program,descriere
+15,ID client:,Se cere ID pentru cautare
+10,10 Popescu Mihai 1960203123456  |  imprumutate: 0,Rezultat cautare client
+15,ID client:,Cautare client inexistent
+99,Clientul nu exista.,Mesaj client inexistent

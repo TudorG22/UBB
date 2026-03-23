@@ -1,0 +1,6 @@
+restart;
+with(plots):
+with(DETools):
+
+# (a)
+

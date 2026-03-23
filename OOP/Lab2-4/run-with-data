@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -e
+
+{
+    # 1. add: zi=10, suma=150.50, tip=mancare(0)
+    printf "1\n10\n150.50\n0\n"
+    # 2. add: zi=5, suma=40, tip=transport(1)
+    printf "1\n5\n40\n1\n"
+    # 3. add: zi=18, suma=90, tip=altele(4)
+    printf "1\n18\n90\n4\n"
+    # 4. add: zi=2, suma=75.25, tip=telefon&internet(2)
+    printf "1\n2\n75.25\n2\n"
+    # 5. add: zi=24, suma=210, tip=imbracaminte(3)
+    printf "1\n24\n210\n3\n"
+    # 6. add: zi=12, suma=33.30, tip=transport(1)
+    printf "1\n12\n33.30\n1\n"
+    # 7. add: zi=7, suma=18.99, tip=mancare(0)
+    printf "1\n7\n18.99\n0\n"
+    # 8. add: zi=29, suma=400, tip=altele(4)
+    printf "1\n29\n400\n4\n"
+    # 9. add: zi=15, suma=62.70, tip=telefon&internet(2)
+    printf "1\n15\n62.70\n2\n"
+    # 10. add: zi=21, suma=120, tip=imbracaminte(3)
+    printf "1\n21\n120\n3\n"
+    # Hand over to interactive input.
+    cat
+} | ./compilare/aplicatie_buget_familie

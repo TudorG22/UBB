@@ -1,0 +1,7 @@
+utilizator,program,descriere
+9,[lista clienti vida],Lista initiala goala
+6,ID client:,Adaugare client pentru listare
+10,Nume:,
+Popescu Mihai,CNP:,
+1960203123456,Client adaugat.,
+9,10 Popescu Mihai 1960203123456  |  imprumutate: 0,Listare clienti cu numar imprumuturi

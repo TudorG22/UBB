@@ -1,0 +1,30 @@
+restart;
+with(plots):
+with(DETools):
+
+# (a)
+sol_a := dsolve(diff(y(x),x) = 2*x*(1 + y(x)^2), y(x)):
+y1 := unapply(rhs(sol_a), x, _C1):
+
+plot([y1(x,-1), y1(x,0), y1(x,1)], x=-2*Pi..2*Pi);
+
+
+# (b)
+sol_b := dsolve((x^2 - 1)*diff(y(x),x) + 2*x*y(x)^2 = 0, y(x)):
+y2 := unapply(rhs(sol_b), x, _C1):
+
+plot([y2(x,1), y2(x,2), y2(x,3)], x=1.2..5);
+
+
+# (g)
+sol_g := dsolve(diff(y(x),x) + y(x)*tan(x) = 1/cos(x), y(x)):
+y3 := unapply(rhs(sol_g), x, _C1):
+
+plot([y3(x,-1), y3(x,0), y3(x,1)], x=-2*Pi..2*Pi);
+
+
+# (j)
+sol_j := dsolve(diff(y(x),x$2) - y(x) = exp(2*x), y(x)):
+y4 := unapply(rhs(sol_j), x, _C1, _C2):
+
+plot([y4(x,1,0), y4(x,0,1), y4(x,1,1)], x=-2..2);
