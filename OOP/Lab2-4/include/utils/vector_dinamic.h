@@ -4,19 +4,18 @@
 #include <stddef.h>
 
 typedef struct {
-    void* date;
-    size_t dimensiune_element;
+    void** date;
     size_t dimensiune;
     size_t capacitate;
 } VectorDinamic;
 
 /* Creeaza vectorul dinamic
-Input: dimensiune element
+Input: -
 Output: vector nou
-Pre conditii: dimensiune element > 0
+Pre conditii: -
 Post conditii: vector gol, initializat
 */
-VectorDinamic vector_dinamic_creeaza(size_t dimensiune_element);
+VectorDinamic vector_dinamic_creeaza(void);
 
 /* Distruge vectorul dinamic
 Input: vector
@@ -40,7 +39,7 @@ Output: -
 Pre conditii: vector initializat, element valid
 Post conditii: elementul este adaugat la final
 */
-void vector_dinamic_adauga(VectorDinamic* vector, const void* element);
+void vector_dinamic_adauga(VectorDinamic* vector, void* element);
 
 /* Seteaza elementul de pe index
 Input: vector, index, element
@@ -48,7 +47,7 @@ Output: -
 Pre conditii: vector initializat, index valid, element valid
 Post conditii: elementul de pe index este inlocuit
 */
-void vector_dinamic_seteaza(VectorDinamic* vector, size_t index, const void* element);
+void vector_dinamic_seteaza(VectorDinamic* vector, size_t index, void* element);
 
 /* Sterge elementul de pe index
 Input: vector, index
@@ -64,7 +63,7 @@ Output: pointer la element
 Pre conditii: vector initializat, index valid
 Post conditii: -
 */
-void* vector_dinamic_get(VectorDinamic* vector, size_t index);
+void* vector_dinamic_get(const VectorDinamic* vector, size_t index);
 
 /* Returneaza pointer la element (const)
 Input: vector, index
@@ -73,5 +72,13 @@ Pre conditii: vector initializat, index valid
 Post conditii: -
 */
 const void* vector_dinamic_get_const(const VectorDinamic* vector, size_t index);
+/**
+ * Creeaza o copie a unui vector dinamic
+ * Input: vector
+ * Output: copie a vectorului dat
+ * Pre conditii: vector initializat
+ * Post conditii: se returneaza un vector nou, cu aceleasi elemente ca vectorul dat
+ **/
+VectorDinamic vector_dinamic_copiaza(const VectorDinamic* vector);
 
 #endif

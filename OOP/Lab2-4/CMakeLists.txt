@@ -20,6 +20,7 @@ set(FISIERE_APLICATIE
     src/main.c
     src/ui/interfata_consola.c
     ${FISIERE_CORE}
+        include/domain/cheltuiala.h
 )
 
 add_executable(aplicatie_buget_familie ${FISIERE_APLICATIE})

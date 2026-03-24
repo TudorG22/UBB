@@ -47,6 +47,24 @@ Post conditii: -
 */
 TipCheltuiala cheltuiala_get_tip(const Cheltuiala* c);
 
+/**
+ * Creeaza pe heap o copie a unei cheltuieli existente
+ * Input: cheltuiala sursa
+ * Output: pointer la copia alocata
+ * Pre conditii: sursa valida
+ * Post conditii: se returneaza un obiect independent
+ **/
+Cheltuiala* cheltuiala_copiaza(const Cheltuiala* c);
+
+/**
+ * Distruge o cheltuiala alocata pe heap
+ * Input: pointer cheltuiala
+ * Output: -
+ * Pre conditii: pointerul provine din alocare dinamica sau este NULL
+ * Post conditii: memoria este eliberata
+ **/
+void cheltuiala_distruge(Cheltuiala* c);
+
 /* Seteaza ziua cheltuielii
 Input: cheltuiala, zi
 Output: -

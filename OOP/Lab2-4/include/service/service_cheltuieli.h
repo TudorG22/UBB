@@ -7,13 +7,29 @@
 
 typedef struct {
     RepoCheltuieli* repo;
+    VectorDinamic undo_list;
 } ServiceCheltuieli;
 
 typedef enum {
     SERVICE_SORT_CHEIE_SUMA = 1,
     SERVICE_SORT_CHEIE_TIP = 2
 } ServiceSortCheie;
-
+/**
+ * Distruge istoricul de undo al service-ului
+ * Input: service
+ * Output: -
+ * Pre conditii: service initializat
+ * Post conditii: toate snapshot-urile din undo sunt eliberate
+ **/
+void service_distruge(ServiceCheltuieli* service);
+/**
+ * Reface ultima stare salvata a listei de cheltuieli
+ * Input: service
+ * Output: 0 daca undo s-a realizat, 1 daca nu exista operatii de undo
+ * Pre conditii: service initializat
+ * Post conditii: repo-ul revine la ultima stare salvata, daca aceasta exista
+ **/
+int service_undo(ServiceCheltuieli* service);
 /* Creeaza service-ul
 Input: repo
 Output: service nou
@@ -93,5 +109,4 @@ Pre conditii: vector initializat, cheie valida
 Post conditii: vectorul este ordonat in-place
 */
 void service_sorteaza(VectorDinamic* cheltuieli, int crescator, ServiceSortCheie cheie);
-
 #endif

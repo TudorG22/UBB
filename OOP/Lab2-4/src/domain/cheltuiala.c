@@ -1,5 +1,7 @@
 #include "domain/cheltuiala.h"
 
+#include <stdlib.h>
+
 Cheltuiala cheltuiala_creeaza(int zi, double suma, TipCheltuiala tip) {
     Cheltuiala c;
     c.zi = zi;
@@ -11,6 +13,15 @@ Cheltuiala cheltuiala_creeaza(int zi, double suma, TipCheltuiala tip) {
 int cheltuiala_get_zi(const Cheltuiala* c) { return c->zi; }
 double cheltuiala_get_suma(const Cheltuiala* c) { return c->suma; }
 TipCheltuiala cheltuiala_get_tip(const Cheltuiala* c) { return c->tip; }
+Cheltuiala* cheltuiala_copiaza(const Cheltuiala* c) {
+    Cheltuiala* copie = malloc(sizeof(Cheltuiala));
+    *copie = *c;
+    return copie;
+}
+
+void cheltuiala_distruge(Cheltuiala* c) {
+    free(c);
+}
 
 
 void cheltuiala_set_zi(Cheltuiala* c, int zi) { c->zi = zi; }

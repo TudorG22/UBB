@@ -30,10 +30,54 @@ static void test_domain(void) {
     assert(strcmp(tip_cheltuiala_la_text(TIP_IMBRACAMINTE), "imbracaminte") == 0);
     assert(strcmp(tip_cheltuiala_la_text(TIP_ALTELE), "altele") == 0);
     assert(strcmp(tip_cheltuiala_la_text((TipCheltuiala)999), "necunoscut") == 0);
+
+    Cheltuiala* copie = cheltuiala_copiaza(&c);
+    assert(copie != NULL);
+    assert(copie != &c);
+    assert(copie->zi == c.zi);
+    assert(copie->suma == c.suma);
+    assert(copie->tip == c.tip);
+    cheltuiala_distruge(copie);
+}
+static void test_undo(void) {
+    RepoCheltuieli repo = repo_creaza();
+    ServiceCheltuieli srv = service_creeaza(&repo);
+
+    assert(service_undo(&srv) != 0);
+
+    service_adauga_cheltuiala(&srv, 10, 100, TIP_MANCARE);
+    assert(service_numar_cheltuieli(&srv) == 1);
+    assert(service_undo(&srv) == 0);
+    assert(service_numar_cheltuieli(&srv) == 0);
+
+    service_adauga_cheltuiala(&srv, 1, 10, TIP_MANCARE);
+    service_adauga_cheltuiala(&srv, 2, 20, TIP_TRANSPORT);
+    {
+        size_t undo_n = vector_dinamic_dimensiune(&srv.undo_list);
+        VectorDinamic* snapshot = (VectorDinamic*)vector_dinamic_get(&srv.undo_list, undo_n - 1);
+        const Cheltuiala* c_repo = (const Cheltuiala*)vector_dinamic_get_const(repo_toate(&repo), 0);
+        const Cheltuiala* c_snapshot = (const Cheltuiala*)vector_dinamic_get_const(snapshot, 0);
+        assert(c_repo != c_snapshot);
+        assert(c_repo->zi == c_snapshot->zi);
+        assert(c_repo->suma == c_snapshot->suma);
+        assert(c_repo->tip == c_snapshot->tip);
+    }
+    service_modifica_cheltuiala(&srv, 1, 5, 99, TIP_ALTELE);
+    assert(repo_get(&repo, 1).zi == 5);
+    assert(service_undo(&srv) == 0);
+    assert(repo_get(&repo, 1).zi == 2);
+
+    service_sterge_cheltuiala(&srv, 0);
+    assert(service_numar_cheltuieli(&srv) == 1);
+    assert(service_undo(&srv) == 0);
+    assert(service_numar_cheltuieli(&srv) == 2);
+
+    service_distruge(&srv);
+    repo_distruge(&repo);
 }
 
 static void test_vector(void) {
-    VectorDinamic v = vector_dinamic_creeaza(sizeof(int));
+    VectorDinamic v = vector_dinamic_creeaza();
     int a = 7, b = 9, c = 11;
 
     vector_dinamic_adauga(&v, &a);
@@ -49,6 +93,11 @@ static void test_vector(void) {
     assert(vector_dinamic_dimensiune(&v) == 1);
     assert(*(int*)vector_dinamic_get(&v, 0) == 11);
 
+    VectorDinamic copie = vector_dinamic_copiaza(&v);
+    assert(vector_dinamic_dimensiune(&copie) == 1);
+    assert(vector_dinamic_get(&copie, 0) == &c);
+
+    vector_dinamic_distruge(&copie);
     vector_dinamic_distruge(&v);
 }
 
@@ -58,12 +107,12 @@ static void test_repo(void) {
     Cheltuiala c2 = cheltuiala_creeaza(2, 20, TIP_TRANSPORT);
     Cheltuiala c3 = cheltuiala_creeaza(3, 30, TIP_ALTELE);
 
-    repo_adauga(&repo, c1);
-    repo_adauga(&repo, c2);
+    repo_adauga(&repo, &c1);
+    repo_adauga(&repo, &c2);
     assert(repo_dimensiune(&repo) == 2);
     assert(repo_get(&repo, 0).zi == 1);
 
-    repo_modifica(&repo, 1, c3);
+    repo_modifica(&repo, 1, &c3);
     assert(repo_get(&repo, 1).zi == 3);
 
     assert(repo_toate(&repo) != NULL);
@@ -71,6 +120,34 @@ static void test_repo(void) {
     assert(repo_dimensiune(&repo) == 1);
     assert(repo_get(&repo, 0).zi == 3);
 
+    repo_distruge(&repo);
+}
+
+static void test_repo_copiere_lista(void) {
+    RepoCheltuieli repo = repo_creaza();
+    Cheltuiala c1 = cheltuiala_creeaza(4, 44.0, TIP_MANCARE);
+    Cheltuiala c2 = cheltuiala_creeaza(5, 55.0, TIP_ALTELE);
+    repo_adauga(&repo, &c1);
+    repo_adauga(&repo, &c2);
+
+    VectorDinamic copie = repo_copiaza_lista_cheltuieli(repo_toate(&repo));
+    assert(vector_dinamic_dimensiune(&copie) == 2);
+
+    const Cheltuiala* repo_c = (const Cheltuiala*)vector_dinamic_get_const(repo_toate(&repo), 0);
+    const Cheltuiala* copie_c = (const Cheltuiala*)vector_dinamic_get_const(&copie, 0);
+    assert(repo_c != copie_c);
+    assert(repo_c->zi == copie_c->zi);
+
+    Cheltuiala c_nou = cheltuiala_creeaza(7, 70.0, TIP_TRANSPORT);
+    repo_modifica(&repo, 0, &c_nou);
+    copie_c = (const Cheltuiala*)vector_dinamic_get_const(&copie, 0);
+    assert(copie_c->zi == 4);
+
+    for (size_t i = 0; i < vector_dinamic_dimensiune(&copie); i++) {
+        Cheltuiala* c = (Cheltuiala*)vector_dinamic_get(&copie, i);
+        cheltuiala_distruge(c);
+    }
+    vector_dinamic_distruge(&copie);
     repo_distruge(&repo);
 }
 
@@ -129,6 +206,7 @@ static void test_service(void) {
     vector_dinamic_distruge(&sort_suma);
     vector_dinamic_distruge(&sort_tip);
     vector_dinamic_distruge(&sort_invalid);
+    service_distruge(&srv);
     repo_distruge(&repo);
 }
 
@@ -143,7 +221,7 @@ static void test_validation(void) {
     assert(valideaza_domain_cheltuiala(&c) == 1);
 
     assert(valideaza_repo(&repo) == 1);
-    repo_adauga(&repo, c);
+    repo_adauga(&repo, &c);
     assert(valideaza_repo_index(&repo, 0) == 1);
     assert(valideaza_repo_index(&repo, 1) == 0);
 
@@ -152,6 +230,7 @@ static void test_validation(void) {
     assert(valideaza_service_date_cheltuiala(1, 10, TIP_MANCARE) == 1);
     assert(valideaza_service_date_cheltuiala(0, 10, TIP_MANCARE) == 0);
 
+    service_distruge(&srv);
     repo_distruge(&repo);
 }
 
@@ -159,7 +238,9 @@ void ruleaza_toate_testele(void) {
     test_domain();
     test_vector();
     test_repo();
+    test_repo_copiere_lista();
     test_service();
     test_validation();
+    test_undo();
     printf("Toate testele au trecut.\n");
 }

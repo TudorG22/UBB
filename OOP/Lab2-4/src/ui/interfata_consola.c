@@ -42,6 +42,7 @@ void afiseaza_meniu(void) {
     printf("3. Sterge cheltuiala\n");
     printf("4. Listeaza filtrat\n");
     printf("5. Listeaza sortat\n");
+    printf("6. Undo\n");
     printf("0. Iesire\n");
 }
 
@@ -64,16 +65,6 @@ void afiseaza_lista(const VectorDinamic* lista) {
         const Cheltuiala* c = (const Cheltuiala*)vector_dinamic_get_const(lista, i);
         printf("%zu) zi=%d, suma=%.2f, tip=%s\n", i, c->zi, c->suma, tip_cheltuiala_la_text(c->tip));
     }
-}
-
-VectorDinamic copiaza_lista(const VectorDinamic* lista) {
-    VectorDinamic copie = vector_dinamic_creeaza(sizeof(Cheltuiala));
-    size_t n = vector_dinamic_dimensiune(lista);
-    for (size_t i = 0; i < n; i++) {
-        const Cheltuiala* c = (const Cheltuiala*)vector_dinamic_get_const(lista, i);
-        vector_dinamic_adauga(&copie, c);
-    }
-    return copie;
 }
 
 void ui_adauga(ServiceCheltuieli* service) {
@@ -218,7 +209,7 @@ void ui_sortare(ServiceCheltuieli* service) {
     int criteriu;
     int ordine;
     int crescator;
-    VectorDinamic lista_sortata = copiaza_lista(service_lista(service));
+    VectorDinamic lista_sortata = vector_dinamic_copiaza(service_lista(service));;
 
     printf("Sortare: 1-suma, 2-tip\n");
     if (!citeste_int("Criteriu: ", &criteriu)) {
@@ -252,6 +243,13 @@ void ui_sortare(ServiceCheltuieli* service) {
     afiseaza_lista(&lista_sortata);
     vector_dinamic_distruge(&lista_sortata);
 }
+void ui_undo(ServiceCheltuieli* service) {
+    if (service_undo(service) != 0) {
+        printf("Nu exista operatii de undo.\n");
+        return;
+    }
+    printf("Undo realizat.\n");
+}
 
 void ruleaza_interfata(ServiceCheltuieli* service) {
     int comanda = -1;
@@ -268,6 +266,7 @@ void ruleaza_interfata(ServiceCheltuieli* service) {
         else if (comanda == 3) ui_sterge(service);
         else if (comanda == 4) ui_filtrare(service);
         else if (comanda == 5) ui_sortare(service);
+	else if (comanda == 6) ui_undo(service);
         else if (comanda == 0) printf("La revedere!\n");
         else printf("Comanda invalida.\n");
     }

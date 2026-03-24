@@ -5,7 +5,8 @@ int main(void) {
     ServiceCheltuieli service = service_creeaza(&repo);
 
     ruleaza_interfata(&service);
-
+    
+    service_distruge(&service);
     repo_distruge(&repo);
     return 0;
 }
