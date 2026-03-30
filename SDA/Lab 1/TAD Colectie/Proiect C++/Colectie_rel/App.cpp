@@ -9,4 +9,5 @@ using namespace std;
 int main() {
 	testAllExtins();
 	testAll();
+	cout << "All tests pased.\n";
 }
