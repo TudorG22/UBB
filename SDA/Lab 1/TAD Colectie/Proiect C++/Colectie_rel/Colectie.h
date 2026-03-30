@@ -1,4 +1,5 @@
-#pragma once;
+#pragma once
+#include <utility>
 
 typedef int TElem;
 
@@ -15,7 +16,12 @@ class Colectie {
 	friend class IteratorColectie;
 
 private:
-	/* aici e reprezentarea */
+		
+		std::pair<TElem,int>* date;
+		int capacitate;
+		int dimensiune;
+		int dimensiune_real;
+
 public:
 		//constructorul implicit
 		Colectie();
@@ -32,7 +38,6 @@ public:
 
 		//returneaza numar de aparitii ale unui element in colectie
 		int nrAparitii(TElem elem) const;
-
 
 		//intoarce numarul de elemente din colectie;
 		int dim() const;

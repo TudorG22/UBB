@@ -7,15 +7,17 @@ typedef int TElem;
 class IteratorColectie
 {
 	friend class Colectie;
+
 private:
-	//constructorul primeste o referinta catre Container
-    //iteratorul va referi primul element din container
-	IteratorColectie(const Colectie& c);
+    //constructorul primeste o referinta catre Container
+	//iteratorul va referi primul element din container
+    IteratorColectie(const Colectie& c);
 
     //contine o referinta catre containerul pe care il itereaza
 	const Colectie& col;
-	/* aici e reprezentarea pecifica a iteratorului*/
-
+	/* aici e reprezentarea  spcifica a iteratorului*/
+	int curent = 0;
+	int frec_curent = 0;
 
 public:
 
