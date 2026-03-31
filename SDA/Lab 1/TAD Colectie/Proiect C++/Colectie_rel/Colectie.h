@@ -22,10 +22,15 @@ private:
 		int dimensiune;
 		int dimensiune_real;
 
+		
+
 public:
 		//constructorul implicit
 		//complexitate: BC = WC = Theta(1), initializeaza campurile
 		Colectie();
+
+		int bin_search(TElem e) ;
+		bool bin_search_bool(TElem e) ;
 
 		//adauga un element in colectie
 		//complexitate: BC = Theta(1), WC = O(n), parcurgere liniara
@@ -38,11 +43,11 @@ public:
 
 		//verifica daca un element se afla in colectie
 		//complexitate: BC = Theta(1), WC = O(n), parcurgere liniara
-		bool cauta(TElem elem) const;
+		bool cauta(TElem elem) ;
 
 		//returneaza numar de aparitii ale unui element in colectie
 		//complexitate: BC = Theta(1), WC = O(n), parcurgere liniara
-		int nrAparitii(TElem elem) const;
+		int nrAparitii(TElem elem) ;
 
 		//intoarce numarul de elemente din colectie;
 		//complexitate: BC = WC = Theta(1), returneaza un camp

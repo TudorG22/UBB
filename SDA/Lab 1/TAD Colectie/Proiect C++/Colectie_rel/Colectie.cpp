@@ -15,6 +15,58 @@ Colectie::Colectie() {
 	date = new std::pair<TElem,int>[capacitate];
 }
 
+bool Colectie::bin_search_bool(TElem e) {
+	int start = 0;
+	int end = dimensiune-1;
+
+	int middle = (start+end)/2;
+
+	while (start <= end){
+		if (date[middle].first == e) {
+			return true;
+		}
+
+		else if (rel(e, date[middle].first)){
+			end = middle-1;
+			middle = (start+end)/2;
+		}
+
+		else {
+			start = middle+1;
+			middle = (start+end)/2;
+		}
+	}
+
+	return false;
+
+}
+
+int Colectie::bin_search(TElem e)  {
+	int start = 0;
+	int end = dimensiune-1;
+
+	int middle = (start+end)/2;
+
+	while (start <= end){
+		if (date[middle].first == e) {
+			return middle;
+		}
+
+		else if (rel(e, date[middle].first)){
+			end = middle-1;
+			middle = (start+end)/2;
+		}
+
+		else {
+			start = middle+1;
+			middle = (start+end)/2;
+		}
+	}
+
+	return start;
+
+}
+
 void Colectie::adauga(TElem e) {
 
 	// -- dimensiune --
@@ -30,12 +82,8 @@ void Colectie::adauga(TElem e) {
 	}
 
 
-	int index = 0;
+	int index = Colectie::bin_search(e);
 
-	// -- ordine --
-	while (index < dimensiune && date[index].first < e) {
-		index++;
-	}
 
 	if (index < dimensiune && date[index].first != e){	// -- prima instanta --
 		for (int j = dimensiune; j > index; j--) {
@@ -60,15 +108,12 @@ void Colectie::adauga(TElem e) {
 
 bool Colectie::sterge(TElem e) {
 
-	int index = 0;
-
-	while (index < dimensiune && date[index].first != e) {
-		index++;
-	}
-
-	if (index == dimensiune) { // -- nu exista --
+	
+	if (!bin_search_bool(e)) { // -- nu exista --
 		return false;
 	}
+
+	int index = Colectie::bin_search(e);
 
 	if (date[index].second > 1){ // -- exista de mai multe ori --
 		date[index].second --;
@@ -97,29 +142,17 @@ bool Colectie::sterge(TElem e) {
 }
 
 
-bool Colectie::cauta(TElem elem) const {
-	int index = 0;
-	while (index < dimensiune && date[index].first != elem) {
-		index++;
-	}
-
-	if (index == dimensiune) { // -- nu exista --
-		return false;
-	}
-
-	return true;
+bool Colectie::cauta(TElem elem)  {
+	return bin_search_bool(elem);
 }
 
 
-int Colectie::nrAparitii(TElem elem) const {
-	int index = 0;
-	while (index < dimensiune && date[index].first != elem) {
-		index++;
-	}
-
-	if (index == dimensiune) { // -- nu exista --
+int Colectie::nrAparitii(TElem elem)  {
+	if (!bin_search_bool(elem)) { // -- nu exista --
 		return 0;
 	}
+
+	int index = Colectie::bin_search(elem);
 
 	return date[index].second;
 }
