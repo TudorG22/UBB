@@ -1,11 +1,7 @@
 #include "repo.h"
 
-Repo::Repo(int d) 
-    : dimensiune(d) {
-}
-
 int Repo::repoDim() const {
-    return dimensiune;
+    return date.size();
 }
 
 void Repo::repoAdd(const Film& f)  {
@@ -14,10 +10,11 @@ void Repo::repoAdd(const Film& f)  {
 
 int Repo::repoCauta(const string& titlu) const {
     int i = 0;
-    while (i < dimensiune){
+    while (i < Repo::repoDim()){
         if ((date[i].getTitlu()) == titlu){
             return i;
         }
+        i++;
     }
 
     return -1;
@@ -36,7 +33,4 @@ void Repo::repoModify(int poz, const string& titlu, const string& gen, int an, c
 
 const vector<Film>& Repo::repoGetAll() const {
     return date;
-}
-
-Repo::~Repo(){
 }

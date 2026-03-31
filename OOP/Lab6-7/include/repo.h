@@ -3,6 +3,7 @@
 #include "domain.h"
 
 #include <vector>
+#include <algorithm>
 
 using std::string;
 using std::vector;
@@ -10,12 +11,12 @@ using std::vector;
 class Repo {
     private:
         vector<Film> date;
-        int dimensiune;
-        int capacitate; // egale pentru prima iteratiaa    
+        //int dimensiune;
+        //int capacitate; mai tarziu
 
     public:
         //
-        Repo(int d);
+        Repo() = default;
 
         int repoDim() const;
 
@@ -34,7 +35,4 @@ class Repo {
         //
         const vector<Film>& repoGetAll() const;
 
-        //
-        ~Repo();
-        
 };

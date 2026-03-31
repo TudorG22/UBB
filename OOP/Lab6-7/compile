@@ -1,4 +1,4 @@
 #!/usr/bin/bash
 set -e
 
-g++ -Wvla -Wall -Werror -I include src/domain.cpp src/repo.cpp src/main.cpp -o app
+g++ -Wvla -Wall -Werror -I include src/domain.cpp src/repo.cpp src/service.cpp src/main.cpp -o app
