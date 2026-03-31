@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+set -e
+
+g++ -Wvla -Wall -Werror -I include src/domain.cpp src/main.cpp -o app
