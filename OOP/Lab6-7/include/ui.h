@@ -21,6 +21,7 @@ private:
 
     static std::string filmToString(const Film& film);
     static std::string listaToString(const std::vector<Film>& filme);
+    static std::string listaToString(const std::vector<const Film*>& filme);
 
     void drawStaticScreen() const;
     void clearInputArea() const;

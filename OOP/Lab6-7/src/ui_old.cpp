@@ -28,6 +28,15 @@ void UIOld::printLista(const vector<Film>& filme) {
     }
 }
 
+void UIOld::printLista(const vector<const Film*>& filme) {
+    for (const auto film : filme) {
+        printFilm(*film);
+    }
+    if (filme.empty()) {
+        cout << "Nu exista filme.\n";
+    }
+}
+
 void UIOld::printMeniu() {
     cout << "\n1. Adauga\n"
             "2. Sterge\n"

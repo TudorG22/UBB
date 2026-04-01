@@ -8,6 +8,7 @@ private:
 
     static void printFilm(const Film& film);
     static void printLista(const vector<Film>& filme);
+    static void printLista(const vector<const Film*>& filme);
     static void printMeniu();
 
     static std::string citesteText(const std::string& mesaj);

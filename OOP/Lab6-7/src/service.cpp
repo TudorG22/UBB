@@ -5,7 +5,7 @@ Service::Service(Repo& r)
 }
 
 void Service::serviceAdd(const string& titlu, const string& gen, int an, const string& actor) {
-    repo.repoAdd(Film(titlu, gen, an, actor));
+    repo.repoAdd(titlu, gen, an, actor);
 }
 
 void Service::serviceDel(const string& titlu) {
@@ -30,24 +30,25 @@ const vector<Film>& Service::serviceGetAll() const {
     return repo.repoGetAll();
 }
 
-const vector<Film> Service::serviceFilter(int key, string& pattern) const{
-
-    vector<Film> rezultat;
+const vector<const Film*> Service::serviceFilter(int key, string& pattern) const{
+    vector<const Film*> filtrate;
 
     if (key == 1) {
-        std::copy_if(repo.repoGetAll().begin(), repo.repoGetAll().end(), 
-        std::back_inserter(rezultat), 
-            [pattern](const Film& f) { 
-                return f.getTitlu() == pattern; 
-            });
+        for (const auto& film : repo.repoGetAll()) {
+            if (film.getTitlu() == pattern) {
+                filtrate.push_back(&film);
+            }
+        }
+    } else {
+        const int patternInt = stoi(pattern);
+        for (const auto& film : repo.repoGetAll()) {
+            if (film.getAn() == patternInt) {
+                filtrate.push_back(&film);
+            }
+        }
     }
 
-    else {
-        int patternInt = stoi(pattern);
-        std::copy_if(repo.repoGetAll().begin(), repo.repoGetAll().end(), std::back_inserter(rezultat), [patternInt](const Film& f) { return f.getAn() == patternInt; });
-    }
-
-    return rezultat;
+    return filtrate;
 }
 
 const vector<Film> Service::serviceSort(int key) const {

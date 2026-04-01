@@ -64,6 +64,18 @@ string UI::listaToString(const std::vector<Film>& filme) {
     return out.str();
 }
 
+string UI::listaToString(const std::vector<const Film*>& filme) {
+    if (filme.empty()) {
+        return "Nu exista filme.\n";
+    }
+
+    std::ostringstream out;
+    for (const auto film : filme) {
+        out << filmToString(*film) << '\n';
+    }
+    return out.str();
+}
+
 void UI::drawStaticScreen() const {
     clearScreen();
     cout << "1. Adauga\n"

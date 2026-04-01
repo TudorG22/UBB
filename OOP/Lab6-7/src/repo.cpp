@@ -4,8 +4,8 @@ int Repo::repoDim() const {
     return date.size();
 }
 
-void Repo::repoAdd(const Film& f)  {
-    date.push_back(f);
+void Repo::repoAdd(const string& titlu, const string& gen, int an, const string& actor)  {
+    date.emplace_back(titlu, gen, an, actor);
 }
 
 int Repo::repoCauta(const string& titlu) const {
