@@ -80,5 +80,4 @@ const vector<Film> Service::serviceSort(int key) const {
             });
     }
 
-    return rezultat;
-}
+    return rezultat; }

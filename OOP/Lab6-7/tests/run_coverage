@@ -1,0 +1,22 @@
+#!/usr/bin/bash
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+COVERAGE_DIR="$SCRIPT_DIR/coverage"
+
+mkdir -p "$COVERAGE_DIR"
+rm -f "$COVERAGE_DIR"/*
+
+g++ --coverage -Wvla -Wall -Werror -I "$PROJECT_DIR/include" \
+    "$PROJECT_DIR/src/domain.cpp" \
+    "$PROJECT_DIR/src/repo.cpp" \
+    "$PROJECT_DIR/src/service.cpp" \
+    "$SCRIPT_DIR/test_domain_repo_service.cpp" \
+    -o "$COVERAGE_DIR/coverage_bin"
+
+"$COVERAGE_DIR/coverage_bin"
+
+cd "$COVERAGE_DIR"
+gcov coverage_bin-domain.gcno coverage_bin-repo.gcno coverage_bin-service.gcno
+gcovr "$PROJECT_DIR" --filter "$PROJECT_DIR/src" --html-details coverage.html

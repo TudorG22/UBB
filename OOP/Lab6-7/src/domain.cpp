@@ -1,5 +1,7 @@
 #include "domain.h"
 
+#include <iostream>
+
 Film::Film(const string& titlu, const string& gen, int an, const string& actor)
     : titlu(titlu), gen(gen), an(an), actor(actor) {
 }
