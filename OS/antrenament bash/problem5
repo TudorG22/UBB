@@ -1,0 +1,14 @@
+#!/bin/bash
+
+nr=$#
+
+while true; do
+	for ((i=1;i<=$nr;i++)); do
+		if awk '{print $NF}' <(ps -e) | grep -qx "${!i}"; then
+			p_id=$(pgrep "${!i}")
+			kill $p_id
+			echo "Dangerous process "${!i}" has been killed."
+		fi
+	done
+sleep 1		
+done

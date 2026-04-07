@@ -1,0 +1,9 @@
+#!/bin/bash
+
+dir=$1
+
+find "$dir" -type f -name "*.log" | while read -r file; do
+	temp="$file.tmp"
+	sort "$file" > "$temp"
+	mv "$temp" "$file"
+done

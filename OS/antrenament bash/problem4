@@ -1,0 +1,9 @@
+#!/bin/bash
+
+dir=$1
+
+find "$dir" -type l | while read -r file; do
+	if [ ! -e "$file" ]; then
+		echo "Fisier destinatie inexistent pentru symlinkul $file";
+	fi
+done

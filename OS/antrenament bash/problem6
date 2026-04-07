@@ -1,0 +1,11 @@
+#!/bin/bash
+
+dir=$1
+
+find "$dir" -type f | while read file; do
+	if ls -l "$file" | awk '{print $1}' | grep -q ".w..w..w."; then
+		echo "before $(ls -l "$file" | awk '{print $1 " " $NF}')"	
+		chmod a-w "$file"
+		echo "after $(ls -l "$file" | awk '{print $1 " " $NF}')"
+	fi
+done 

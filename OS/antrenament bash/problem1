@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# "cat who.fake" instead of command "who"
+# "cat ps.fake" instead of command "ps -ef"
+
+nr=$(wc -l < who.fake)
+
+for ((i=1; i<=$nr; i++)); do
+	user=$(awk -v line=$i 'NR==line {print $1}' who.fake)
+	echo "$user" $(awk -v u=$user '$1 == u' ps.fake | wc -l)
+done
