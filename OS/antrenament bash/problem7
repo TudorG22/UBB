@@ -1,0 +1,8 @@
+#!/bin/bash
+
+file=$1
+output=$2
+
+while read -r line; do
+	echo "$line@scs.ubbcluj.ro" >> "$output"
+done < "$file"
