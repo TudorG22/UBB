@@ -31,6 +31,6 @@ void Repo::repoModify(int poz, const string& titlu, const string& gen, int an, c
     date[poz].setActor(actor);
 }
 
-const vector<Film>& Repo::repoGetAll() const {
+const VectorDinamic<Film>& Repo::repoGetAll() const {
     return date;
 }

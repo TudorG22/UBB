@@ -7,9 +7,14 @@ COVERAGE_DIR="$SCRIPT_DIR/coverage"
 
 mkdir -p "$COVERAGE_DIR"
 rm -f "$COVERAGE_DIR"/*
+find "$PROJECT_DIR" \( -name '*.gcda' -o -name '*.gcno' -o -name '*.gcov' \) -delete
+
+cd "$COVERAGE_DIR"
 
 g++ --coverage -Wvla -Wall -Werror -I "$PROJECT_DIR/include" \
     "$PROJECT_DIR/src/domain.cpp" \
+    "$PROJECT_DIR/src/validator.cpp" \
+    "$PROJECT_DIR/src/vector_dinamic.cpp" \
     "$PROJECT_DIR/src/repo.cpp" \
     "$PROJECT_DIR/src/service.cpp" \
     "$SCRIPT_DIR/test_domain_repo_service.cpp" \
@@ -17,6 +22,11 @@ g++ --coverage -Wvla -Wall -Werror -I "$PROJECT_DIR/include" \
 
 "$COVERAGE_DIR/coverage_bin"
 
-cd "$COVERAGE_DIR"
-gcov coverage_bin-domain.gcno coverage_bin-repo.gcno coverage_bin-service.gcno
-gcovr "$PROJECT_DIR" --filter "$PROJECT_DIR/src" --html-details coverage.html
+gcovr "$PROJECT_DIR" \
+    --filter "$PROJECT_DIR/src" \
+    --exclude "$PROJECT_DIR/src/ui.cpp" \
+    --exclude "$PROJECT_DIR/src/ui_old.cpp" \
+    --object-directory "$COVERAGE_DIR" \
+    --merge-mode-functions=merge-use-line-min \
+    --txt \
+    --html-details "$COVERAGE_DIR/coverage.html"

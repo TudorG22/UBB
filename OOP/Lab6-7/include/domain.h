@@ -9,7 +9,7 @@ class Film {
     private:
         string titlu;
         string gen;
-        int an;
+        int an = 0;
         string actor;
 
     public:
@@ -26,12 +26,12 @@ class Film {
         Output: -
         Pre conditii: film initializat
         Post conditii: film copiat
-        */
+        
         Film(const Film& other);
 
         Film(Film&& other) noexcept = default;
         Film& operator=(const Film& other) = default;
-        Film& operator=(Film&& other) noexcept = default;
+        Film& operator=(Film&& other) noexcept = default;*/
 
         /* Returneaza titlul filmului
         Input: -

@@ -6,11 +6,6 @@ Film::Film(const string& titlu, const string& gen, int an, const string& actor)
     : titlu(titlu), gen(gen), an(an), actor(actor) {
 }
 
-Film::Film(const Film& other)
-    : titlu(other.titlu), gen(other.gen), an(other.an), actor(other.actor) {
-        std::cout << "Copy constructor apelat pentru: " << titlu << '\n';
-}
-
 const string& Film::getTitlu() const {
     return titlu;
 }

@@ -19,7 +19,7 @@ void UIOld::printFilm(const Film& film) {
          << film.getActor() << '\n';
 }
 
-void UIOld::printLista(const vector<Film>& filme) {
+void UIOld::printLista(const VectorDinamic<Film>& filme) {
     for (const auto& film : filme) {
         printFilm(film);
     }
@@ -28,7 +28,7 @@ void UIOld::printLista(const vector<Film>& filme) {
     }
 }
 
-void UIOld::printLista(const vector<const Film*>& filme) {
+void UIOld::printLista(const VectorDinamic<const Film*>& filme) {
     for (const auto film : filme) {
         printFilm(*film);
     }

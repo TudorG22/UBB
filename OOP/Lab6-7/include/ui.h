@@ -20,8 +20,8 @@ private:
     static int citesteInt(const std::string& mesaj);
 
     static std::string filmToString(const Film& film);
-    static std::string listaToString(const std::vector<Film>& filme);
-    static std::string listaToString(const std::vector<const Film*>& filme);
+    static std::string listaToString(const VectorDinamic<Film>& filme);
+    static std::string listaToString(const VectorDinamic<const Film*>& filme);
 
     void drawStaticScreen() const;
     void clearInputArea() const;

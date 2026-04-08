@@ -1,6 +1,6 @@
 #include "repo.h"
 #include "service.h"
-#include "ui_old.h"
+#include "ui.h"
 
 #include <string>
 
@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
         service.serviceAdd("Shrek", "Animatie", 2001, "Mike Myers");
     }
 
-    UIOld ui(service);
+    UI ui(service);
     ui.run();
     return 0;
 }

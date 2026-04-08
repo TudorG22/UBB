@@ -2,11 +2,9 @@
 
 #include "domain.h"
 #include "repo.h"
-
-#include <vector>
+#include "validator.h"
 
 using std::string;
-using std::vector;
 
 class Service {
     private:
@@ -20,6 +18,9 @@ class Service {
         Post conditii: service initializat
         */
         Service(Repo& r);
+
+        static constexpr const char* duplicateErrorMessage = "Filmul exista deja.";
+        static constexpr const char* notFoundErrorMessage = "Filmul nu exista.";
 
         /* Adauga un film in aplicatie
         Input: titlu, gen, an, actor
@@ -59,7 +60,7 @@ class Service {
         Pre conditii: service initializat
         Post conditii: -
         */
-        const vector<Film>& serviceGetAll() const;
+        const VectorDinamic<Film>& serviceGetAll() const;
 
         /* Filtreaza filmele din aplicatie
         Input: key, pattern
@@ -67,7 +68,7 @@ class Service {
         Pre conditii: service initializat
         Post conditii: -
         */
-        const vector<const Film*> serviceFilter(int key, string& pattern) const;
+        const VectorDinamic<const Film*> serviceFilter(int key, string& pattern) const;
 
         /* Sorteaza filmele din aplicatie
         Input: key
@@ -75,6 +76,6 @@ class Service {
         Pre conditii: service initializat
         Post conditii: -
         */
-        const vector<Film> serviceSort(int key) const;
+        const VectorDinamic<Film> serviceSort(int key) const;
     
 };

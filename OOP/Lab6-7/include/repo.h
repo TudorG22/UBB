@@ -1,16 +1,15 @@
 #pragma once 
 
 #include "domain.h"
+#include "vector_dinamic.h"
 
-#include <vector>
 #include <algorithm>
 
 using std::string;
-using std::vector;
 
 class Repo {
     private:
-        vector<Film> date;
+        VectorDinamic<Film> date;
         //int dimensiune;
         //int capacitate; mai tarziu
 
@@ -69,6 +68,6 @@ class Repo {
         Pre conditii: repository initializat
         Post conditii: -
         */
-        const vector<Film>& repoGetAll() const;
+        const VectorDinamic<Film>& repoGetAll() const;
 
 };

@@ -52,7 +52,7 @@ string UI::filmToString(const Film& film) {
     return out.str();
 }
 
-string UI::listaToString(const std::vector<Film>& filme) {
+string UI::listaToString(const VectorDinamic<Film>& filme) {
     if (filme.empty()) {
         return "Nu exista filme.\n";
     }
@@ -64,7 +64,7 @@ string UI::listaToString(const std::vector<Film>& filme) {
     return out.str();
 }
 
-string UI::listaToString(const std::vector<const Film*>& filme) {
+string UI::listaToString(const VectorDinamic<const Film*>& filme) {
     if (filme.empty()) {
         return "Nu exista filme.\n";
     }

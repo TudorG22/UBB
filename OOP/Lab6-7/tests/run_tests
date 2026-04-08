@@ -6,6 +6,8 @@ PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 g++ -Wvla -Wall -Werror -I "$PROJECT_DIR/include" \
     "$PROJECT_DIR/src/domain.cpp" \
+    "$PROJECT_DIR/src/validator.cpp" \
+    "$PROJECT_DIR/src/vector_dinamic.cpp" \
     "$PROJECT_DIR/src/repo.cpp" \
     "$PROJECT_DIR/src/service.cpp" \
     "$SCRIPT_DIR/test_domain_repo_service.cpp" \
