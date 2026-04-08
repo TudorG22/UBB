@@ -92,7 +92,7 @@ void UIOld::uiCauta() const {
         return;
     }
 
-    printFilm(service.serviceGetAll()[poz]);
+    printFilm(service.serviceGetAll().get(poz));
 }
 
 void UIOld::uiShowAll() const {

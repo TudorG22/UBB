@@ -66,84 +66,45 @@ static void testVectorDinamic() {
     Film b("B", "SF", 2002, "Actor B");
     Film c("C", "Comedie", 2003, "Actor C");
 
-    vector.vector_dinamic_adauga(a);
+    vector.push_back(a);
     vector.push_back(b);
-    vector.emplace_back("C", "Comedie", 2003, "Actor C");
-    assert(vector.vector_dinamic_dimensiune() == 3);
+    vector.push_back(c);
+    assert(vector.size() == 3);
     assert(vector.begin()->getTitlu() == "A");
     assert((vector.end() - vector.begin()) == 3);
-
-    vector.vector_dinamic_seteaza(1, c);
-    assert(vector.vector_dinamic_get(1).getTitlu() == "C");
-
-    const VectorDinamic<Film>& constVector = vector;
-    assert(constVector.vector_dinamic_get_const(1).getGen() == "Comedie");
-    assert(constVector[2].getTitlu() == "C");
+    assert(vector.get(1).getTitlu() == "B");
 
     VectorDinamic<Film> copied(vector);
     assert(copied.size() == 3);
+    assert(copied.get(2).getTitlu() == "C");
 
-    VectorDinamic<Film> assigned;
-    assigned = vector;
-    assigned = assigned;
-    assert(assigned.size() == 3);
-
-    VectorDinamic<Film> moved(std::move(copied));
-    assert(moved.size() == 3);
-
-    VectorDinamic<Film> moveAssigned;
-    moveAssigned = std::move(moved);
-    auto& moveAssignedSelf = moveAssigned;
-    moveAssigned = std::move(moveAssignedSelf);
-    assert(moveAssigned.size() == 3);
-
-    moveAssigned.vector_dinamic_sterge(1);
-    assert(moveAssigned.size() == 2);
-
-    moveAssigned.erase(moveAssigned.begin());
-    assert(moveAssigned.size() == 1);
-    assert(!moveAssigned.empty());
+    copied.erase(1);
+    assert(copied.size() == 2);
+    copied.erase(0);
+    assert(copied.size() == 1);
+    assert(!copied.empty());
 
     VectorDinamic<const Film*> filmPointers;
-    filmPointers.push_back(&vector[0]);
-    assert(filmPointers[0]->getTitlu() == "A");
-
-    filmPointers.vector_dinamic_adauga(&vector[1]);
-    filmPointers.push_back(&vector[2]);
+    filmPointers.push_back(vector.begin());
+    assert(filmPointers.get(0)->getTitlu() == "A");
+    filmPointers.push_back(vector.begin() + 1);
+    filmPointers.push_back(vector.begin() + 2);
     assert(filmPointers.size() == 3);
     assert((filmPointers.end() - filmPointers.begin()) == 3);
 
-    filmPointers.vector_dinamic_seteaza(1, &vector[0]);
-    assert(filmPointers.vector_dinamic_get(1)->getTitlu() == "A");
-
     const VectorDinamic<const Film*>& constFilmPointers = filmPointers;
-    assert(constFilmPointers.vector_dinamic_get_const(0)->getTitlu() == "A");
-    assert(constFilmPointers.begin()[0]->getTitlu() == "A");
+    assert(constFilmPointers.get(0)->getTitlu() == "A");
     assert((constFilmPointers.end() - constFilmPointers.begin()) == 3);
 
     VectorDinamic<const Film*> filmPointersCopy(filmPointers);
     assert(filmPointersCopy.size() == 3);
+    assert(filmPointersCopy.get(1)->getTitlu() == "B");
 
-    VectorDinamic<const Film*> filmPointersAssigned;
-    filmPointersAssigned = filmPointers;
-    filmPointersAssigned = filmPointersAssigned;
-    assert(filmPointersAssigned.size() == 3);
-
-    VectorDinamic<const Film*> filmPointersMoved(std::move(filmPointersCopy));
-    assert(filmPointersMoved.size() == 3);
-
-    VectorDinamic<const Film*> filmPointersMoveAssigned;
-    filmPointersMoveAssigned = std::move(filmPointersMoved);
-    auto& filmPointersMoveAssignedSelf = filmPointersMoveAssigned;
-    filmPointersMoveAssigned = std::move(filmPointersMoveAssignedSelf);
-    assert(filmPointersMoveAssigned.size() == 3);
-
-    filmPointersMoveAssigned.vector_dinamic_sterge(1);
-    assert(filmPointersMoveAssigned.size() == 2);
-
-    filmPointersMoveAssigned.erase(filmPointersMoveAssigned.begin());
-    assert(filmPointersMoveAssigned.size() == 1);
-    assert(!filmPointersMoveAssigned.empty());
+    filmPointersCopy.erase(1);
+    assert(filmPointersCopy.size() == 2);
+    filmPointersCopy.erase(0);
+    assert(filmPointersCopy.size() == 1);
+    assert(!filmPointersCopy.empty());
 }
 
 static void testRepo() {
@@ -162,17 +123,17 @@ static void testRepo() {
     assert(repo.repoCauta("C") == 2);
 
     repo.repoModify(1, "A2", "Thriller", 2010, "Actor Z");
-    assert(repo.repoGetAll()[1].getTitlu() == "A2");
-    assert(repo.repoGetAll()[1].getGen() == "Thriller");
-    assert(repo.repoGetAll()[1].getAn() == 2010);
-    assert(repo.repoGetAll()[1].getActor() == "Actor Z");
+    assert(repo.repoGetAll().get(1).getTitlu() == "A2");
+    assert(repo.repoGetAll().get(1).getGen() == "Thriller");
+    assert(repo.repoGetAll().get(1).getAn() == 2010);
+    assert(repo.repoGetAll().get(1).getActor() == "Actor Z");
     assert(repo.repoCauta("A") == -1);
     assert(repo.repoCauta("A2") == 1);
 
     repo.repoDel(0);
     assert(repo.repoDim() == 2);
-    assert(repo.repoGetAll()[0].getTitlu() == "A2");
-    assert(repo.repoGetAll()[1].getTitlu() == "C");
+    assert(repo.repoGetAll().get(0).getTitlu() == "A2");
+    assert(repo.repoGetAll().get(1).getTitlu() == "C");
 }
 
 static void testService() {
@@ -209,8 +170,8 @@ static void testService() {
     assert(service.serviceCauta("Avatar") == -1);
     assert(service.serviceCauta("Avatar 2") != -1);
     const auto pozAvatar2 = service.serviceCauta("Avatar 2");
-    assert(service.serviceGetAll()[pozAvatar2].getGen() == "SF");
-    assert(service.serviceGetAll()[pozAvatar2].getAn() == 2022);
+    assert(service.serviceGetAll().get(pozAvatar2).getGen() == "SF");
+    assert(service.serviceGetAll().get(pozAvatar2).getAn() == 2022);
 
     bool modifyValidationException = false;
     try {
@@ -243,12 +204,12 @@ static void testService() {
     string patternTitlu = "Dune";
     const auto filtrateTitlu = service.serviceFilter(1, patternTitlu);
     assert(filtrateTitlu.size() == 1);
-    assert(filtrateTitlu[0]->getTitlu() == "Dune");
+    assert(filtrateTitlu.get(0)->getTitlu() == "Dune");
 
     string patternAn = "2022";
     const auto filtrateAn = service.serviceFilter(2, patternAn);
     assert(filtrateAn.size() == 1);
-    assert(filtrateAn[0]->getTitlu() == "Avatar 2");
+    assert(filtrateAn.get(0)->getTitlu() == "Avatar 2");
 
     string patternInexistent = "1900";
     const auto filtrateGoale = service.serviceFilter(2, patternInexistent);
@@ -265,22 +226,22 @@ static void testService() {
 
     const VectorDinamic<Film> sortateTitlu = service.serviceSort(1);
     assert(sortateTitlu.size() == 4);
-    assert(sortateTitlu[0].getTitlu() == "Alien");
-    assert(sortateTitlu[1].getTitlu() == "Arrival");
-    assert(sortateTitlu[2].getTitlu() == "Avatar 2");
-    assert(sortateTitlu[3].getTitlu() == "Dune");
+    assert(sortateTitlu.get(0).getTitlu() == "Alien");
+    assert(sortateTitlu.get(1).getTitlu() == "Arrival");
+    assert(sortateTitlu.get(2).getTitlu() == "Avatar 2");
+    assert(sortateTitlu.get(3).getTitlu() == "Dune");
 
     const VectorDinamic<Film> sortateActor = service.serviceSort(2);
-    assert(sortateActor[0].getActor() == "Amy Adams");
-    assert(sortateActor[1].getActor() == "Sam Worthington");
-    assert(sortateActor[2].getActor() == "Sigourney Weaver");
-    assert(sortateActor[3].getActor() == "Timothee Chalamet");
+    assert(sortateActor.get(0).getActor() == "Amy Adams");
+    assert(sortateActor.get(1).getActor() == "Sam Worthington");
+    assert(sortateActor.get(2).getActor() == "Sigourney Weaver");
+    assert(sortateActor.get(3).getActor() == "Timothee Chalamet");
 
     const VectorDinamic<Film> sortateAnGen = service.serviceSort(3);
-    assert(sortateAnGen[0].getTitlu() == "Alien");
-    assert(sortateAnGen[1].getTitlu() == "Arrival");
-    assert(sortateAnGen[2].getTitlu() == "Dune");
-    assert(sortateAnGen[3].getTitlu() == "Avatar 2");
+    assert(sortateAnGen.get(0).getTitlu() == "Alien");
+    assert(sortateAnGen.get(1).getTitlu() == "Arrival");
+    assert(sortateAnGen.get(2).getTitlu() == "Dune");
+    assert(sortateAnGen.get(3).getTitlu() == "Avatar 2");
 
     Repo repoAniEgali;
     Service serviceAniEgali(repoAniEgali);
@@ -288,8 +249,8 @@ static void testService() {
     serviceAniEgali.serviceAdd("Film A", "A", 2000, "Actor 2");
     const VectorDinamic<Film> sortateCuAniEgali = serviceAniEgali.serviceSort(3);
     assert(sortateCuAniEgali.size() == 2);
-    assert(sortateCuAniEgali[0].getGen() == "A");
-    assert(sortateCuAniEgali[1].getGen() == "Z");
+    assert(sortateCuAniEgali.get(0).getGen() == "A");
+    assert(sortateCuAniEgali.get(1).getGen() == "Z");
 }
 
 int main() {

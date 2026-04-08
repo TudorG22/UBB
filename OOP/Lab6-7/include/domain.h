@@ -13,6 +13,8 @@ class Film {
         string actor;
 
     public:
+        Film() = default;
+
         /* Creeaza un film
         Input: titlu, gen, an, actor
         Output: -

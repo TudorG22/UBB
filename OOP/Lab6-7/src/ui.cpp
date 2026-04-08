@@ -141,7 +141,7 @@ void UI::uiCauta() const {
         return;
     }
 
-    showOutput(filmToString(service.serviceGetAll()[poz]) + '\n');
+    showOutput(filmToString(service.serviceGetAll().get(poz)) + '\n');
 }
 
 void UI::uiShowAll() const {
