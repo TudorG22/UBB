@@ -94,7 +94,7 @@ void UI::drawStaticScreen() const {
 }
 
 void UI::clearInputArea() const {
-    for (int row = inputRow; row < outputRow - 1; ++row) {
+    for (int row = inputRow; row <= outputRow - 1; ++row) {
         moveCursor(row, 1);
         clearLine();
     }

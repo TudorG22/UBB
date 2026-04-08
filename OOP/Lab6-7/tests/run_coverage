@@ -28,5 +28,4 @@ gcovr "$PROJECT_DIR" \
     --exclude "$PROJECT_DIR/src/ui_old.cpp" \
     --object-directory "$COVERAGE_DIR" \
     --merge-mode-functions=merge-use-line-min \
-    --txt \
     --html-details "$COVERAGE_DIR/coverage.html"
