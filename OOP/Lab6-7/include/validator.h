@@ -12,6 +12,5 @@ public:
 
 class Validator {
 public:
-    static void valideazaFilm(const Film& film);
     static void valideazaFilm(const std::string& titlu, const std::string& gen, int an, const std::string& actor);
 };

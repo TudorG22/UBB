@@ -57,7 +57,7 @@ VectorDinamic<ElementT>::VectorDinamic(const VectorDinamic& other)
 }
 
 template <typename ElementT>
-VectorDinamic<ElementT>::VectorDinamic(VectorDinamic&& other) noexcept
+VectorDinamic<ElementT>::VectorDinamic(VectorDinamic&& other)
     : date(other.date),
       dimensiune_element(other.dimensiune_element),
       dimensiune(other.dimensiune),
@@ -80,7 +80,7 @@ VectorDinamic<ElementT>& VectorDinamic<ElementT>::operator=(const VectorDinamic&
 }
 
 template <typename ElementT>
-VectorDinamic<ElementT>& VectorDinamic<ElementT>::operator=(VectorDinamic&& other) noexcept {
+VectorDinamic<ElementT>& VectorDinamic<ElementT>::operator=(VectorDinamic&& other) {
     if (this == &other) {
         return *this;
     }
@@ -155,12 +155,12 @@ const ElementT& VectorDinamic<ElementT>::vector_dinamic_get_const(std::size_t in
 }
 
 template <typename ElementT>
-std::size_t VectorDinamic<ElementT>::size() const noexcept {
+std::size_t VectorDinamic<ElementT>::size() const {
     return vector_dinamic_dimensiune();
 }
 
 template <typename ElementT>
-bool VectorDinamic<ElementT>::empty() const noexcept {
+bool VectorDinamic<ElementT>::empty() const {
     return dimensiune == 0;
 }
 
@@ -175,22 +175,22 @@ const ElementT& VectorDinamic<ElementT>::operator[](std::size_t index) const {
 }
 
 template <typename ElementT>
-ElementT* VectorDinamic<ElementT>::begin() noexcept {
+ElementT* VectorDinamic<ElementT>::begin() {
     return reinterpret_cast<ElementT*>(date);
 }
 
 template <typename ElementT>
-const ElementT* VectorDinamic<ElementT>::begin() const noexcept {
+const ElementT* VectorDinamic<ElementT>::begin() const {
     return reinterpret_cast<const ElementT*>(date);
 }
 
 template <typename ElementT>
-ElementT* VectorDinamic<ElementT>::end() noexcept {
+ElementT* VectorDinamic<ElementT>::end() {
     return begin() + dimensiune;
 }
 
 template <typename ElementT>
-const ElementT* VectorDinamic<ElementT>::end() const noexcept {
+const ElementT* VectorDinamic<ElementT>::end() const {
     return begin() + dimensiune;
 }
 

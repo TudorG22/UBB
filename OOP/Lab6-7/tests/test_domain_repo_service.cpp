@@ -48,9 +48,6 @@ static void testDomain() {
 static void testValidator() {
     Validator::valideazaFilm("Titlu", "Gen", 2000, "Actor");
 
-    Film filmValid("Valid", "Drama", 2020, "Actor");
-    Validator::valideazaFilm(filmValid);
-
     bool exceptieAruncata = false;
     try {
         Validator::valideazaFilm("", "", 0, "");

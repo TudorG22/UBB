@@ -4,10 +4,6 @@ ValidationError::ValidationError(const std::string& mesaj)
     : std::runtime_error(mesaj) {
 }
 
-void Validator::valideazaFilm(const Film& film) {
-    valideazaFilm(film.getTitlu(), film.getGen(), film.getAn(), film.getActor());
-}
-
 void Validator::valideazaFilm(const std::string& titlu, const std::string& gen, int an, const std::string& actor) {
     std::string erori;
 

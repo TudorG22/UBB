@@ -42,7 +42,7 @@ public:
     Pre conditii: vector valid
     Post conditii: resursele sunt mutate
     */
-    VectorDinamic(VectorDinamic&& other) noexcept;
+    VectorDinamic(VectorDinamic&& other);
 
     /* Copiaza un vector dinamic
     Input: alt vector
@@ -58,7 +58,7 @@ public:
     Pre conditii: vectori valizi
     Post conditii: resursele sunt mutate in vectorul curent
     */
-    VectorDinamic& operator=(VectorDinamic&& other) noexcept;
+    VectorDinamic& operator=(VectorDinamic&& other);
 
     /* Distruge vectorul dinamic
     Input: -
@@ -145,7 +145,7 @@ public:
     Pre conditii: vector initializat
     Post conditii: -
     */
-    std::size_t size() const noexcept;
+    std::size_t size() const;
 
     /* Verifica daca vectorul este gol
     Input: -
@@ -153,7 +153,7 @@ public:
     Pre conditii: vector initializat
     Post conditii: -
     */
-    bool empty() const noexcept;
+    bool empty() const;
 
     /* Returneaza elementul de pe index
     Input: index
@@ -177,7 +177,7 @@ public:
     Pre conditii: vector initializat
     Post conditii: -
     */
-    ElementT* begin() noexcept;
+    ElementT* begin();
 
     /* Returneaza iterator const la primul element
     Input: -
@@ -185,7 +185,7 @@ public:
     Pre conditii: vector initializat
     Post conditii: -
     */
-    const ElementT* begin() const noexcept;
+    const ElementT* begin() const;
 
     /* Returneaza iterator la final
     Input: -
@@ -193,7 +193,7 @@ public:
     Pre conditii: vector initializat
     Post conditii: -
     */
-    ElementT* end() noexcept;
+    ElementT* end();
 
     /* Returneaza iterator const la final
     Input: -
@@ -201,7 +201,7 @@ public:
     Pre conditii: vector initializat
     Post conditii: -
     */
-    const ElementT* end() const noexcept;
+    const ElementT* end() const;
 
     /* Sterge elementul indicat de iterator
     Input: pozitie
