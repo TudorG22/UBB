@@ -1,13 +1,78 @@
+#ifdef _MSC_VER
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
+#endif
 
-#include "VectDinNewDelete.h"
-#include "VectDinSmartPointer.h"
-#include "VectorDinamicTemplate.h"
 #include "Pet.h"
+#include "../../Lab6-7/include/vector_dinamic.h"
+#include "../../Lab6-7/src/vector_dinamic.cpp"
 #include <assert.h>
 #include <vector>
+
+class LabVectorAdapter {
+private:
+	VectorDinamic<Pet>* vec = nullptr;
+public:
+	LabVectorAdapter() : vec{ new VectorDinamic<Pet> } {}
+
+	LabVectorAdapter(const LabVectorAdapter& other) : vec{ new VectorDinamic<Pet>{ *other.vec } } {}
+
+	LabVectorAdapter(LabVectorAdapter&& other) noexcept : vec{ other.vec } {
+		other.vec = nullptr;
+	}
+
+	LabVectorAdapter& operator=(const LabVectorAdapter& other) {
+		if (this == &other) {
+			return *this;
+		}
+		delete vec;
+		vec = new VectorDinamic<Pet>{ *other.vec };
+		return *this;
+	}
+
+	LabVectorAdapter& operator=(LabVectorAdapter&& other) noexcept {
+		if (this == &other) {
+			return *this;
+		}
+		delete vec;
+		vec = other.vec;
+		other.vec = nullptr;
+		return *this;
+	}
+
+	~LabVectorAdapter() {
+		delete vec;
+	}
+
+	void add(const Pet& el) {
+		vec->push_back(el);
+	}
+
+	Pet& get(int poz) const {
+		return vec->get(poz);
+	}
+
+	int size() const noexcept {
+		return static_cast<int>(vec->size());
+	}
+
+	Pet* begin() {
+		return vec->begin();
+	}
+
+	const Pet* begin() const {
+		return vec->begin();
+	}
+
+	Pet* end() {
+		return vec->end();
+	}
+
+	const Pet* end() const {
+		return vec->end();
+	}
+};
 
 /*
   Functie folosit in teste
@@ -88,11 +153,10 @@ void testAll() {
 }
 
 int main() {
-	testAll<VectDinNewDelete>();
-	testAll<VectDinSmartPointer>();
+	testAll<LabVectorAdapter>();
 
-	testAll<VectDinNewDeleteT<Pet>>();
-
+#ifdef _MSC_VER
 	_CrtDumpMemoryLeaks();
+#endif
 	return 0;
 }
