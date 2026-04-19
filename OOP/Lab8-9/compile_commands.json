@@ -1,0 +1,98 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-I",
+      "include",
+      "-o",
+      "app",
+      "src/domain.cpp"
+    ],
+    "directory": "/home/tudor/Documents/UBB/OOP/Lab8-9",
+    "file": "/home/tudor/Documents/UBB/OOP/Lab8-9/src/domain.cpp",
+    "output": "/home/tudor/Documents/UBB/OOP/Lab8-9/app"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-I",
+      "include",
+      "-o",
+      "app",
+      "src/main.cpp"
+    ],
+    "directory": "/home/tudor/Documents/UBB/OOP/Lab8-9",
+    "file": "/home/tudor/Documents/UBB/OOP/Lab8-9/src/main.cpp",
+    "output": "/home/tudor/Documents/UBB/OOP/Lab8-9/app"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-I",
+      "include",
+      "-o",
+      "app",
+      "src/repo.cpp"
+    ],
+    "directory": "/home/tudor/Documents/UBB/OOP/Lab8-9",
+    "file": "/home/tudor/Documents/UBB/OOP/Lab8-9/src/repo.cpp",
+    "output": "/home/tudor/Documents/UBB/OOP/Lab8-9/app"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-I",
+      "include",
+      "-o",
+      "app",
+      "src/service.cpp"
+    ],
+    "directory": "/home/tudor/Documents/UBB/OOP/Lab8-9",
+    "file": "/home/tudor/Documents/UBB/OOP/Lab8-9/src/service.cpp",
+    "output": "/home/tudor/Documents/UBB/OOP/Lab8-9/app"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-I",
+      "include",
+      "-o",
+      "app",
+      "src/ui.cpp"
+    ],
+    "directory": "/home/tudor/Documents/UBB/OOP/Lab8-9",
+    "file": "/home/tudor/Documents/UBB/OOP/Lab8-9/src/ui.cpp",
+    "output": "/home/tudor/Documents/UBB/OOP/Lab8-9/app"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-I",
+      "include",
+      "-o",
+      "app",
+      "src/validator.cpp"
+    ],
+    "directory": "/home/tudor/Documents/UBB/OOP/Lab8-9",
+    "file": "/home/tudor/Documents/UBB/OOP/Lab8-9/src/validator.cpp",
+    "output": "/home/tudor/Documents/UBB/OOP/Lab8-9/app"
+  }
+]
