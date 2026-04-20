@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+set -e
+
+g++ -Wall -Wextra -Wvla -I. -I../Teste App.cpp LO.cpp Iterator.cpp ../Teste/TestExtins.cpp ../Teste/TestScurt.cpp -o program
