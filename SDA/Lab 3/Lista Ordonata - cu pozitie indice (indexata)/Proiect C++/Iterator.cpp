@@ -1,26 +1,32 @@
 #include "Iterator.h"
 #include "LO.h"
+#include <exception>
+
+using namespace std;
 
 Iterator::Iterator(const LO& lo) : lista(lo){
-	/* de adaugat */
+	curent = lista.prim;
 }
 
 void Iterator::prim() {
-	/* de adaugat */
+	curent = lista.prim;
 }
 
 void Iterator::urmator(){
-	/* de adaugat */
+	if (!valid()) {
+		throw exception();
+	}
+	curent = curent->urm;
 }
 
 bool Iterator::valid() const{
-	/* de adaugat */
-	return false;
+	return curent != nullptr;
 }
 
 TElement Iterator::element() const{
-	/* de adaugat */
-	return -1;
+	if (!valid()) {
+		throw exception();
+	}
+	return curent->e;
 }
-
 

@@ -23,32 +23,41 @@ private:
     Relatie rel;
 public:
 	// constructor
+	//complexitate: BC = WC = Theta(1), initializeaza campurile
 	LO(Relatie r);
 
 	// returnare dimensiune
+	//complexitate: BC = WC = Theta(1), returneaza un camp
 	int dim() const;
 
 	// verifica daca LO e vida
+	//complexitate: BC = WC = Theta(1), verifica un camp
 	bool vida() const;
 
 	// returnare element
 	//arunca exceptie daca i nu e valid
+	//complexitate: BC = Theta(1), WC = O(n), parcurge lista pana la pozitia i
 	TElement element(int i) const;
 
 	// adaugare element in LO a.i. sa se pastreze ordinea intre elemente
+	//complexitate: BC = Theta(1), WC = O(n), parcurgere liniara
 	void adauga(TElement e);
 
 	// sterge element de pe o pozitie i si returneaza elementul sters
 	//arunca exceptie daca i nu e valid
+	//complexitate: BC = Theta(1), WC = O(n), parcurge lista pana la pozitia i
 	TElement sterge(int i);
 
 	// cauta element si returneaza prima pozitie pe care apare (sau -1)
+	//complexitate: BC = Theta(1), WC = O(n), parcurgere liniara
 	int cauta(TElement e) const;
 
 	// returnare iterator
+	//complexitate: BC = WC = Theta(1), construieste iteratorul
 	Iterator iterator();
 
 	//destructor
+	//complexitate: BC = WC = O(n), elibereaza toate nodurile
 	~LO();
 
 };
