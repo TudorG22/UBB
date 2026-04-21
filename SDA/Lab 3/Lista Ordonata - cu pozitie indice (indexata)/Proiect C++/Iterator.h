@@ -32,6 +32,11 @@ public:
 		//complexitate: BC = WC = Theta(1), trece la urmatoarea pozitie
 		void urmator();
 
+		//muta iteratorul in container cu k pozitii
+		// arunca exceptie daca iteratorul nu e valid sau daca k e zero sau negativ
+		//complexitate: WC = Theta(k), BC = Theta(1) trece la urmatoarea pozitie
+		void avanseazaKPasi(int k);
+
 		//verifica daca iteratorul e valid (indica un element al containerului)
 		//complexitate: BC = WC = Theta(1), compara pozitia curenta
 		bool valid() const;

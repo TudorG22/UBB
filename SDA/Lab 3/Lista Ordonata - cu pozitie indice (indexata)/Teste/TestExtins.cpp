@@ -319,11 +319,63 @@ void testCantitativ(){
     assert(lo.vida());
 }
 
+void testIteratorKPasi(){
+	LO lo = LO(cresc);
+	lo.adauga(10);
+	lo.adauga(20);
+	lo.adauga(30);
+	lo.adauga(40);
+
+	Iterator it = lo.iterator();
+	assert(it.valid());
+	assert(it.element() == 10);
+
+	it.avanseazaKPasi(2);
+	assert(it.valid());
+	assert(it.element() == 30);
+
+	it.avanseazaKPasi(1);
+	assert(it.valid());
+	assert(it.element() == 40);
+
+	it.avanseazaKPasi(1);
+	assert(!it.valid());
+
+	it.prim();
+	try {
+		it.avanseazaKPasi(0);
+		assert(false);
+	}
+	catch (exception&) {
+		assert(true);
+	}
+
+	try {
+		it.avanseazaKPasi(-2);
+		assert(false);
+	}
+	catch (exception&) {
+		assert(true);
+	}
+
+	it.avanseazaKPasi(4);
+	assert(!it.valid());
+
+	try {
+		it.avanseazaKPasi(1);
+		assert(false);
+	}
+	catch (exception&) {
+		assert(true);
+	}
+}
+
 void testAllExtins() {
 	testCreeaza();
 	testAdaugaSiCauta();
 	testStergeCauta();
     testCantitativ();
+	testIteratorKPasi();
 }
 
 

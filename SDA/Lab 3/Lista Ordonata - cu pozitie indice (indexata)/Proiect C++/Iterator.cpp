@@ -19,6 +19,16 @@ void Iterator::urmator(){
 	curent = curent->urm;
 }
 
+void Iterator::avanseazaKPasi(int k){
+	if (!valid() || k <= 0) {
+		throw exception();
+	}
+
+	for (int i=0; i<k; i++){
+		if (curent != nullptr) curent = curent->urm;
+	}
+}
+
 bool Iterator::valid() const{
 	return curent != nullptr;
 }
