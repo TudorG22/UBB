@@ -1,6 +1,8 @@
 #!/usr/bin/bash
 set -e
 
+echo "Rulare teste..."
+
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 

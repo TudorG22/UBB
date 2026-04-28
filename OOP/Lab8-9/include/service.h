@@ -6,6 +6,7 @@
 
 #include <map>
 #include <vector>
+#include <fstream>
 
 using std::string;
 
@@ -92,5 +93,6 @@ class Service {
         void cosAdauga(const string& titlu);
         void cosGenereaza(int numarFilme);
         const std::vector<Film>& cosGetAll() const;
+        void cosSalveazaFisier(const string& numeFisier);
     
 };

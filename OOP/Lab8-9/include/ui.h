@@ -14,8 +14,8 @@ class UI {
 private:
     Service& service;
 
-    static const int inputRow = 15;
-    static const int outputRow = 21;
+    static const int inputRow = 16;
+    static const int outputRow = 22;
 
     static void clearScreen();
     static void moveCursor(int row, int col);
@@ -46,6 +46,7 @@ private:
     void uiCosAdauga() const;
     void uiCosGenereaza() const;
     void uiCosAfiseaza() const;
+    void uiCosSalveaza() const;
 
 public:
     explicit UI(Service& service);

@@ -1,6 +1,8 @@
 #!/usr/bin/bash
 set -e
 
+echo "Rulare teste..."
+
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 COVERAGE_DIR="$SCRIPT_DIR/coverage"
@@ -28,3 +30,5 @@ gcovr "$PROJECT_DIR" \
     --object-directory "$COVERAGE_DIR" \
     --merge-mode-functions=merge-use-line-min \
     --html-details "$COVERAGE_DIR/coverage.html"
+
+echo "Gata."

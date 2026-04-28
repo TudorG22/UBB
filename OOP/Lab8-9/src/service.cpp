@@ -1,4 +1,4 @@
-    #include "service.h"
+#include "service.h"
 
 #include <random>
 
@@ -148,4 +148,39 @@ void Service::cosGenereaza(int numarFilme) {
 
 const std::vector<Film>& Service::cosGetAll() const {
     return cos;
+}
+
+
+void Service::cosSalveazaFisier(const string& numeFisier) {
+    std::ofstream fout(numeFisier);
+
+    fout << "<!DOCTYPE html>\n";
+    fout << "<html>\n<head>\n";
+    fout << "<title>Cos de cumparaturi</title>\n";
+    fout << "</head>\n<body>\n";
+
+    fout << "<h1>Cos de cumparaturi</h1>\n";
+
+    fout << "<table border='1'>\n";
+    fout << "<tr><th>Nr.</th><th>Titlu</th><th>Gen</th><th>An</th><th>Actor</th></tr>\n";
+
+    int total = 0;
+
+    for (const Film& film : cosGetAll()) {
+        total += 1;
+
+        fout << "<tr>";
+        fout << "<td>" << total << "</td>";
+        fout << "<td>" << film.getTitlu() << "</td>";
+        fout << "<td>" << film.getGen() << "</td>";
+        fout << "<td>" << film.getAn() << "</td>";
+        fout << "<td>" << film.getActor() << "</td>";
+        fout << "</tr>\n";
+    }
+
+    fout << "</table>\n";
+
+    fout << "<p><b>Nr filme in cos: " << total << "</b></p>\n";
+
+    fout << "</body>\n</html>\n";
 }

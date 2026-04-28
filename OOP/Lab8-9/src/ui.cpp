@@ -23,6 +23,7 @@ constexpr int cmdCartEmpty = 9;
 constexpr int cmdCartAdd = 10;
 constexpr int cmdCartGenerate = 11;
 constexpr int cmdCartShow = 12;
+constexpr int cmdCartSave = 13;
 }
 
 UI::UI(Service& service) : service(service) {
@@ -129,6 +130,7 @@ void UI::drawStaticScreen() const {
             "10. Adauga in cos\n"
             "11. Genereaza cos\n"
             "12. Afiseaza cos\n"
+            "13. Salveaza cos in fisier html\n"
             "0. Iesire\n"
             "\n"
             "\n"
@@ -239,6 +241,12 @@ void UI::uiCosAfiseaza() const {
     showOutput(listaToString(service.cosGetAll()));
 }
 
+void UI::uiCosSalveaza() const {
+    const string numeFisier = citesteText("Nume fisier: ");
+    service.cosSalveazaFisier(numeFisier);
+    showOutput("Cos salvat.");
+}
+
 void UI::run() const {
     drawStaticScreen();
 
@@ -279,6 +287,8 @@ void UI::run() const {
                 uiCosGenereaza();
             } else if (cmd == cmdCartShow) {
                 uiCosAfiseaza();
+            } else if (cmd == cmdCartSave) {
+                uiCosSalveaza();
             } else {
                 showOutput("Comanda invalida.\n");
             }

@@ -2,10 +2,11 @@ OOP/Lab6-7/app
 OOP/Lab6-7/tests/coverage*
 OOP/Lab8-9/app
 OOP/Lab8-9/tests/coverage*
-GRA/Lab 3/1/*.txt
-GRA/Lab 3/2/*.txt
-GRA/Partial 1/problem
+OOP/Lab8-9/*.html
 OOP/VectorDinamicCPP/x64
 OOP/VectorDinamicCPP/VectorDinamicCPP.sln
 OOP/VectorDinamicCPP/VectorDinamicCPP/app
 OOP/VectorDinamicCPP/VectorDinamicCPP/compile
+GRA/Lab 3/1/*.txt
+GRA/Lab 3/2/*.txt
+GRA/Partial 1/problem

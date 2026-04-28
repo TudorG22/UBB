@@ -3,6 +3,9 @@
 #include "service.h"
 #include "validator.h"
 #include <cassert>
+#include <cstdio>
+#include <fstream>
+#include <iostream>
 #include <string>
 #include <utility>
 #include <vector>
@@ -289,6 +292,21 @@ static void testService() {
     service.cosGenereaza(0);
     assert(service.cosGetAll().empty());
 
+    service.cosAdauga("Dune");
+    service.cosAdauga("Alien");
+    const string numeFisier = "test_cos.html";
+    service.cosSalveazaFisier(numeFisier);
+
+    std::ifstream fin(numeFisier);
+    assert(fin.is_open());
+    const string continut((std::istreambuf_iterator<char>(fin)), std::istreambuf_iterator<char>());
+    assert(continut.find("<tr><th>Nr.</th><th>Titlu</th><th>Gen</th><th>An</th><th>Actor</th></tr>") != string::npos);
+    assert(continut.find("<td>1</td><td>Dune</td><td>SF</td><td>2021</td><td>Timothee Chalamet</td>") != string::npos);
+    assert(continut.find("<td>2</td><td>Alien</td><td>Horror</td><td>1979</td><td>Sigourney Weaver</td>") != string::npos);
+    assert(continut.find("<p><b>Nr filme in cos: 2</b></p>") != string::npos);
+    fin.close();
+    std::remove(numeFisier.c_str());
+
     service.cosGenereaza(3);
     assert(service.cosGetAll().size() == 3);
 
@@ -326,5 +344,7 @@ int main() {
     testVector();
     testRepo();
     testService();
+    std::cout << "Teste ok.\n";
     return 0;
+    
 }
