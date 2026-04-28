@@ -1,10 +1,16 @@
 #pragma once 
 
 #include "domain.h"
+#include "validator.h"
 #include <algorithm>
 #include <vector>
 
 using std::string;
+
+class RepoError : public AppError {
+public:
+    explicit RepoError(const std::string& mesaj);
+};
 
 class Repo {
     private:

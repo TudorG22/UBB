@@ -1,5 +1,13 @@
-#include "service.h"
+    #include "service.h"
 
+#include <random>
+
+const char* const Service::duplicateErrorMessage = "Filmul exista deja.";
+const char* const Service::notFoundErrorMessage = "Filmul nu exista.";
+
+ServiceError::ServiceError(const std::string& mesaj)
+    : AppError(mesaj) {
+}
 
 Service::Service(Repo& r)
     : repo(r) {
@@ -8,7 +16,7 @@ Service::Service(Repo& r)
 void Service::serviceAdd(const string& titlu, const string& gen, int an, const string& actor) {
     Validator::valideazaFilm(titlu, gen, an, actor);
     if (repo.repoCauta(titlu) != -1) {
-        throw std::runtime_error(duplicateErrorMessage);
+        throw ServiceError(duplicateErrorMessage);
     }
     repo.repoAdd(titlu, gen, an, actor);
 }
@@ -16,7 +24,7 @@ void Service::serviceAdd(const string& titlu, const string& gen, int an, const s
 void Service::serviceDel(const string& titlu) {
     int poz = repo.repoCauta(titlu);
     if (poz == -1) {
-        throw std::runtime_error(notFoundErrorMessage);
+        throw ServiceError(notFoundErrorMessage);
     }
     repo.repoDel(poz);
 }
@@ -25,7 +33,7 @@ void Service::serviceModify(const string& titluVechi, const string& titluNou, co
     Validator::valideazaFilm(titluNou, genNou, anNou, actorNou);
     int poz = repo.repoCauta(titluVechi);
     if (poz == -1) {
-        throw std::runtime_error(notFoundErrorMessage);
+        throw ServiceError(notFoundErrorMessage);
     }
     repo.repoModify(poz, titluNou, genNou, anNou, actorNou);
 }
@@ -38,7 +46,7 @@ const std::vector<Film>& Service::serviceGetAll() const {
     return repo.repoGetAll();
 }
 
-const std::vector<const Film*> Service::serviceFilter(int key, string& pattern) const {
+std::vector<const Film*> Service::serviceFilter(int key, const string& pattern) const {
     std::vector<const Film*> filtrate;
 
     if (key == 1) {
@@ -49,7 +57,12 @@ const std::vector<const Film*> Service::serviceFilter(int key, string& pattern) 
                 }
             });
     } else {
-        const int patternInt = stoi(pattern);
+        int patternInt = 0;
+        try {
+            patternInt = stoi(pattern);
+        } catch (const std::exception&) {
+            throw ServiceError("An invalid.");
+        }
         std::for_each(repo.repoGetAll().begin(), repo.repoGetAll().end(),
             [&filtrate, patternInt](const Film& film) {
                 if (film.getAn() == patternInt) {
@@ -61,7 +74,7 @@ const std::vector<const Film*> Service::serviceFilter(int key, string& pattern) 
     return filtrate;
 }
 
-const std::vector<Film> Service::serviceSort(int key) const {
+std::vector<Film> Service::serviceSort(int key) const {
 
     std::vector<Film> rezultat = repo.repoGetAll();
 
@@ -91,3 +104,48 @@ const std::vector<Film> Service::serviceSort(int key) const {
     }
 
     return rezultat; }
+
+std::map<string, int> Service::raportGenuri() const {
+    std::map<string, int> raport;
+    for (const Film& film : repo.repoGetAll()) {
+            raport[film.getGen()]++;
+    }
+    return raport; }
+
+void Service::cosGoleste() {
+    cos.clear();
+}
+
+void Service::cosAdauga(const string& titlu) {
+    const int poz = repo.repoCauta(titlu);
+    if (poz == -1) {
+        throw ServiceError(notFoundErrorMessage);
+    }
+    cos.push_back(repo.repoGetAll().at(static_cast<std::size_t>(poz)));
+}
+
+void Service::cosGenereaza(int numarFilme) {
+    if (numarFilme < 0) {
+        throw ServiceError("Numar invalid.");
+    }
+    if (numarFilme > 0 && repo.repoGetAll().empty()) {
+        throw ServiceError("Nu exista filme disponibile.");
+    }
+
+    cos.clear();
+    if (numarFilme == 0) {
+        return;
+    }
+
+    std::mt19937 mt{std::random_device{}()};
+    std::uniform_int_distribution<> dist(0, static_cast<int>(repo.repoGetAll().size()) - 1);
+
+    for (int i = 0; i < numarFilme; ++i) {
+        const int rndNr = dist(mt);
+        cos.push_back(repo.repoGetAll().at(static_cast<std::size_t>(rndNr)));
+    }
+}
+
+const std::vector<Film>& Service::cosGetAll() const {
+    return cos;
+}

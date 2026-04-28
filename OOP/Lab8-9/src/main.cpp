@@ -15,7 +15,7 @@ constexpr int shrekYear = 2001;
 int main(int argc, char* argv[]) {
     Repo repo;
     Service service(repo);
-
+    
     // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     if (argc > 1 && std::string(argv[1]) == "--date") {
         service.serviceAdd("Inception", "SF", inceptionYear, "Leonardo DiCaprio");

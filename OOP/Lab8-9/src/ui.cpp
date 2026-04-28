@@ -18,9 +18,18 @@ constexpr int cmdShowAll = 4;
 constexpr int cmdSearch = 5;
 constexpr int cmdFilter = 6;
 constexpr int cmdSort = 7;
+constexpr int cmdReportGenres = 8;
+constexpr int cmdCartEmpty = 9;
+constexpr int cmdCartAdd = 10;
+constexpr int cmdCartGenerate = 11;
+constexpr int cmdCartShow = 12;
 }
 
 UI::UI(Service& service) : service(service) {
+}
+
+UIError::UIError(const std::string& mesaj)
+    : AppError(mesaj) {
 }
 
 void UI::clearScreen() {
@@ -55,7 +64,7 @@ int UI::citesteInt(const string& mesaj) {
     int valoare = 0;
     char extra = '\0';
     if (!(in >> valoare) || (in >> extra)) {
-        throw std::runtime_error("Input invalid.");
+        throw UIError("Input invalid.");
     }
 
     return valoare;
@@ -76,7 +85,7 @@ string UI::listaToString(const std::vector<Film>& filme) {
     }
 
     std::ostringstream out;
-    for (const auto& film : filme) {
+    for (const Film& film : filme) {
         out << filmToString(film) << '\n';
     }
     return out.str();
@@ -88,8 +97,20 @@ string UI::listaToString(const std::vector<const Film*>& filme) {
     }
 
     std::ostringstream out;
-    for (const auto film : filme) {
+    for (const Film* film : filme) {
         out << filmToString(*film) << '\n';
+    }
+    return out.str();
+}
+
+string UI::mapToString(const std::map<string, int>& raport) {
+    if (raport.empty()) {
+        return "Nu exista filme.\n";
+    }
+
+    std::ostringstream out;
+    for (const std::pair<const string, int>& pereche : raport) {
+        out << pereche.first << " | " << pereche.second << '\n';
     }
     return out.str();
 }
@@ -103,16 +124,24 @@ void UI::drawStaticScreen() const {
             "5. Cauta dupa titlu\n"
             "6. Filtreaza\n"
             "7. Sorteaza\n"
+            "8. Raport genuri\n"
+            "9. Goleste cos\n"
+            "10. Adauga in cos\n"
+            "11. Genereaza cos\n"
+            "12. Afiseaza cos\n"
             "0. Iesire\n"
             "\n"
-            "Input:\n"
+            "\n"
+            "\n"
+            "\n"
+            "\n"
             "\n"
             "Rezultat:\n";
     showOutput("Aplicatia a pornit.\n");
 }
 
 void UI::clearInputArea() const {
-    for (int row = inputRow; row <= outputRow - 1; ++row) {
+    for (int row = inputRow; row <= outputRow - 2; ++row) {
         moveCursor(row, 1);
         clearLine();
     }
@@ -127,39 +156,39 @@ void UI::showOutput(const string& text) const {
 }
 
 void UI::uiAdd() const {
-    const auto titlu = citesteText("Titlu: ");
-    const auto gen = citesteText("Gen: ");
-    const auto an = citesteInt("An: ");
-    const auto actor = citesteText("Actor principal: ");
+    const string titlu = citesteText("Titlu: ");
+    const string gen = citesteText("Gen: ");
+    const int an = citesteInt("An: ");
+    const string actor = citesteText("Actor principal: ");
     service.serviceAdd(titlu, gen, an, actor);
     showOutput("Film adaugat.\n");
 }
 
 void UI::uiDel() const {
-    const auto titlu = citesteText("Titlu de sters: ");
+    const string titlu = citesteText("Titlu de sters: ");
     service.serviceDel(titlu);
     showOutput("Operatie finalizata.\n");
 }
 
 void UI::uiModify() const {
-    const auto titluVechi = citesteText("Titlu de modificat: ");
-    const auto titluNou = citesteText("Titlu nou: ");
-    const auto genNou = citesteText("Gen nou: ");
-    const auto anNou = citesteInt("An nou: ");
-    const auto actorNou = citesteText("Actor principal nou: ");
+    const string titluVechi = citesteText("Titlu de modificat: ");
+    const string titluNou = citesteText("Titlu nou: ");
+    const string genNou = citesteText("Gen nou: ");
+    const int anNou = citesteInt("An nou: ");
+    const string actorNou = citesteText("Actor principal nou: ");
     service.serviceModify(titluVechi, titluNou, genNou, anNou, actorNou);
     showOutput("Film modificat.\n");
 }
 
 void UI::uiCauta() const {
-    const auto titlu = citesteText("Titlu cautat: ");
+    const string titlu = citesteText("Titlu cautat: ");
     const int poz = service.serviceCauta(titlu);
     if (poz == -1) {
         showOutput("Filmul nu exista.\n");
         return;
     }
 
-    showOutput(filmToString(service.serviceGetAll().at(poz)) + '\n');
+    showOutput(filmToString(service.serviceGetAll().at(static_cast<std::size_t>(poz))) + '\n');
 }
 
 void UI::uiShowAll() const {
@@ -169,20 +198,45 @@ void UI::uiShowAll() const {
 void UI::uiFilter() const {
     const int optiune = citesteInt("Filtru 1=titlu 2=an: ");
     if (optiune != 1 && optiune != 2) {
-        throw std::runtime_error("Optiune invalida.");
+        throw UIError("Optiune invalida.");
     }
 
-    auto pattern = citesteText("Valoare: ");
+    const string pattern = citesteText("Valoare: ");
     showOutput(listaToString(service.serviceFilter(optiune, pattern)));
 }
 
 void UI::uiSort() const {
     const int optiune = citesteInt("Sortare 1=titlu 2=actor 3=an+gen: ");
     if (optiune != 1 && optiune != 2 && optiune != 3) {
-        throw std::runtime_error("Optiune invalida.");
+        throw UIError("Optiune invalida.");
     }
 
     showOutput(listaToString(service.serviceSort(optiune)));
+}
+
+void UI::uiRaportGenuri() const {
+    showOutput(mapToString(service.raportGenuri()));
+}
+
+void UI::uiCosGoleste() const {
+    service.cosGoleste();
+    showOutput("Cos golit.\n");
+}
+
+void UI::uiCosAdauga() const {
+    const string titlu = citesteText("Titlu de adaugat in cos: ");
+    service.cosAdauga(titlu);
+    showOutput(listaToString(service.cosGetAll()));
+}
+
+void UI::uiCosGenereaza() const {
+    const int numarFilme = citesteInt("Numar filme in cos: ");
+    service.cosGenereaza(numarFilme);
+    showOutput(listaToString(service.cosGetAll()));
+}
+
+void UI::uiCosAfiseaza() const {
+    showOutput(listaToString(service.cosGetAll()));
 }
 
 void UI::run() const {
@@ -193,6 +247,7 @@ void UI::run() const {
 
         try {
             const int cmd = citesteInt("Comanda: ");
+            clearInputArea();
 
             if (cmd == cmdExit) {
                 moveCursor(outputRow, 1);
@@ -214,6 +269,16 @@ void UI::run() const {
                 uiFilter();
             } else if (cmd == cmdSort) {
                 uiSort();
+            } else if (cmd == cmdReportGenres) {
+                uiRaportGenuri();
+            } else if (cmd == cmdCartEmpty) {
+                uiCosGoleste();
+            } else if (cmd == cmdCartAdd) {
+                uiCosAdauga();
+            } else if (cmd == cmdCartGenerate) {
+                uiCosGenereaza();
+            } else if (cmd == cmdCartShow) {
+                uiCosAfiseaza();
             } else {
                 showOutput("Comanda invalida.\n");
             }
@@ -222,4 +287,3 @@ void UI::run() const {
         }
     }
 }
-

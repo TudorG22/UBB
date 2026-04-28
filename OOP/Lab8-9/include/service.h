@@ -4,13 +4,20 @@
 #include "repo.h"
 #include "validator.h"
 
+#include <map>
 #include <vector>
 
 using std::string;
 
+class ServiceError : public AppError {
+public:
+    explicit ServiceError(const std::string& mesaj);
+};
+
 class Service {
     private:
         Repo& repo;
+        std::vector<Film> cos;
 
     public:
         /* Creeaza service-ul aplicatiei
@@ -21,8 +28,8 @@ class Service {
         */
         Service(Repo& r);
 
-        static constexpr const char* duplicateErrorMessage = "Filmul exista deja.";
-        static constexpr const char* notFoundErrorMessage = "Filmul nu exista.";
+        static const char* const duplicateErrorMessage;
+        static const char* const notFoundErrorMessage;
 
         /* Adauga un film in aplicatie
         Input: titlu, gen, an, actor
@@ -70,7 +77,7 @@ class Service {
         Pre conditii: service initializat
         Post conditii: -
         */
-        const std::vector<const Film*> serviceFilter(int key, string& pattern) const;
+        std::vector<const Film*> serviceFilter(int key, const string& pattern) const;
 
         /* Sorteaza filmele din aplicatie
         Input: key
@@ -78,6 +85,12 @@ class Service {
         Pre conditii: service initializat
         Post conditii: -
         */
-        const std::vector<Film> serviceSort(int key) const;
+        std::vector<Film> serviceSort(int key) const;
+        std::map<string, int> raportGenuri() const;
+
+        void cosGoleste();
+        void cosAdauga(const string& titlu);
+        void cosGenereaza(int numarFilme);
+        const std::vector<Film>& cosGetAll() const;
     
 };

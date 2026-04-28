@@ -3,9 +3,9 @@
 #include "service.h"
 #include "validator.h"
 #include <cassert>
-#include <vector>
-#include <stdexcept>
 #include <string>
+#include <utility>
+#include <vector>
 
 using std::string;
 
@@ -133,11 +133,30 @@ static void testRepo() {
     assert(repo.repoDim() == 2);
     assert(repo.repoGetAll().at(0).getTitlu() == "A2");
     assert(repo.repoGetAll().at(1).getTitlu() == "C");
+
+    bool repoDeleteException = false;
+    try {
+        repo.repoDel(-1);
+    } catch (const RepoError&) {
+        repoDeleteException = true;
+    }
+    assert(repoDeleteException);
+
+    bool repoModifyException = false;
+    try {
+        repo.repoModify(-1, "X", "Y", 1, "Z");
+    } catch (const RepoError&) {
+        repoModifyException = true;
+    }
+    assert(repoModifyException);
 }
 
 static void testService() {
     Repo repo;
     Service service(repo);
+
+    const std::map<string, int> raportGol = service.raportGenuri();
+    assert(raportGol.empty());
 
     service.serviceAdd("Dune", "SF", 2021, "Timothee Chalamet");
     service.serviceAdd("Avatar", "Fantasy", 2009, "Sam Worthington");
@@ -152,7 +171,7 @@ static void testService() {
     bool duplicateException = false;
     try {
         service.serviceAdd("Dune", "SF", 2021, "Timothee Chalamet");
-    } catch (const std::runtime_error& ex) {
+    } catch (const ServiceError& ex) {
         duplicateException = string(ex.what()) == Service::duplicateErrorMessage;
     }
     assert(duplicateException);
@@ -168,7 +187,7 @@ static void testService() {
     service.serviceModify("Avatar", "Avatar 2", "SF", 2022, "Sam Worthington");
     assert(service.serviceCauta("Avatar") == -1);
     assert(service.serviceCauta("Avatar 2") != -1);
-    const auto pozAvatar2 = service.serviceCauta("Avatar 2");
+    const int pozAvatar2 = service.serviceCauta("Avatar 2");
     assert(service.serviceGetAll().at(pozAvatar2).getGen() == "SF");
     assert(service.serviceGetAll().at(pozAvatar2).getAn() == 2022);
 
@@ -183,7 +202,7 @@ static void testService() {
     bool modifyMissingException = false;
     try {
         service.serviceModify("NuExista", "X", "Y", 1, "Z");
-    } catch (const std::runtime_error& ex) {
+    } catch (const ServiceError& ex) {
         modifyMissingException = string(ex.what()) == Service::notFoundErrorMessage;
     }
     assert(modifyMissingException);
@@ -195,30 +214,30 @@ static void testService() {
     bool deleteMissingException = false;
     try {
         service.serviceDel("NuExista");
-    } catch (const std::runtime_error& ex) {
+    } catch (const ServiceError& ex) {
         deleteMissingException = string(ex.what()) == Service::notFoundErrorMessage;
     }
     assert(deleteMissingException);
 
     string patternTitlu = "Dune";
-    const auto filtrateTitlu = service.serviceFilter(1, patternTitlu);
+    const std::vector<const Film*> filtrateTitlu = service.serviceFilter(1, patternTitlu);
     assert(filtrateTitlu.size() == 1);
     assert(filtrateTitlu.at(0)->getTitlu() == "Dune");
 
     string patternAn = "2022";
-    const auto filtrateAn = service.serviceFilter(2, patternAn);
+    const std::vector<const Film*> filtrateAn = service.serviceFilter(2, patternAn);
     assert(filtrateAn.size() == 1);
     assert(filtrateAn.at(0)->getTitlu() == "Avatar 2");
 
     string patternInexistent = "1900";
-    const auto filtrateGoale = service.serviceFilter(2, patternInexistent);
+    const std::vector<const Film*> filtrateGoale = service.serviceFilter(2, patternInexistent);
     assert(filtrateGoale.empty());
 
     bool exceptieAruncata = false;
     string patternInvalid = "abc";
     try {
         (void)service.serviceFilter(2, patternInvalid);
-    } catch (const std::invalid_argument&) {
+    } catch (const ServiceError&) {
         exceptieAruncata = true;
     }
     assert(exceptieAruncata);
@@ -242,6 +261,11 @@ static void testService() {
     assert(sortateAnGen.at(2).getTitlu() == "Dune");
     assert(sortateAnGen.at(3).getTitlu() == "Avatar 2");
 
+    const std::map<string, int> raport = service.raportGenuri();
+    assert(raport.at("Drama") == 1);
+    assert(raport.at("Horror") == 1);
+    assert(raport.at("SF") == 2);
+
     Repo repoAniEgali;
     Service serviceAniEgali(repoAniEgali);
     serviceAniEgali.serviceAdd("Film Z", "Z", 2000, "Actor 1");
@@ -250,6 +274,50 @@ static void testService() {
     assert(sortateCuAniEgali.size() == 2);
     assert(sortateCuAniEgali.at(0).getGen() == "A");
     assert(sortateCuAniEgali.at(1).getGen() == "Z");
+
+    service.cosAdauga("Dune");
+    service.cosAdauga("Alien");
+    assert(service.cosGetAll().size() == 2);
+    assert(service.cosGetAll().at(0).getTitlu() == "Dune");
+    assert(service.cosGetAll().at(1).getTitlu() == "Alien");
+
+    service.cosGoleste();
+    assert(service.cosGetAll().empty());
+
+    service.cosAdauga("Dune");
+    assert(service.cosGetAll().size() == 1);
+    service.cosGenereaza(0);
+    assert(service.cosGetAll().empty());
+
+    service.cosGenereaza(3);
+    assert(service.cosGetAll().size() == 3);
+
+    bool cosMissingException = false;
+    try {
+        service.cosAdauga("NuExista");
+    } catch (const ServiceError& ex) {
+        cosMissingException = string(ex.what()) == Service::notFoundErrorMessage;
+    }
+    assert(cosMissingException);
+
+    bool cosInvalidException = false;
+    try {
+        service.cosGenereaza(-1);
+    } catch (const ServiceError&) {
+        cosInvalidException = true;
+    }
+    assert(cosInvalidException);
+
+    Repo repoGol;
+    Service serviceGol(repoGol);
+
+    bool cosEmptyRepoException = false;
+    try {
+        serviceGol.cosGenereaza(1);
+    } catch (const ServiceError&) {
+        cosEmptyRepoException = true;
+    }
+    assert(cosEmptyRepoException);
 }
 
 int main() {

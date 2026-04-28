@@ -1,5 +1,9 @@
 #include "validator.h"
 
+AppError::AppError(const std::string& mesaj)
+    : std::runtime_error(mesaj) {
+}
+
 ValidationError::ValidationError(const std::string& mesaj)
     : std::runtime_error(mesaj) {
 }

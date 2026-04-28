@@ -1,5 +1,9 @@
 #include "repo.h"
 
+RepoError::RepoError(const std::string& mesaj)
+    : AppError(mesaj) {
+}
+
 int Repo::repoDim() const {
     return static_cast<int>(date.size());
 }
@@ -9,10 +13,10 @@ void Repo::repoAdd(const string& titlu, const string& gen, int an, const string&
 }
 
 int Repo::repoCauta(const string& titlu) const {
-    int i = 0;
-    while (i < Repo::repoDim()){
+    std::size_t i = 0;
+    while (i < date.size()){
         if (date.at(i).getTitlu() == titlu){
-            return i;
+            return static_cast<int>(i);
         }
         i++;
     }
@@ -21,17 +25,23 @@ int Repo::repoCauta(const string& titlu) const {
 }
 
 void Repo::repoDel(int poz){
+    if (poz < 0 || poz >= repoDim()) {
+        throw RepoError("Pozitie invalida.");
+    }
     date.erase(date.begin() + poz);
 }
 
 void Repo::repoModify(int poz, const string& titlu, const string& gen, int an, const string& actor){
-    date.at(poz).setTitlu(titlu);
-    date.at(poz).setGen(gen);
-    date.at(poz).setAn(an);
-    date.at(poz).setActor(actor);
+    if (poz < 0 || poz >= repoDim()) {
+        throw RepoError("Pozitie invalida.");
+    }
+    const std::size_t pozitie = static_cast<std::size_t>(poz);
+    date.at(pozitie).setTitlu(titlu);
+    date.at(pozitie).setGen(gen);
+    date.at(pozitie).setAn(an);
+    date.at(pozitie).setActor(actor);
 }
 
 const std::vector<Film>& Repo::repoGetAll() const {
     return date;
 }
-
