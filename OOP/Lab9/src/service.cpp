@@ -1,5 +1,6 @@
 #include "service.h"
 
+#include <algorithm>
 #include <random>
 
 const char* const Service::duplicateErrorMessage = "Filmul exista deja.";
@@ -9,41 +10,59 @@ ServiceError::ServiceError(const std::string& mesaj)
     : AppError(mesaj) {
 }
 
-Service::Service(Repo& r)
-    : repo(r) {
+Service::Service(Repo& r, double probabilitate)
+    : repo(r), probabilitate(probabilitate) {
+    if (probabilitate < 0.0 || probabilitate > 1.0) {
+        throw ServiceError("Probabilitate invalida.");
+    }
+}
+
+void Service::aruncaDacaEsueaza() const {
+    if (probabilitate == 0.0) {
+        return;
+    }
+
+    static std::mt19937 mt{std::random_device{}()};
+    std::uniform_real_distribution<> dist(0.0, 1.0);
+    if (dist(mt) < probabilitate) {
+        throw ServiceError("Operatie esuata.");
+    }
 }
 
 void Service::serviceAdd(const string& titlu, const string& gen, int an, const string& actor) {
+    aruncaDacaEsueaza();
     Validator::valideazaFilm(titlu, gen, an, actor);
-    if (repo.repoCauta(titlu) != -1) {
+    if (repo.repoExista(titlu)) {
         throw ServiceError(duplicateErrorMessage);
     }
-    repo.repoAdd(titlu, gen, an, actor);
-    actiuniUndo.push_back(std::make_unique<UndoAdauga>(repo, Film(titlu, gen, an, actor)));
+    const Film film(titlu, gen, an, actor);
+    repo.repoAdd(film);
+    actiuniUndo.push_back(std::make_unique<UndoAdauga>(repo, film));
 }
 
 void Service::serviceDel(const string& titlu) {
-    int poz = repo.repoCauta(titlu);
-    if (poz == -1) {
+    aruncaDacaEsueaza();
+    if (!repo.repoExista(titlu)) {
         throw ServiceError(notFoundErrorMessage);
     }
-    Film filmSters = repo.repoGetAll().at(static_cast<std::size_t>(poz));
-    repo.repoDel(poz);
+    const Film filmSters = repo.repoFind(titlu);
+    repo.repoDel(titlu);
     actiuniUndo.push_back(std::make_unique<UndoSterge>(repo, filmSters));
 }
 
 void Service::serviceModify(const string& titluVechi, const string& titluNou, const string& genNou, int anNou, const string& actorNou) {
+    aruncaDacaEsueaza();
     Validator::valideazaFilm(titluNou, genNou, anNou, actorNou);
-    int poz = repo.repoCauta(titluVechi);
-    if (poz == -1) {
+    if (!repo.repoExista(titluVechi)) {
         throw ServiceError(notFoundErrorMessage);
     }
-    Film filmVechi = repo.repoGetAll().at(static_cast<std::size_t>(poz));
-    repo.repoModify(poz, titluNou, genNou, anNou, actorNou);
+    const Film filmVechi = repo.repoFind(titluVechi);
+    repo.repoModify(titluVechi, Film(titluNou, genNou, anNou, actorNou));
     actiuniUndo.push_back(std::make_unique<UndoModifica>(repo, filmVechi, titluNou));
 }
 
 void Service::undo() {
+    aruncaDacaEsueaza();
     if (actiuniUndo.empty()) {
         throw ServiceError("Nu mai exista operatii de undo.");
     }
@@ -52,15 +71,23 @@ void Service::undo() {
     actiuniUndo.pop_back();
 }
 
-int Service::serviceCauta(const string& titlu) const {
-    return repo.repoCauta(titlu);
+bool Service::serviceExista(const string& titlu) const {
+    aruncaDacaEsueaza();
+    return repo.repoExista(titlu);
+}
+
+const Film& Service::serviceFind(const string& titlu) const {
+    aruncaDacaEsueaza();
+    return repo.repoFind(titlu);
 }
 
 const std::vector<Film>& Service::serviceGetAll() const {
+    aruncaDacaEsueaza();
     return repo.repoGetAll();
 }
 
 std::vector<const Film*> Service::serviceFilter(int key, const string& pattern) const {
+    aruncaDacaEsueaza();
     std::vector<const Film*> filtrate;
 
     if (key == 1) {
@@ -89,6 +116,7 @@ std::vector<const Film*> Service::serviceFilter(int key, const string& pattern) 
 }
 
 std::vector<Film> Service::serviceSort(int key) const {
+    aruncaDacaEsueaza();
 
     std::vector<Film> rezultat = repo.repoGetAll();
 
@@ -120,6 +148,7 @@ std::vector<Film> Service::serviceSort(int key) const {
     return rezultat; }
 
 std::map<string, int> Service::raportGenuri() const {
+    aruncaDacaEsueaza();
     std::map<string, int> raport;
     for (const Film& film : repo.repoGetAll()) {
             raport[film.getGen()]++;
@@ -127,18 +156,20 @@ std::map<string, int> Service::raportGenuri() const {
     return raport; }
 
 void Service::cosGoleste() {
+    aruncaDacaEsueaza();
     cos.clear();
 }
 
 void Service::cosAdauga(const string& titlu) {
-    const int poz = repo.repoCauta(titlu);
-    if (poz == -1) {
+    aruncaDacaEsueaza();
+    if (!repo.repoExista(titlu)) {
         throw ServiceError(notFoundErrorMessage);
     }
-    cos.push_back(repo.repoGetAll().at(static_cast<std::size_t>(poz)));
+    cos.push_back(repo.repoFind(titlu));
 }
 
 void Service::cosGenereaza(int numarFilme) {
+    aruncaDacaEsueaza();
     if (numarFilme < 0) {
         throw ServiceError("Numar invalid.");
     }
@@ -161,11 +192,13 @@ void Service::cosGenereaza(int numarFilme) {
 }
 
 const std::vector<Film>& Service::cosGetAll() const {
+    aruncaDacaEsueaza();
     return cos;
 }
 
 
 void Service::cosSalveazaFisier(const string& numeFisier) {
+    aruncaDacaEsueaza();
     std::ofstream fout(numeFisier);
 
     fout << "<!DOCTYPE html>\n";

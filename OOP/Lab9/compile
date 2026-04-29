@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+set -e
+
+g++ -Wvla -Wall -Werror -I include src/domain.cpp src/validator.cpp src/repoVector.cpp src/repoMap.cpp src/undo.cpp src/service.cpp src/ui.cpp src/main.cpp -o app

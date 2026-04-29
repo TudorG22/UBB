@@ -1,0 +1,1 @@
+sa se scrie un program care primeste un numar de jugadores ca argument in linia de comanda; creati threaduri jucatori care afiseaza in ordine numerele lor pe ecran de 10 ori fiecare; similar cu a juca septica (10 maini)

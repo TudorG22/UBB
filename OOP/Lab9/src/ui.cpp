@@ -25,9 +25,15 @@ constexpr int cmdCartAdd = 11;
 constexpr int cmdCartGenerate = 12;
 constexpr int cmdCartShow = 13;
 constexpr int cmdCartSave = 14;
+constexpr int inceptionYear = 2010;
+constexpr int titanicYear = 1997;
+constexpr int gladiatorYear = 2000;
+constexpr int interstellarYear = 2014;
+constexpr int shrekYear = 2001;
 }
 
-UI::UI(Service& service) : service(service) {
+UI::UI(Service& service, const std::string& repoType, bool useDate)
+    : service(service), repoType(repoType), useDate(useDate) {
 }
 
 UIError::UIError(const std::string& mesaj)
@@ -119,7 +125,8 @@ string UI::mapToString(const std::map<string, int>& raport) {
 
 void UI::drawStaticScreen() const {
     clearScreen();
-    cout << "1. Adauga\n"
+    cout << "Repo: " << repoType << "\n\n"
+            "1. Adauga\n"
             "2. Sterge\n"
             "3. Modifica\n"
             "4. Undo\n"
@@ -191,13 +198,12 @@ void UI::uiUndo() const {
 
 void UI::uiCauta() const {
     const string titlu = citesteText("Titlu cautat: ");
-    const int poz = service.serviceCauta(titlu);
-    if (poz == -1) {
+    if (!service.serviceExista(titlu)) {
         showOutput("Filmul nu exista.\n");
         return;
     }
 
-    showOutput(filmToString(service.serviceGetAll().at(static_cast<std::size_t>(poz))) + '\n');
+    showOutput(filmToString(service.serviceFind(titlu)) + '\n');
 }
 
 void UI::uiShowAll() const {
@@ -255,6 +261,19 @@ void UI::uiCosSalveaza() const {
 }
 
 void UI::run() const {
+    if (useDate) {
+        try {
+            service.serviceAdd("Inception", "SF", inceptionYear, "Leonardo DiCaprio");
+            service.serviceAdd("Titanic", "Drama", titanicYear, "Leonardo DiCaprio");
+            service.serviceAdd("Gladiator", "Actiune", gladiatorYear, "Russell Crowe");
+            service.serviceAdd("Interstellar", "SF", interstellarYear, "Matthew McConaughey");
+            service.serviceAdd("Shrek", "Animatie", shrekYear, "Mike Myers");
+        } catch (const std::exception& ex) {
+            drawStaticScreen();
+            showOutput(string("Eroare: ") + ex.what() + '\n');
+        }
+    }
+
     drawStaticScreen();
 
     while (true) {

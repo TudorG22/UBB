@@ -1,0 +1,40 @@
+@startuml Lab6-7
+
+class Film {
+  - titlu : string
+  - gen : string
+  - an : int
+  - actor : string
+}
+
+class Repo {
+  - date : VectorDinamic<Film>
+}
+
+class Service {
+  - repo : Repo
+}
+
+class UI {
+  - service : Service
+  - inputRow : int
+  - outputRow : int
+}
+
+class Validator
+
+class "VectorDinamic<T>" as VectorDinamicT {
+  - date : void*
+  - dimensiune_element : size_t
+  - dimensiune : size_t
+  - capacitate : size_t
+}
+
+Repo --> VectorDinamicT
+Service --> Repo
+Service --> Validator
+UI --> Service
+Repo --> Film
+Validator --> Film
+
+@enduml

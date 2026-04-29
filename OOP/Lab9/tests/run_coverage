@@ -16,7 +16,8 @@ cd "$COVERAGE_DIR"
 g++ --coverage -Wvla -Wall -Werror -I "$PROJECT_DIR/include" \
     "$PROJECT_DIR/src/domain.cpp" \
     "$PROJECT_DIR/src/validator.cpp" \
-    "$PROJECT_DIR/src/repo.cpp" \
+    "$PROJECT_DIR/src/repoVector.cpp" \
+    "$PROJECT_DIR/src/repoMap.cpp" \
     "$PROJECT_DIR/src/undo.cpp" \
     "$PROJECT_DIR/src/service.cpp" \
     "$SCRIPT_DIR/test_domain_repo_service.cpp" \

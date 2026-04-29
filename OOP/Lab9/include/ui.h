@@ -13,9 +13,11 @@ public:
 class UI {
 private:
     Service& service;
+    std::string repoType;
+    bool useDate;
 
-    static const int inputRow = 16;
-    static const int outputRow = 22;
+    static const int inputRow = 17;
+    static const int outputRow = 23;
 
     static void clearScreen();
     static void moveCursor(int row, int col);
@@ -50,6 +52,6 @@ private:
     void uiCosSalveaza() const;
 
 public:
-    explicit UI(Service& service);
+    UI(Service& service, const std::string& repoType, bool useDate);
     void run() const;
 };

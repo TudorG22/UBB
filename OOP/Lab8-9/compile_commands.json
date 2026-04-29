@@ -89,6 +89,22 @@
       "include",
       "-o",
       "app",
+      "src/undo.cpp"
+    ],
+    "directory": "/home/dan/Documents/UBB/OOP/Lab8-9",
+    "file": "/home/dan/Documents/UBB/OOP/Lab8-9/src/undo.cpp",
+    "output": "/home/dan/Documents/UBB/OOP/Lab8-9/app"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-I",
+      "include",
+      "-o",
+      "app",
       "src/validator.cpp"
     ],
     "directory": "/home/dan/Documents/UBB/OOP/Lab8-9",

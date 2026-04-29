@@ -22,6 +22,9 @@ class Service {
         Repo& repo;
         std::vector<Film> cos;
         std::vector<std::unique_ptr<ActiuneUndo>> actiuniUndo;
+        double probabilitate = 0.0;
+
+        void aruncaDacaEsueaza() const;
 
     public:
         /* Creeaza service-ul aplicatiei
@@ -30,7 +33,7 @@ class Service {
         Pre conditii: repository initializat
         Post conditii: service initializat
         */
-        Service(Repo& r);
+        Service(Repo& r, double probabilitate = 0.0);
 
         static const char* const duplicateErrorMessage;
         static const char* const notFoundErrorMessage;
@@ -60,13 +63,8 @@ class Service {
         void serviceModify(const string& titluVechi, const string& titluNou, const string& genNou, int anNou, const string& actorNou);
         void undo();
 
-        /* Cauta un film dupa titlu
-        Input: titlu
-        Output: -1 daca nu exista, indexul daca exista
-        Pre conditii: service initializat
-        Post conditii: -
-        */
-        int serviceCauta(const string& titlu) const;
+        bool serviceExista(const string& titlu) const;
+        const Film& serviceFind(const string& titlu) const;
 
         /* Returneaza toate filmele din aplicatie
         Input: -

@@ -109,37 +109,38 @@ static void testVector() {
     assert(!filmPointersCopy.empty());
 }
 
-static void testRepo() {
-    Repo repo;
+static void verificaRepo(Repo& repo) {
     assert(repo.repoDim() == 0);
     assert(repo.repoGetAll().empty());
-    assert(repo.repoCauta("Lipsa") == -1);
+    assert(!repo.repoExista("Lipsa"));
 
-    repo.repoAdd("B", "Drama", 2002, "Actor B");
-    repo.repoAdd("A", "Actiune", 2001, "Actor C");
-    repo.repoAdd("C", "Comedie", 2001, "Actor A");
+    repo.repoAdd(Film("B", "Drama", 2002, "Actor B"));
+    repo.repoAdd(Film("A", "Actiune", 2001, "Actor C"));
+    repo.repoAdd(Film("C", "Comedie", 2001, "Actor A"));
 
     assert(repo.repoDim() == 3);
-    assert(repo.repoCauta("B") == 0);
-    assert(repo.repoCauta("A") == 1);
-    assert(repo.repoCauta("C") == 2);
+    assert(repo.repoExista("B"));
+    assert(repo.repoExista("A"));
+    assert(repo.repoExista("C"));
+    assert(repo.repoFind("B").getActor() == "Actor B");
 
-    repo.repoModify(1, "A2", "Thriller", 2010, "Actor Z");
-    assert(repo.repoGetAll().at(1).getTitlu() == "A2");
-    assert(repo.repoGetAll().at(1).getGen() == "Thriller");
-    assert(repo.repoGetAll().at(1).getAn() == 2010);
-    assert(repo.repoGetAll().at(1).getActor() == "Actor Z");
-    assert(repo.repoCauta("A") == -1);
-    assert(repo.repoCauta("A2") == 1);
+    repo.repoModify("A", Film("A2", "Thriller", 2010, "Actor Z"));
+    assert(repo.repoFind("A2").getTitlu() == "A2");
+    assert(repo.repoFind("A2").getGen() == "Thriller");
+    assert(repo.repoFind("A2").getAn() == 2010);
+    assert(repo.repoFind("A2").getActor() == "Actor Z");
+    assert(!repo.repoExista("A"));
+    assert(repo.repoExista("A2"));
 
-    repo.repoDel(0);
+    repo.repoDel("B");
     assert(repo.repoDim() == 2);
-    assert(repo.repoGetAll().at(0).getTitlu() == "A2");
-    assert(repo.repoGetAll().at(1).getTitlu() == "C");
+    assert(!repo.repoExista("B"));
+    assert(repo.repoExista("A2"));
+    assert(repo.repoExista("C"));
 
     bool repoDeleteException = false;
     try {
-        repo.repoDel(-1);
+        repo.repoDel("Lipsa");
     } catch (const RepoError&) {
         repoDeleteException = true;
     }
@@ -147,15 +148,32 @@ static void testRepo() {
 
     bool repoModifyException = false;
     try {
-        repo.repoModify(-1, "X", "Y", 1, "Z");
+        repo.repoModify("Lipsa", Film("X", "Y", 1, "Z"));
     } catch (const RepoError&) {
         repoModifyException = true;
     }
     assert(repoModifyException);
+
+    bool repoFindException = false;
+    try {
+        (void)repo.repoFind("Lipsa");
+    } catch (const RepoError&) {
+        repoFindException = true;
+    }
+    assert(repoFindException);
+}
+
+static void testRepo() {
+    RepoVector repoVector;
+    verificaRepo(repoVector);
+
+    RepoMap repoMap;
+    verificaRepo(repoMap);
+    assert(!repoMap.repoGetAll().empty());
 }
 
 static void testService() {
-    Repo repo;
+    RepoVector repo;
     Service service(repo);
 
     const std::map<string, int> raportGol = service.raportGenuri();
@@ -168,8 +186,8 @@ static void testService() {
     service.serviceAdd("Alien", "Horror", 1979, "Sigourney Weaver");
 
     assert(service.serviceGetAll().size() == 5);
-    assert(service.serviceCauta("Avatar") == 1);
-    assert(service.serviceCauta("Inexistent") == -1);
+    assert(service.serviceExista("Avatar"));
+    assert(!service.serviceExista("Inexistent"));
 
     bool duplicateException = false;
     try {
@@ -188,15 +206,14 @@ static void testService() {
     assert(validationException);
 
     service.serviceModify("Avatar", "Avatar 2", "SF", 2022, "Sam Worthington");
-    assert(service.serviceCauta("Avatar") == -1);
-    assert(service.serviceCauta("Avatar 2") != -1);
-    const int pozAvatar2 = service.serviceCauta("Avatar 2");
-    assert(service.serviceGetAll().at(pozAvatar2).getGen() == "SF");
-    assert(service.serviceGetAll().at(pozAvatar2).getAn() == 2022);
+    assert(!service.serviceExista("Avatar"));
+    assert(service.serviceExista("Avatar 2"));
+    assert(service.serviceFind("Avatar 2").getGen() == "SF");
+    assert(service.serviceFind("Avatar 2").getAn() == 2022);
 
     service.undo();
-    assert(service.serviceCauta("Avatar 2") == -1);
-    assert(service.serviceCauta("Avatar") != -1);
+    assert(!service.serviceExista("Avatar 2"));
+    assert(service.serviceExista("Avatar"));
 
     service.serviceModify("Avatar", "Avatar 2", "SF", 2022, "Sam Worthington");
 
@@ -217,11 +234,11 @@ static void testService() {
     assert(modifyMissingException);
 
     service.serviceDel("Matrix");
-    assert(service.serviceCauta("Matrix") == -1);
+    assert(!service.serviceExista("Matrix"));
     assert(service.serviceGetAll().size() == 4);
 
     service.undo();
-    assert(service.serviceCauta("Matrix") != -1);
+    assert(service.serviceExista("Matrix"));
     assert(service.serviceGetAll().size() == 5);
 
     service.serviceDel("Matrix");
@@ -235,11 +252,11 @@ static void testService() {
     assert(deleteMissingException);
 
     service.serviceAdd("Blade Runner", "SF", 1982, "Harrison Ford");
-    assert(service.serviceCauta("Blade Runner") != -1);
+    assert(service.serviceExista("Blade Runner"));
     service.undo();
-    assert(service.serviceCauta("Blade Runner") == -1);
+    assert(!service.serviceExista("Blade Runner"));
 
-    Repo repoUndoGol;
+    RepoVector repoUndoGol;
     Service serviceUndoGol(repoUndoGol);
     bool undoEmptyException = false;
     try {
@@ -248,6 +265,23 @@ static void testService() {
         undoEmptyException = true;
     }
     assert(undoEmptyException);
+
+    bool probabilitateInvalidaException = false;
+    try {
+        Service serviceProbabilitateInvalida(repoUndoGol, -0.1);
+    } catch (const ServiceError&) {
+        probabilitateInvalidaException = true;
+    }
+    assert(probabilitateInvalidaException);
+
+    Service serviceEsuat(repoUndoGol, 1.0);
+    bool operatieEsuataException = false;
+    try {
+        (void)serviceEsuat.serviceExista("Orice");
+    } catch (const ServiceError&) {
+        operatieEsuataException = true;
+    }
+    assert(operatieEsuataException);
 
     string patternTitlu = "Dune";
     const std::vector<const Film*> filtrateTitlu = service.serviceFilter(1, patternTitlu);
@@ -296,7 +330,7 @@ static void testService() {
     assert(raport.at("Horror") == 1);
     assert(raport.at("SF") == 2);
 
-    Repo repoAniEgali;
+    RepoVector repoAniEgali;
     Service serviceAniEgali(repoAniEgali);
     serviceAniEgali.serviceAdd("Film Z", "Z", 2000, "Actor 1");
     serviceAniEgali.serviceAdd("Film A", "A", 2000, "Actor 2");
@@ -353,7 +387,7 @@ static void testService() {
     }
     assert(cosInvalidException);
 
-    Repo repoGol;
+    RepoVector repoGol;
     Service serviceGol(repoGol);
 
     bool cosEmptyRepoException = false;
