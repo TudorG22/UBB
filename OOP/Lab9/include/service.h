@@ -96,5 +96,6 @@ class Service {
         void cosGenereaza(int numarFilme);
         const std::vector<Film>& cosGetAll() const;
         void cosSalveazaFisier(const string& numeFisier);
+        void repoSalveazaFisier(const string& numeFisier) const;
     
 };

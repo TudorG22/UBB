@@ -25,6 +25,7 @@ constexpr int cmdCartAdd = 11;
 constexpr int cmdCartGenerate = 12;
 constexpr int cmdCartShow = 13;
 constexpr int cmdCartSave = 14;
+constexpr int cmdRepoSave = 15;
 constexpr int inceptionYear = 2010;
 constexpr int titanicYear = 1997;
 constexpr int gladiatorYear = 2000;
@@ -140,6 +141,7 @@ void UI::drawStaticScreen() const {
             "12. Genereaza cos\n"
             "13. Afiseaza cos\n"
             "14. Salveaza cos in fisier html\n"
+            "15. Salveaza repo in fisier csv\n"
             "0. Iesire\n"
             "\n"
             "\n"
@@ -260,6 +262,12 @@ void UI::uiCosSalveaza() const {
     showOutput("Cos salvat.");
 }
 
+void UI::uiRepoSalveaza() const {
+    const string numeFisier = citesteText("Nume fisier csv: ");
+    service.repoSalveazaFisier(numeFisier);
+    showOutput("Repo salvat.\n");
+}
+
 void UI::run() const {
     if (useDate) {
         try {
@@ -317,6 +325,8 @@ void UI::run() const {
                 uiCosAfiseaza();
             } else if (cmd == cmdCartSave) {
                 uiCosSalveaza();
+            } else if (cmd == cmdRepoSave) {
+                uiRepoSalveaza();
             } else {
                 showOutput("Comanda invalida.\n");
             }

@@ -1,5 +1,7 @@
 #include "repo.h"
 
+#include <fstream>
+
 void RepoMap::rebuildCache() const {
     temp.clear();
     for (const auto& pereche : date) {
@@ -44,4 +46,15 @@ void RepoMap::repoModify(const string& titluVechi, const Film& filmNou) {
 const std::vector<Film>& RepoMap::repoGetAll() const {
     rebuildCache();
     return temp;
+}
+
+void RepoMap::repoSaveToFile(const string& numeFisier) const {
+    std::ofstream fout(numeFisier);
+    for (const auto& pereche : date) {
+        const Film& film = pereche.second;
+        fout << film.getTitlu() << ','
+             << film.getGen() << ','
+             << film.getAn() << ','
+             << film.getActor() << '\n';
+    }
 }

@@ -12,6 +12,21 @@
 
 using std::string;
 
+static void verificaFisierRepo(const string& numeFisier, const std::vector<string>& liniiAsteptate) {
+    std::ifstream fin(numeFisier);
+    assert(fin.is_open());
+
+    std::vector<string> linii;
+    string linie;
+    while (getline(fin, linie)) {
+        linii.push_back(linie);
+    }
+
+    assert(linii == liniiAsteptate);
+    fin.close();
+    std::remove(numeFisier.c_str());
+}
+
 static void testDomain() {
     Film film("Inception", "SF", 2010, "Leonardo DiCaprio");
     assert(film.getTitlu() == "Inception");
@@ -161,6 +176,13 @@ static void verificaRepo(Repo& repo) {
         repoFindException = true;
     }
     assert(repoFindException);
+
+    const string numeFisier = "test_repo.csv";
+    repo.repoSaveToFile(numeFisier);
+    verificaFisierRepo(numeFisier, {
+        "A2,Thriller,2010,Actor Z",
+        "C,Comedie,2001,Actor A"
+    });
 }
 
 static void testRepo() {
@@ -397,6 +419,15 @@ static void testService() {
         cosEmptyRepoException = true;
     }
     assert(cosEmptyRepoException);
+
+    const string numeFisierRepo = "test_repo_service.csv";
+    service.repoSalveazaFisier(numeFisierRepo);
+    verificaFisierRepo(numeFisierRepo, {
+        "Dune,SF,2021,Timothee Chalamet",
+        "Avatar 2,SF,2022,Sam Worthington",
+        "Arrival,Drama,2016,Amy Adams",
+        "Alien,Horror,1979,Sigourney Weaver"
+    });
 }
 
 int main() {

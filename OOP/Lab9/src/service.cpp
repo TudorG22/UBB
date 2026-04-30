@@ -231,3 +231,8 @@ void Service::cosSalveazaFisier(const string& numeFisier) {
 
     fout << "</body>\n</html>\n";
 }
+
+void Service::repoSalveazaFisier(const string& numeFisier) const {
+    aruncaDacaEsueaza();
+    repo.repoSaveToFile(numeFisier);
+}

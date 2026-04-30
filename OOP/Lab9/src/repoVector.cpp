@@ -1,5 +1,7 @@
 #include "repo.h"
 
+#include <fstream>
+
 RepoError::RepoError(const std::string& mesaj)
     : AppError(mesaj) {
 }
@@ -56,4 +58,14 @@ void RepoVector::repoModify(const string& titluVechi, const Film& filmNou) {
 
 const std::vector<Film>& RepoVector::repoGetAll() const {
     return date;
+}
+
+void RepoVector::repoSaveToFile(const string& numeFisier) const {
+    std::ofstream fout(numeFisier);
+    for (const Film& film : date) {
+        fout << film.getTitlu() << ','
+             << film.getGen() << ','
+             << film.getAn() << ','
+             << film.getActor() << '\n';
+    }
 }

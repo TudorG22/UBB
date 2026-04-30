@@ -16,8 +16,8 @@ private:
     std::string repoType;
     bool useDate;
 
-    static const int inputRow = 17;
-    static const int outputRow = 23;
+    static const int inputRow = 19;
+    static const int outputRow = 25;
 
     static void clearScreen();
     static void moveCursor(int row, int col);
@@ -50,6 +50,7 @@ private:
     void uiCosGenereaza() const;
     void uiCosAfiseaza() const;
     void uiCosSalveaza() const;
+    void uiRepoSalveaza() const;
 
 public:
     UI(Service& service, const std::string& repoType, bool useDate);

@@ -23,6 +23,7 @@ public:
     virtual void repoDel(const string& titlu) = 0;
     virtual void repoModify(const string& titluVechi, const Film& filmNou) = 0;
     virtual const std::vector<Film>& repoGetAll() const = 0;
+    virtual void repoSaveToFile(const string& numeFisier) const = 0;
 };
 
 // ---------------------------------------
@@ -40,6 +41,7 @@ public:
     void repoDel(const string& titlu) override;
     void repoModify(const string& titluVechi, const Film& filmNou) override;
     const std::vector<Film>& repoGetAll() const override;
+    void repoSaveToFile(const string& numeFisier) const override;
 };
 
 // ---------------------------------------
@@ -60,4 +62,5 @@ public:
     void repoDel(const string& titlu) override;
     void repoModify(const string& titluVechi, const Film& filmNou) override;
     const std::vector<Film>& repoGetAll() const override;
+    void repoSaveToFile(const string& numeFisier) const override;
 };

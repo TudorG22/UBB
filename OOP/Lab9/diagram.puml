@@ -1,4 +1,4 @@
-@startuml Lab6-7
+@startuml Lab9
 
 class Film {
   - titlu : string
@@ -7,34 +7,110 @@ class Film {
   - actor : string
 }
 
-class Repo {
-  - date : VectorDinamic<Film>
+class AppError
+class RepoError
+class ServiceError
+class UIError
+class ValidationError
+
+class Validator {
+  {static} + valideazaFilm(titlu, gen, an, actor) : void
+}
+
+abstract class Repo {
+  + repoDim() : int
+  + repoAdd(film) : void
+  + repoExista(titlu) : bool
+  + repoFind(titlu) : Film
+  + repoDel(titlu) : void
+  + repoModify(titluVechi, filmNou) : void
+  + repoGetAll() : vector<Film>
+}
+
+class RepoVector {
+  - date : vector<Film>
+}
+
+class RepoMap {
+  - date : map<string, Film>
+  - temp : vector<Film>
+  - rebuildCache() : void
+}
+
+abstract class ActiuneUndo {
+  + doUndo() : void
+}
+
+class UndoAdauga {
+  - repo : Repo&
+  - filmAdaugat : Film
+}
+
+class UndoSterge {
+  - repo : Repo&
+  - filmSters : Film
+}
+
+class UndoModifica {
+  - repo : Repo&
+  - filmVechi : Film
+  - titluNou : string
 }
 
 class Service {
-  - repo : Repo
+  - repo : Repo&
+  - cos : vector<Film>
+  - actiuniUndo : vector<unique_ptr<ActiuneUndo>>
+  - probabilitate : double
+  - aruncaDacaEsueaza() : void
+  + serviceAdd(titlu, gen, an, actor) : void
+  + serviceDel(titlu) : void
+  + serviceModify(titluVechi, titluNou, genNou, anNou, actorNou) : void
+  + undo() : void
+  + serviceGetAll() : vector<Film>
+  + serviceFilter(key, pattern) : vector<Film*>
+  + serviceSort(key) : vector<Film>
+  + raportGenuri() : map<string, int>
+  + cosGoleste() : void
+  + cosAdauga(titlu) : void
+  + cosGenereaza(numarFilme) : void
+  + cosGetAll() : vector<Film>
+  + cosSalveazaFisier(numeFisier) : void
 }
 
 class UI {
-  - service : Service
+  - service : Service&
+  - repoType : string
+  - useDate : bool
   - inputRow : int
   - outputRow : int
+  + run() : void
 }
 
-class Validator
+AppError <|-- RepoError
+AppError <|-- ServiceError
+AppError <|-- UIError
+Repo <|-- RepoVector
+Repo <|-- RepoMap
+ActiuneUndo <|-- UndoAdauga
+ActiuneUndo <|-- UndoSterge
+ActiuneUndo <|-- UndoModifica
 
-class "VectorDinamic<T>" as VectorDinamicT {
-  - date : void*
-  - dimensiune_element : size_t
-  - dimensiune : size_t
-  - capacitate : size_t
-}
-
-Repo --> VectorDinamicT
+RepoVector --> Film
+RepoMap --> Film
+RepoMap --> "temp" Film
+Validator ..> ValidationError
+Validator ..> Film
 Service --> Repo
 Service --> Validator
+Service --> Film
+Service o-- ActiuneUndo
+UndoAdauga --> Repo
+UndoAdauga --> Film
+UndoSterge --> Repo
+UndoSterge --> Film
+UndoModifica --> Repo
+UndoModifica --> Film
 UI --> Service
-Repo --> Film
-Validator --> Film
 
 @enduml
