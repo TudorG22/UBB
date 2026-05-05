@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+
+g++ -Wvla -Wall -Wextra -I Proiect\ C++ -I Teste -o app Proiect\ C++/*.cpp Teste/*.cpp
