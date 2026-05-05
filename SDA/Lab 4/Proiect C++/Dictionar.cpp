@@ -153,4 +153,15 @@ IteratorDictionar Dictionar::iterator() const {
 	return  IteratorDictionar(*this);
 }
 
+int Dictionar::adaugaInexistente(Dictionar& d) {
+	int adaugate = 0;
+	for (int i = d.prim; i != -1; i = d.urm[i]) {
+		TValoare rez = cauta(d.elems[i].first);
+		if (rez == NULL_TVALOARE) {
+			adauga(d.elems[i].first, d.elems[i].second);
+			adaugate++;
+		}
+	}
 
+	return adaugate;
+}

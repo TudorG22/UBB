@@ -55,6 +55,8 @@ class Dictionar {
 	//complexitate: BC = WC = Theta(1), construieste iteratorul
 	IteratorDictionar iterator() const;
 
+	//la lab
+	int adaugaInexistente(Dictionar& d);
 
 	// destructorul dictionarului	
 	//complexitate: BC = WC = Theta(capacitate), elibereaza tablourile

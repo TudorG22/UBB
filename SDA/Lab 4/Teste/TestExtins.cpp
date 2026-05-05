@@ -226,6 +226,48 @@ void testQuantity() {//scopul e sa adaugam multe date
 	assert(d.dim() == 0);
 }
 
+void testInexistente() {
+	Dictionar d1;
+	Dictionar d2;
+
+	assert(d1.adaugaInexistente(d2) == 0);
+	assert(d1.dim() == 0);
+	assert(d2.dim() == 0);
+
+	d2.adauga(1, 10);
+	d2.adauga(2, 20);
+	d2.adauga(3, 30);
+
+	assert(d1.adaugaInexistente(d2) == 3);
+	assert(d1.dim() == 3);
+	assert(d1.cauta(1) == 10);
+	assert(d1.cauta(2) == 20);
+	assert(d1.cauta(3) == 30);
+
+	assert(d1.adaugaInexistente(d2) == 0);
+	assert(d1.dim() == 3);
+	assert(d1.cauta(1) == 10);
+	assert(d1.cauta(2) == 20);
+	assert(d1.cauta(3) == 30);
+
+	Dictionar d3;
+	d3.adauga(2, 200);
+	d3.adauga(4, 40);
+	d3.adauga(5, 50);
+
+	assert(d1.adaugaInexistente(d3) == 2);
+	assert(d1.dim() == 5);
+	assert(d1.cauta(2) == 20);
+	assert(d1.cauta(4) == 40);
+	assert(d1.cauta(5) == 50);
+
+	Dictionar d4;
+	d4.adauga(-1, -10);
+
+	assert(d1.adaugaInexistente(d4) == 1);
+	assert(d1.dim() == 6);
+	assert(d1.cauta(-1) == -10);
+}
 
 
 // nu stim reprezentarea, putem testa doar anumite lucruri generale, nu stim in ce ordine vor fi afisate elementele
@@ -235,4 +277,5 @@ void testAllExtins() {
 	testSterge();
 	testIterator();
 	testQuantity();
+	testInexistente();
 }
