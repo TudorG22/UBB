@@ -56,6 +56,7 @@ class Dictionar {
 	IteratorDictionar iterator() const;
 
 	//la lab
+	// BC = WC = O(|d|*n)
 	int adaugaInexistente(Dictionar& d);
 
 	// destructorul dictionarului	
