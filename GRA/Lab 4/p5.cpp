@@ -74,7 +74,7 @@ vector<Muchie> kruskal(vector<Muchie> q, int n)
 
     vector<Muchie> arbore;
 
-    for (const auto& muchie : q) {
+    for (const Muchie& muchie : q) {
         if ((int)arbore.size() == n - 1) {
             break;
         }
@@ -105,7 +105,7 @@ void afisare(vector<Muchie> arbore, ofstream& fout)
     fout << cost_total << "\n";
     fout << arbore.size() << "\n";
 
-    for (const auto& muchie : arbore) {
+    for (const Muchie& muchie : arbore) {
         fout << muchie.u << " " << muchie.v << "\n";
     }
 }
@@ -114,7 +114,6 @@ int main(int, char * argv[])
 {
     ifstream fin(argv[1]);
     ofstream fout(argv[2]);
-
     int n = nr_of_vertex_from_text(fin);
     vector<Muchie> muchii = muchii_din_text(fin);
 
