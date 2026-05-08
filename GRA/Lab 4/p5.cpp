@@ -12,27 +12,6 @@
 
 using namespace std;
 
-//utils
-vector<vector<int>> text_to_ad_matrix(ifstream& fin, int n)
-{
-    vector<vector<int>> matrix(n, vector<int>(n, INT_MAX));
-
-    string line;
-
-    getline(fin, line); //skip prima linie
-
-    int a, b, c;
-    while (getline(fin, line)) {
-        istringstream iss(line);
-        if (iss >> a >> b >> c) {
-            matrix[a][b] = c;
-            matrix[b][a] = c;
-        }
-    }
-
-    return matrix;
-}
-
 int nr_of_vertex_from_text(ifstream& fin)
 {
     streampos initial_pos = fin.tellg();
@@ -55,43 +34,40 @@ struct Muchie {
     int cost;
 };
 
-vector<Muchie> muchii_din_matrice(vector<vector<int>> matrix, int n)
+vector<Muchie> muchii_din_text(ifstream& fin)
 {
     vector<Muchie> muchii;
+    string line;
 
-    for (int i = 0; i < n; i++) {
-        for (int j = i + 1; j < n; j++) {
-            if (matrix[i][j] != INT_MAX) {
-                muchii.push_back({i, j, matrix[i][j]});
-            }
+    getline(fin, line); //skip prima linie
+
+    int a, b, c;
+    while (getline(fin, line)) {
+        istringstream iss(line);
+        if (iss >> a >> b >> c) {
+            muchii.push_back({a, b, c});
         }
     }
 
     return muchii;
 }
 
-int grupa(int varf, vector<int> componenta)
-{
-    return componenta[varf];
-}
-
-void reuneste_grupe(int grupa1, int grupa2, vector<int>& componenta, int n)
+void reuneste_grupe(int grupa1, int grupa2, vector<int>& grup, int n)
 {
     for (int i = 0; i < n; i++) {
-        if (componenta[i] == grupa2) {
-            componenta[i] = grupa1;
+        if (grup[i] == grupa2) {
+            grup[i] = grupa1;
         }
     }
 }
 
-vector<Muchie> kruskal(vector<vector<int>> matrix, int n)
+vector<Muchie> kruskal(vector<Muchie> q, int n)
 {
-    vector<int> componenta(n);
+    vector<int> grup(n);
     for (int v = 0; v < n; v++) {
-        componenta[v] = v;
+        grup[v] = v;
     }
 
-    vector<Muchie> q = muchii_din_matrice(matrix, n);
     sort(q.begin(), q.end(), [](const Muchie& m1, const Muchie& m2) {
         return m1.cost < m2.cost;
     });
@@ -106,12 +82,12 @@ vector<Muchie> kruskal(vector<vector<int>> matrix, int n)
         int u = muchie.u;
         int v = muchie.v;
 
-        int c_u = grupa(u, componenta);
-        int c_v = grupa(v, componenta);
+        int c_u = grup[u];
+        int c_v = grup[v];
 
         if (c_v != c_u) {
             arbore.push_back(muchie);
-            reuneste_grupe(c_v, c_u, componenta, n);
+            reuneste_grupe(c_v, c_u, grup, n);
         }
     }
 
@@ -140,9 +116,9 @@ int main(int, char * argv[])
     ofstream fout(argv[2]);
 
     int n = nr_of_vertex_from_text(fin);
-    vector<vector<int>> matrix = text_to_ad_matrix(fin, n);
+    vector<Muchie> muchii = muchii_din_text(fin);
 
-    vector<Muchie> arbore = kruskal(matrix, n);
+    vector<Muchie> arbore = kruskal(muchii, n);
     afisare(arbore, fout);
 
     fin.close();
