@@ -32,5 +32,7 @@ private:
     void initConnect();
     void reloadList(const std::vector<Film>& filme);
     void setMessage(const QString& mesaj);
+    void clearFields();
+    void loadSelectedFilm();
 };
 #endif // MAINWINDOW_H

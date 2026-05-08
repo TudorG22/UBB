@@ -3,6 +3,7 @@
 #include "domain.h"
 #include "validator.h"
 #include <algorithm>
+#include <string>
 #include <vector>
 
 using std::string;
@@ -15,8 +16,10 @@ public:
 class Repo {
     private:
         std::vector<Film> date;
-        //int dimensiune;
-        //int capacitate; mai tarziu
+        string numeFisier;
+
+        void incarcaDinFisier();
+        void salveazaInFisier() const;
 
     public:
         /* Creeaza un repository de filme
@@ -25,7 +28,7 @@ class Repo {
         Pre conditii: -
         Post conditii: repository initializat
         */
-        Repo() = default;
+        explicit Repo(const string& numeFisier = "repo.csv");
 
         /* Returneaza numarul de filme din repository
         Input: -

@@ -89,7 +89,6 @@ std::vector<const Film*> Service::serviceFilter(int key, const string& pattern) 
 }
 
 std::vector<Film> Service::serviceSort(int key) const {
-
     std::vector<Film> rezultat = repo.repoGetAll();
 
     if (key == 1) {
@@ -195,6 +194,5 @@ void Service::cosSalveazaFisier(const string& numeFisier) {
     fout << "</table>\n";
 
     fout << "<p><b>Nr filme in cos: " << total << "</b></p>\n";
-
     fout << "</body>\n</html>\n";
 }
