@@ -3,8 +3,9 @@
 
 #include <QMainWindow>
 #include <QLineEdit>
-#include <QListWidget>
 #include <QLabel>
+#include <QTableWidget>
+#include <vector>
 
 #include "repo.h"
 #include "service.h"
@@ -25,12 +26,14 @@ private:
     QLineEdit* editGen = nullptr;
     QLineEdit* editAn = nullptr;
     QLineEdit* editActor = nullptr;
-    QListWidget* listaFilme = nullptr;
+    QTableWidget* listaFilme = nullptr;
     QLabel* labelMesaj = nullptr;
+    std::vector<Film> filmeAfisate;
 
     void initGui();
     void initConnect();
     void reloadList(const std::vector<Film>& filme);
+    void reloadList(const std::vector<const Film*>& filme);
     void setMessage(const QString& mesaj);
     void clearFields();
     void loadSelectedFilm();

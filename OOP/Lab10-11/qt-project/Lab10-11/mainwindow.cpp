@@ -2,7 +2,12 @@
 
 #include <QFormLayout>
 #include <QHBoxLayout>
+#include <QInputDialog>
+#include <QMessageBox>
 #include <QPushButton>
+#include <QHeaderView>
+#include <QStringList>
+#include <QTableWidgetItem>
 #include <QVBoxLayout>
 #include <QWidget>
 #include <QDialog>
@@ -19,6 +24,14 @@ QString filmToQString(const Film& film) {
         film.getTitlu() + " | " + film.getGen() + " | " +
         std::to_string(film.getAn()) + " | " + film.getActor());
 }
+
+QString raportToQString(const std::map<std::string, int>& raport) {
+    QStringList linii;
+    for (const auto& pereche : raport) {
+        linii.push_back(QString::fromStdString(pereche.first) + " | " + QString::number(pereche.second));
+    }
+    return linii.join('\n');
+}
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -34,15 +47,25 @@ void MainWindow::initGui() {
     auto* central = new QWidget;
     auto* mainLayout = new QVBoxLayout;
     auto* formLayout = new QFormLayout;
-    auto* buttonLayout = new QHBoxLayout;
+    auto* buttonLayout1 = new QHBoxLayout;
+    auto* buttonLayout2 = new QHBoxLayout;
+    auto* buttonLayout3 = new QHBoxLayout;
 
     editTitluVechi = new QLineEdit;
     editTitlu = new QLineEdit;
     editGen = new QLineEdit;
     editAn = new QLineEdit;
     editActor = new QLineEdit;
-    listaFilme = new QListWidget;
+    listaFilme = new QTableWidget;
     labelMesaj = new QLabel;
+
+    listaFilme->setColumnCount(4);
+    listaFilme->setHorizontalHeaderLabels(QStringList{"Titlu", "Gen", "An", "Actor"});
+    listaFilme->setSelectionBehavior(QAbstractItemView::SelectRows);
+    listaFilme->setSelectionMode(QAbstractItemView::SingleSelection);
+    listaFilme->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    listaFilme->horizontalHeader()->setStretchLastSection(true);
+    listaFilme->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     formLayout->addRow("Titlu vechi:", editTitluVechi);
     formLayout->addRow("Titlu:", editTitlu);
@@ -58,18 +81,38 @@ void MainWindow::initGui() {
     auto* btnDate = new QPushButton("Date initiale");
     auto* btnClear = new QPushButton("Goleste campuri");
     auto* btnSort = new QPushButton("Sorteaza");
+    auto* btnSearch = new QPushButton("Cauta");
+    auto* btnFilter = new QPushButton("Filtreaza");
+    auto* btnReport = new QPushButton("Raport genuri");
+    auto* btnCartEmpty = new QPushButton("Goleste cos");
+    auto* btnCartAdd = new QPushButton("Adauga in cos");
+    auto* btnCartGenerate = new QPushButton("Genereaza cos");
+    auto* btnCartShow = new QPushButton("Afiseaza cos");
+    auto* btnCartSave = new QPushButton("Salveaza cos");
 
-    buttonLayout->addWidget(btnAdd);
-    buttonLayout->addWidget(btnDelete);
-    buttonLayout->addWidget(btnModify);
-    buttonLayout->addWidget(btnUndo);
-    buttonLayout->addWidget(btnShowAll);
-    buttonLayout->addWidget(btnDate);
-    buttonLayout->addWidget(btnClear);
-    buttonLayout->addWidget(btnSort);
+    buttonLayout1->addWidget(btnAdd);
+    buttonLayout1->addWidget(btnDelete);
+    buttonLayout1->addWidget(btnModify);
+    buttonLayout1->addWidget(btnUndo);
+    buttonLayout1->addWidget(btnShowAll);
+    buttonLayout1->addWidget(btnDate);
+
+    buttonLayout2->addWidget(btnClear);
+    buttonLayout2->addWidget(btnSort);
+    buttonLayout2->addWidget(btnSearch);
+    buttonLayout2->addWidget(btnFilter);
+    buttonLayout2->addWidget(btnReport);
+
+    buttonLayout3->addWidget(btnCartEmpty);
+    buttonLayout3->addWidget(btnCartAdd);
+    buttonLayout3->addWidget(btnCartGenerate);
+    buttonLayout3->addWidget(btnCartShow);
+    buttonLayout3->addWidget(btnCartSave);
 
     mainLayout->addLayout(formLayout);
-    mainLayout->addLayout(buttonLayout);
+    mainLayout->addLayout(buttonLayout1);
+    mainLayout->addLayout(buttonLayout2);
+    mainLayout->addLayout(buttonLayout3);
     mainLayout->addWidget(listaFilme);
     mainLayout->addWidget(labelMesaj);
 
@@ -86,6 +129,14 @@ void MainWindow::initGui() {
     btnDate->setObjectName("btnDate");
     btnClear->setObjectName("btnClear");
     btnSort->setObjectName("btnSort");
+    btnSearch->setObjectName("btnSearch");
+    btnFilter->setObjectName("btnFilter");
+    btnReport->setObjectName("btnReport");
+    btnCartEmpty->setObjectName("btnCartEmpty");
+    btnCartAdd->setObjectName("btnCartAdd");
+    btnCartGenerate->setObjectName("btnCartGenerate");
+    btnCartShow->setObjectName("btnCartShow");
+    btnCartSave->setObjectName("btnCartSave");
 }
 
 void MainWindow::initConnect() {
@@ -97,6 +148,14 @@ void MainWindow::initConnect() {
     auto* btnDate = findChild<QPushButton*>("btnDate");
     auto* btnClear = findChild<QPushButton*>("btnClear");
     auto* btnSort = findChild<QPushButton*>("btnSort");
+    auto* btnSearch = findChild<QPushButton*>("btnSearch");
+    auto* btnFilter = findChild<QPushButton*>("btnFilter");
+    auto* btnReport = findChild<QPushButton*>("btnReport");
+    auto* btnCartEmpty = findChild<QPushButton*>("btnCartEmpty");
+    auto* btnCartAdd = findChild<QPushButton*>("btnCartAdd");
+    auto* btnCartGenerate = findChild<QPushButton*>("btnCartGenerate");
+    auto* btnCartShow = findChild<QPushButton*>("btnCartShow");
+    auto* btnCartSave = findChild<QPushButton*>("btnCartSave");
 
     connect(btnAdd, &QPushButton::clicked, this, [this]() {
         try {
@@ -175,7 +234,7 @@ void MainWindow::initConnect() {
         setMessage("Campurile au fost golite.");
     });
 
-    connect(listaFilme, &QListWidget::itemSelectionChanged, this, [this]() {
+    connect(listaFilme, &QTableWidget::itemSelectionChanged, this, [this]() {
         loadSelectedFilm();
     });
 
@@ -213,13 +272,159 @@ void MainWindow::initConnect() {
         dlg->exec();
     });
 
+    connect(btnSearch, &QPushButton::clicked, this, [this]() {
+        try {
+            const QString titlu = QInputDialog::getText(this, "Cauta dupa titlu", "Titlu cautat:");
+            if (titlu.isNull()) {
+                return;
+            }
+
+            const int poz = service.serviceCauta(titlu.toStdString());
+            if (poz == -1) {
+                setMessage("Filmul nu exista.");
+                return;
+            }
+
+            const auto& film = service.serviceGetAll().at(static_cast<std::size_t>(poz));
+            reloadList(std::vector<Film>{film});
+            setMessage("Cautare finalizata.");
+        } catch (const std::exception& ex) {
+            setMessage(ex.what());
+        }
+    });
+
+    connect(btnFilter, &QPushButton::clicked, this, [this]() {
+        auto* dlg = new QDialog(this);
+        dlg->setWindowTitle("Alege filtrarea");
+
+        auto* layout = new QVBoxLayout(dlg);
+        auto* btnTitlu = new QPushButton("Titlu");
+        auto* btnAn = new QPushButton("An");
+
+        layout->addWidget(btnTitlu);
+        layout->addWidget(btnAn);
+
+        connect(btnTitlu, &QPushButton::clicked, dlg, [this, dlg]() {
+            const QString valoare = QInputDialog::getText(this, "Filtrare dupa titlu", "Valoare:");
+            if (valoare.isNull()) {
+                return;
+            }
+
+            try {
+                reloadList(service.serviceFilter(1, valoare.toStdString()));
+                setMessage("Filtrare dupa titlu.");
+                dlg->accept();
+            } catch (const std::exception& ex) {
+                setMessage(ex.what());
+            }
+        });
+
+        connect(btnAn, &QPushButton::clicked, dlg, [this, dlg]() {
+            const QString valoare = QInputDialog::getText(this, "Filtrare dupa an", "Valoare:");
+            if (valoare.isNull()) {
+                return;
+            }
+
+            try {
+                reloadList(service.serviceFilter(2, valoare.toStdString()));
+                setMessage("Filtrare dupa an.");
+                dlg->accept();
+            } catch (const std::exception& ex) {
+                setMessage(ex.what());
+            }
+        });
+
+        dlg->exec();
+    });
+
+    connect(btnReport, &QPushButton::clicked, this, [this]() {
+        const auto raport = service.raportGenuri();
+        QMessageBox::information(this, "Raport genuri", raportToQString(raport));
+        setMessage("Raport afisat.");
+    });
+
+    connect(btnCartEmpty, &QPushButton::clicked, this, [this]() {
+        service.cosGoleste();
+        reloadList(service.cosGetAll());
+        setMessage("Cos golit.");
+    });
+
+    connect(btnCartAdd, &QPushButton::clicked, this, [this]() {
+        try {
+            const QString titlu = QInputDialog::getText(this, "Adauga in cos", "Titlu de adaugat in cos:");
+            if (titlu.isNull()) {
+                return;
+            }
+
+            service.cosAdauga(titlu.toStdString());
+            reloadList(service.cosGetAll());
+            setMessage("Film adaugat in cos.");
+        } catch (const std::exception& ex) {
+            setMessage(ex.what());
+        }
+    });
+
+    connect(btnCartGenerate, &QPushButton::clicked, this, [this]() {
+        bool ok = false;
+        const int numarFilme = QInputDialog::getInt(this, "Genereaza cos", "Numar filme in cos:", 0, 0, 1000000, 1, &ok);
+        if (!ok) {
+            return;
+        }
+
+        try {
+            service.cosGenereaza(numarFilme);
+            reloadList(service.cosGetAll());
+            setMessage("Cos generat.");
+        } catch (const std::exception& ex) {
+            setMessage(ex.what());
+        }
+    });
+
+    connect(btnCartShow, &QPushButton::clicked, this, [this]() {
+        reloadList(service.cosGetAll());
+        setMessage("Cos afisat.");
+    });
+
+    connect(btnCartSave, &QPushButton::clicked, this, [this]() {
+        try {
+            const QString numeFisier = QInputDialog::getText(this, "Salveaza cos", "Nume fisier:");
+            if (numeFisier.isNull()) {
+                return;
+            }
+
+            service.cosSalveazaFisier(numeFisier.toStdString());
+            setMessage("Cos salvat.");
+        } catch (const std::exception& ex) {
+            setMessage(ex.what());
+        }
+    });
 
 }
 
 void MainWindow::reloadList(const std::vector<Film>& filme) {
-    listaFilme->clear();
-    for (const auto& film : filme) {
-        listaFilme->addItem(filmToQString(film));
+    filmeAfisate = filme;
+    listaFilme->clearContents();
+    listaFilme->setRowCount(static_cast<int>(filmeAfisate.size()));
+    for (int i = 0; i < static_cast<int>(filmeAfisate.size()); ++i) {
+        const auto& film = filmeAfisate[static_cast<std::size_t>(i)];
+        listaFilme->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(film.getTitlu())));
+        listaFilme->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(film.getGen())));
+        listaFilme->setItem(i, 2, new QTableWidgetItem(QString::number(film.getAn())));
+        listaFilme->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(film.getActor())));
+    }
+}
+
+void MainWindow::reloadList(const std::vector<const Film*>& filme) {
+    filmeAfisate.clear();
+    listaFilme->clearContents();
+    listaFilme->setRowCount(static_cast<int>(filme.size()));
+    for (int i = 0; i < static_cast<int>(filme.size()); ++i) {
+        const auto* film = filme[static_cast<std::size_t>(i)];
+        filmeAfisate.push_back(*film);
+        listaFilme->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(film->getTitlu())));
+        listaFilme->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(film->getGen())));
+        listaFilme->setItem(i, 2, new QTableWidgetItem(QString::number(film->getAn())));
+        listaFilme->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(film->getActor())));
     }
 }
 
@@ -241,12 +446,11 @@ void MainWindow::loadSelectedFilm() {
         return;
     }
 
-    const auto& filme = service.serviceGetAll();
-    if (index >= static_cast<int>(filme.size())) {
+    if (index >= static_cast<int>(filmeAfisate.size())) {
         return;
     }
 
-    const auto& film = filme[static_cast<std::size_t>(index)];
+    const auto& film = filmeAfisate[static_cast<std::size_t>(index)];
     editTitluVechi->setText(QString::fromStdString(film.getTitlu()));
     editTitlu->setText(QString::fromStdString(film.getTitlu()));
     editGen->setText(QString::fromStdString(film.getGen()));
