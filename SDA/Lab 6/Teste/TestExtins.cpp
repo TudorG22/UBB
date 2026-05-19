@@ -314,6 +314,33 @@ void testQuantity() {//scopul e sa adaugam multe date
 	assert(c.dim() == 0);
 }
 
+void testIntersectie() {
+	Colectie c1;
+	Colectie c2;
+
+	c1.adauga(1);
+	c1.adauga(2);
+	c1.adauga(3);
+	c1.adauga(5);
+	c1.adauga(5);
+
+	c2.adauga(1);
+	c2.adauga(2);
+	c2.adauga(2);
+	c2.adauga(4);
+	c2.adauga(5);
+	c2.adauga(5);
+
+	c1.intersectie(c2);
+
+	assert(c1.nrAparitii(1) == 1);
+	assert(c1.nrAparitii(2) == 1);
+	assert(c1.nrAparitii(3) == 0);
+	assert(c1.nrAparitii(4) == 0);
+	assert(c1.nrAparitii(5) == 2);
+	assert(c1.dim() == 4);
+}
+
 
 void testAllExtins() {
 	testCreeaza();
@@ -321,4 +348,5 @@ void testAllExtins() {
 	testSterge();
 	testIterator();
 	testQuantity();
+	testIntersectie();
 }

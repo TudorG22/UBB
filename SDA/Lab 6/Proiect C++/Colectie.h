@@ -63,5 +63,7 @@ public:
 		// destructorul colectiei
 		//complexitate: BC = WC = Theta(1), elibereaza memoria
 		~Colectie();
-
+		
+		//
+		void intersectie(const Colectie &b);
 };

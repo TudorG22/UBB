@@ -257,3 +257,32 @@ IteratorColectie Colectie::iterator() const {
 Colectie::~Colectie() {
 	delete[] tabela;
 }
+
+
+void Colectie::intersectie(const Colectie &b) {
+	Colectie rezultat;
+
+	for (int i = 0; i < capacitate; i++) {
+		if (tabela[i].stare == OCUPAT) {
+			int frecvB = b.nrAparitii(tabela[i].elem);
+			int frecvMinima = tabela[i].frecventa;
+			if (frecvB < frecvMinima) {
+				frecvMinima = frecvB;
+			}
+
+			for (int j = 0; j < frecvMinima; j++) {
+				rezultat.adauga(tabela[i].elem);
+			}
+		}
+	}
+
+	delete[] tabela;
+	capacitate = rezultat.capacitate;
+	nrElemente = rezultat.nrElemente;
+	nrDistincte = rezultat.nrDistincte;
+	tabela = new Celula[capacitate];
+
+	for (int i = 0; i < capacitate; i++) {
+		tabela[i] = rezultat.tabela[i];
+	}
+}
