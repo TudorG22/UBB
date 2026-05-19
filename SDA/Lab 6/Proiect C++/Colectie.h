@@ -64,6 +64,7 @@ public:
 		//complexitate: BC = WC = Theta(1), elibereaza memoria
 		~Colectie();
 		
-		//
+		//intersecteaza colectia curenta cu colectia b
+		//complexitate: BC = WC = O(m * n), foloseste nrAparitii si adauga pentru construirea rezultatului
 		void intersectie(const Colectie &b);
 };
