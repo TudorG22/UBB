@@ -5,9 +5,9 @@ using namespace std;
 
 
 int main() {
-	cout<<"Rulare test scurt...";
+	cout<<"Rulare test scurt...\n";
 	testAll();
-	cout<<"Rulare test extins...";
+	cout<<"Rulare test extins...\n";
 	testAllExtins();
-	cout<<"End";
+	cout<<"End\n";
 }

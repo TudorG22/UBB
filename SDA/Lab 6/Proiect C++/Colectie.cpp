@@ -7,7 +7,35 @@ using namespace std;
 static const int LIBER = 0;
 static const int OCUPAT = 1;
 static const int STERS = 2;
-static const int CAPACITATE_MINIMA = 10;
+static const int CAPACITATE_MINIMA = 11;
+
+static bool estePrim(int x) {
+	if (x < 2) {
+		return false;
+	}
+	if (x % 2 == 0) {
+		return x == 2;
+	}
+	for (int d = 3; d * d <= x; d += 2) {
+		if (x % d == 0) {
+			return false;
+		}
+	}
+	return true;
+}
+
+static int urmatorPrim(int x) {
+	if (x <= 2) {
+		return 2;
+	}
+	if (x % 2 == 0) {
+		x++;
+	}
+	while (!estePrim(x)) {
+		x += 2;
+	}
+	return x;
+}
 
 int Colectie::dispersie(TElem e) const {
 	int rez = e % capacitate;
@@ -25,7 +53,7 @@ void Colectie::redimensionareAdauga() {
 	int capacitateVeche = capacitate;
 	Celula* tabelaVeche = tabela;
 
-	capacitate = capacitate * 2;
+	capacitate = urmatorPrim(capacitate * 2);
 	tabela = new Celula[capacitate];
 	for (int i = 0; i < capacitate; i++) {
 		tabela[i].elem = NULL_TELEM;
@@ -63,7 +91,7 @@ void Colectie::redimensionareSterge() {
 	int capacitateVeche = capacitate;
 	Celula* tabelaVeche = tabela;
 
-	capacitate = capacitate / 2;
+	capacitate = urmatorPrim(capacitate / 2);
 	if (capacitate < CAPACITATE_MINIMA) {
 		capacitate = CAPACITATE_MINIMA;
 	}
