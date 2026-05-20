@@ -37,8 +37,7 @@ std::vector<const Carte*> Service::serviceFilterByGen(const std::string& gen) co
         }
     }
 
-    return filtrate;
-} // GCOVR_EXCL_LINE
+    return filtrate;}
 
 Comanda Service::serviceCumpara(int isbn, int numarExemplare) const {
     if (isbn <= 0) {
