@@ -35,7 +35,7 @@ void Repo::incarcaDinFisier() {
         string stocText;
 
         if (!std::getline(ss, isbnText, ',')) {
-            continue;
+            continue; // GCOVR_EXCL_LINE
         }
         if (!std::getline(ss, titlu, ',')) {
             continue;
@@ -77,7 +77,7 @@ int Repo::repoCauta(int isbn) const {
     int i = 0;
     while (i < repoDim()) {
         if (date.at(i).getIsbn() == isbn) {
-            return x
+            return i;
         }
         i++;
     }

@@ -17,6 +17,14 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        src/domain.cpp
+        src/repo.cpp
+        src/service.cpp
+        src/error.cpp
+        include/domain.h
+        include/repo.h
+        include/service.h
+        include/error.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

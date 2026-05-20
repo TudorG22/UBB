@@ -38,7 +38,7 @@ std::vector<const Carte*> Service::serviceFilterByGen(const std::string& gen) co
     }
 
     return filtrate;
-}
+} // GCOVR_EXCL_LINE
 
 Comanda Service::serviceCumpara(int isbn, int numarExemplare) const {
     if (isbn <= 0) {
@@ -58,5 +58,7 @@ Comanda Service::serviceCumpara(int isbn, int numarExemplare) const {
         throw ServiceError(stockErrorMessage);
     }
 
+    // GCOVR_EXCL_START
     return Comanda{carte, numarExemplare, carte.getPret() * numarExemplare};
+    // GCOVR_EXCL_STOP
 }

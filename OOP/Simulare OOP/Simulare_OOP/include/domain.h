@@ -17,11 +17,11 @@ class Carte {
     public:
         Carte() = default;
 
-        /* Creeaza o carte
+        /* Construieste o carte
         Input: isbn, titlu, autor, gen, pret, stoc
         Output: -
-        Pre conditii: date valide pentru initializarea unei carti
-        Post conditii: carte initializata
+        Pre conditii: valorile primite pot descrie corect o carte
+        Post conditii: obiectul carte este initializat
         */
         Carte(int isbn, const string& titlu, const string& autor, const string& gen, int pret, int stoc);
 
@@ -37,94 +37,94 @@ class Carte {
         Carte& operator=(const Carte& other) = default;
         Carte& operator=(Carte&& other) noexcept = default;*/
 
-        /* Returneaza isbn-ul cartii
+        /* Ofera isbn-ul cartii
         Input: -
         Output: isbn-ul cartii
-        Pre conditii: carte initializata
+        Pre conditii: obiectul carte exista
         Post conditii: -
         */
         int getIsbn() const;
-        /* Seteaza isbn-ul cartii
+        /* Modifica isbn-ul cartii
         Input: isbnNou
         Output: -
-        Pre conditii: carte initializata
-        Post conditii: isbn actualizat
+        Pre conditii: obiectul carte exista
+        Post conditii: isbn-ul este schimbat
         */
         void setIsbn(int isbnNou);
 
-        /* Returneaza titlul cartii
+        /* Ofera titlul cartii
         Input: -
         Output: titlul cartii
-        Pre conditii: carte initializata
+        Pre conditii: obiectul carte exista
         Post conditii: -
         */
         const string& getTitlu() const;
-        /* Seteaza titlul cartii
+        /* Modifica titlul cartii
         Input: titluNou
         Output: -
-        Pre conditii: carte initializata
-        Post conditii: titlu actualizat
+        Pre conditii: obiectul carte exista
+        Post conditii: titlul este actualizat
         */
         void setTitlu(const string& titluNou);
 
-        /* Returneaza autorul cartii
+        /* Ofera autorul cartii
         Input: -
         Output: autorul cartii
-        Pre conditii: carte initializata
+        Pre conditii: obiectul carte exista
         Post conditii: -
         */
         const string& getAutor() const;
-        /* Seteaza autorul cartii
+        /* Modifica autorul cartii
         Input: autorNou
         Output: -
-        Pre conditii: carte initializata
-        Post conditii: autor actualizat
+        Pre conditii: obiectul carte exista
+        Post conditii: autorul este actualizat
         */
         void setAutor(const string& autorNou);
 
-        /* Returneaza genul cartii
+        /* Ofera genul cartii
         Input: -
         Output: genul cartii
-        Pre conditii: carte initializata
+        Pre conditii: obiectul carte exista
         Post conditii: -
         */
         const string& getGen() const;
 
-        /* Seteaza genul cartii
+        /* Modifica genul cartii
         Input: genNou
         Output: -
-        Pre conditii: carte initializata
-        Post conditii: gen actualizat
+        Pre conditii: obiectul carte exista
+        Post conditii: genul este actualizat
         */
         void setGen(const string& genNou);
 
-        /* Returneaza pretul cartii
+        /* Ofera pretul cartii
         Input: -
         Output: pretul cartii
-        Pre conditii: carte initializata
+        Pre conditii: obiectul carte exista
         Post conditii: -
         */
         int getPret() const;
-        /* Seteaza pretul cartii
+        /* Modifica pretul cartii
         Input: pretNou
         Output: -
-        Pre conditii: carte initializata
-        Post conditii: pret actualizat
+        Pre conditii: obiectul carte exista
+        Post conditii: pretul este actualizat
         */
         void setPret(int pretNou);
 
-        /* Returneaza stocul cartii
+        /* Ofera stocul cartii
         Input: -
         Output: stocul cartii
-        Pre conditii: carte initializata
+        Pre conditii: obiectul carte exista
         Post conditii: -
         */
         int getStoc() const;
-        /* Seteaza stocul cartii
+        /* Modifica stocul cartii
         Input: stocNou
         Output: -
-        Pre conditii: carte initializata
-        Post conditii: stoc actualizat
+        Pre conditii: obiectul carte exista
+        Post conditii: stocul este actualizat
         */
         void setStoc(int stocNou);
 };
