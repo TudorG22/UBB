@@ -35,6 +35,8 @@ set(PROJECT_SOURCES
         coscrudgui.h
         cosreadonlygui.cpp
         cosreadonlygui.h
+        filmtablemodel.cpp
+        filmtablemodel.h
         mainwindow.cpp
         mainwindow.h
         ${LAB_NON_UI_SOURCES}

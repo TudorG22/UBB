@@ -8,8 +8,8 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QHeaderView>
+#include <QItemSelectionModel>
 #include <QStringList>
-#include <QTableWidgetItem>
 #include <QVBoxLayout>
 #include <QWidget>
 #include <QDialog>
@@ -58,14 +58,14 @@ void MainWindow::initGui() {
     editGen = new QLineEdit;
     editAn = new QLineEdit;
     editActor = new QLineEdit;
-    listaFilme = new QTableWidget;
+    listaFilme = new QTableView;
     labelMesaj = new QLabel;
+    modelFilme = new FilmTableModel(this);
 
-    listaFilme->setColumnCount(4);
-    listaFilme->setHorizontalHeaderLabels(QStringList{"Titlu", "Gen", "An", "Actor"});
     listaFilme->setSelectionBehavior(QAbstractItemView::SelectRows);
     listaFilme->setSelectionMode(QAbstractItemView::SingleSelection);
     listaFilme->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    listaFilme->setModel(modelFilme);
     listaFilme->horizontalHeader()->setStretchLastSection(true);
     listaFilme->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
@@ -236,7 +236,7 @@ void MainWindow::initConnect() {
         setMessage("Campurile au fost golite.");
     });
 
-    connect(listaFilme, &QTableWidget::itemSelectionChanged, this, [this]() {
+    connect(listaFilme->selectionModel(), &QItemSelectionModel::selectionChanged, this, [this]() {
         loadSelectedFilm();
     });
 
@@ -395,29 +395,16 @@ void MainWindow::initConnect() {
 
 void MainWindow::reloadList(const std::vector<Film>& filme) {
     filmeAfisate = filme;
-    listaFilme->clearContents();
-    listaFilme->setRowCount(int(filmeAfisate.size()));
-    for (int i = 0; i < int(filmeAfisate.size()); ++i) {
-        const auto& film = filmeAfisate[static_cast<std::size_t>(i)];
-        listaFilme->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(film.getTitlu())));
-        listaFilme->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(film.getGen())));
-        listaFilme->setItem(i, 2, new QTableWidgetItem(QString::number(film.getAn())));
-        listaFilme->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(film.getActor())));
-    }
+    modelFilme->setFilme(filmeAfisate);
 }
 
 void MainWindow::reloadList(const std::vector<const Film*>& filme) {
     filmeAfisate.clear();
-    listaFilme->clearContents();
-    listaFilme->setRowCount(int(filme.size()));
     for (int i = 0; i < int(filme.size()); ++i) {
         const auto* film = filme[static_cast<std::size_t>(i)];
         filmeAfisate.push_back(*film);
-        listaFilme->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(film->getTitlu())));
-        listaFilme->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(film->getGen())));
-        listaFilme->setItem(i, 2, new QTableWidgetItem(QString::number(film->getAn())));
-        listaFilme->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(film->getActor())));
     }
+    modelFilme->setFilme(filmeAfisate);
 }
 
 void MainWindow::setMessage(const QString& mesaj) {
@@ -433,7 +420,7 @@ void MainWindow::clearFields() {
 }
 
 void MainWindow::loadSelectedFilm() {
-    const int index = listaFilme->currentRow();
+    const int index = listaFilme->currentIndex().row();
     if (index < 0) {
         return;
     }

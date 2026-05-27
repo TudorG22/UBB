@@ -2,9 +2,10 @@
 #define COSCRUDGUI_H
 
 #include <QLabel>
-#include <QTableWidget>
+#include <QTableView>
 #include <QWidget>
 
+#include "filmtablemodel.h"
 #include "observer.h"
 #include "service.h"
 
@@ -17,8 +18,9 @@ public:
 
 private:
     Service& service;
-    QTableWidget* listaCos = nullptr;
+    QTableView* listaCos = nullptr;
     QLabel* labelMesaj = nullptr;
+    FilmTableModel* modelCos = nullptr;
 
     void initGui();
     void initConnect();

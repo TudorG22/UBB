@@ -4,9 +4,10 @@
 #include <QMainWindow>
 #include <QLineEdit>
 #include <QLabel>
-#include <QTableWidget>
+#include <QTableView>
 #include <vector>
 
+#include "filmtablemodel.h"
 #include "repo.h"
 #include "service.h"
 
@@ -26,8 +27,9 @@ private:
     QLineEdit* editGen = nullptr;
     QLineEdit* editAn = nullptr;
     QLineEdit* editActor = nullptr;
-    QTableWidget* listaFilme = nullptr;
+    QTableView* listaFilme = nullptr;
     QLabel* labelMesaj = nullptr;
+    FilmTableModel* modelFilme = nullptr;
     std::vector<Film> filmeAfisate;
 
     void initGui();

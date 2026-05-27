@@ -4,7 +4,6 @@
 #include <QHBoxLayout>
 #include <QInputDialog>
 #include <QPushButton>
-#include <QTableWidgetItem>
 #include <QVBoxLayout>
 
 CosCRUDGUI::CosCRUDGUI(Service& service, QWidget* parent)
@@ -33,12 +32,12 @@ void CosCRUDGUI::initGui() {
     auto* btnCartEmpty = new QPushButton("Goleste cos");
     auto* btnCartGenerate = new QPushButton("Genereaza cos");
 
-    listaCos = new QTableWidget;
+    listaCos = new QTableView;
     labelMesaj = new QLabel;
+    modelCos = new FilmTableModel(this);
 
-    listaCos->setColumnCount(4);
-    listaCos->setHorizontalHeaderLabels(QStringList{"Titlu", "Gen", "An", "Actor"});
     listaCos->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    listaCos->setModel(modelCos);
     listaCos->horizontalHeader()->setStretchLastSection(true);
     listaCos->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
@@ -83,17 +82,7 @@ void CosCRUDGUI::initConnect() {
 }
 
 void CosCRUDGUI::reloadList() {
-    const auto& filme = service.cosGetAll();
-    listaCos->clearContents();
-    listaCos->setRowCount(int(filme.size()));
-
-    for (int i = 0; i < int(filme.size()); ++i) {
-        const auto& film = filme[static_cast<std::size_t>(i)];
-        listaCos->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(film.getTitlu())));
-        listaCos->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(film.getGen())));
-        listaCos->setItem(i, 2, new QTableWidgetItem(QString::number(film.getAn())));
-        listaCos->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(film.getActor())));
-    }
+    modelCos->setFilme(service.cosGetAll());
 }
 
 void CosCRUDGUI::setMessage(const QString& mesaj) {
