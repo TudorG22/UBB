@@ -1,6 +1,7 @@
 #pragma once 
 
 #include "domain.h"
+#include "observer.h"
 #include "repo.h"
 #include "undo.h"
 #include "validator.h"
@@ -17,7 +18,7 @@ public:
     explicit ServiceError(const std::string& mesaj);
 };
 
-class Service {
+class Service : public Observable {
     private:
         Repo& repo;
         std::vector<Film> cos;

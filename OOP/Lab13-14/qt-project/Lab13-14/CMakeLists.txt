@@ -22,6 +22,7 @@ set(LAB_NON_UI_SOURCES
 
 set(LAB_NON_UI_HEADERS
         include/domain.h
+        include/observer.h
         include/repo.h
         include/service.h
         include/undo.h
@@ -30,8 +31,10 @@ set(LAB_NON_UI_HEADERS
 
 set(PROJECT_SOURCES
         main.cpp
-        cartwindow.cpp
-        cartwindow.h
+        coscrudgui.cpp
+        coscrudgui.h
+        cosreadonlygui.cpp
+        cosreadonlygui.h
         mainwindow.cpp
         mainwindow.h
         ${LAB_NON_UI_SOURCES}

@@ -127,6 +127,7 @@ std::map<string, int> Service::raportGenuri() const {
 
 void Service::cosGoleste() {
     cos.clear();
+    notify();
 }
 
 void Service::cosAdauga(const string& titlu) {
@@ -135,6 +136,7 @@ void Service::cosAdauga(const string& titlu) {
         throw ServiceError(notFoundErrorMessage);
     }
     cos.push_back(repo.repoGetAll().at(static_cast<std::size_t>(poz)));
+    notify();
 }
 
 void Service::cosGenereaza(int numarFilme) {
@@ -147,16 +149,19 @@ void Service::cosGenereaza(int numarFilme) {
 
     cos.clear();
     if (numarFilme == 0) {
+        notify();
         return;
     }
 
     std::mt19937 mt{std::random_device{}()};
-    std::uniform_int_distribution<> dist(0, static_cast<int>(repo.repoGetAll().size()) - 1);
+    std::uniform_int_distribution<> dist(0, int(repo.repoGetAll().size()) - 1);
 
     for (int i = 0; i < numarFilme; ++i) {
         const int rndNr = dist(mt);
         cos.push_back(repo.repoGetAll().at(static_cast<std::size_t>(rndNr)));
     }
+
+    notify();
 }
 
 const std::vector<Film>& Service::cosGetAll() const {

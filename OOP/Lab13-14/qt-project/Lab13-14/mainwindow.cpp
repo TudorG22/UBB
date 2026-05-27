@@ -1,5 +1,6 @@
 #include "mainwindow.h"
-#include "cartwindow.h"
+#include "coscrudgui.h"
+#include "cosreadonlygui.h"
 
 #include <QFormLayout>
 #include <QHBoxLayout>
@@ -39,7 +40,6 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), service(repo)
 {
     initGui();
-    cosWindow = new CartWindow(service, this);
     initConnect();
     reloadList(service.serviceGetAll());
     setMessage("Aplicatia a pornit.");
@@ -86,7 +86,11 @@ void MainWindow::initGui() {
     auto* btnSearch = new QPushButton("Cauta");
     auto* btnFilter = new QPushButton("Filtreaza");
     auto* btnReport = new QPushButton("Raport genuri");
-    auto* btnManageCart = new QPushButton("Gestioneaza cos");
+    auto* btnCartAdd = new QPushButton("Adauga in cos");
+    auto* btnCartEmpty = new QPushButton("Sterge cos");
+    auto* btnCartGenerate = new QPushButton("Genereaza cos");
+    auto* btnOpenCrud = new QPushButton("Deschide CosCRUD");
+    auto* btnOpenReadOnly = new QPushButton("Deschide CosReadOnly");
 
     buttonLayout1->addWidget(btnAdd);
     buttonLayout1->addWidget(btnDelete);
@@ -101,7 +105,11 @@ void MainWindow::initGui() {
     buttonLayout2->addWidget(btnFilter);
     buttonLayout2->addWidget(btnReport);
 
-    buttonLayout3->addWidget(btnManageCart);
+    buttonLayout3->addWidget(btnCartAdd);
+    buttonLayout3->addWidget(btnCartEmpty);
+    buttonLayout3->addWidget(btnCartGenerate);
+    buttonLayout3->addWidget(btnOpenCrud);
+    buttonLayout3->addWidget(btnOpenReadOnly);
 
     mainLayout->addLayout(formLayout);
     mainLayout->addLayout(buttonLayout1);
@@ -126,7 +134,11 @@ void MainWindow::initGui() {
     btnSearch->setObjectName("btnSearch");
     btnFilter->setObjectName("btnFilter");
     btnReport->setObjectName("btnReport");
-    btnManageCart->setObjectName("btnManageCart");
+    btnCartAdd->setObjectName("btnCartAdd");
+    btnCartEmpty->setObjectName("btnCartEmpty");
+    btnCartGenerate->setObjectName("btnCartGenerate");
+    btnOpenCrud->setObjectName("btnOpenCrud");
+    btnOpenReadOnly->setObjectName("btnOpenReadOnly");
 }
 
 void MainWindow::initConnect() {
@@ -141,7 +153,11 @@ void MainWindow::initConnect() {
     auto* btnSearch = findChild<QPushButton*>("btnSearch");
     auto* btnFilter = findChild<QPushButton*>("btnFilter");
     auto* btnReport = findChild<QPushButton*>("btnReport");
-    auto* btnManageCart = findChild<QPushButton*>("btnManageCart");
+    auto* btnCartAdd = findChild<QPushButton*>("btnCartAdd");
+    auto* btnCartEmpty = findChild<QPushButton*>("btnCartEmpty");
+    auto* btnCartGenerate = findChild<QPushButton*>("btnCartGenerate");
+    auto* btnOpenCrud = findChild<QPushButton*>("btnOpenCrud");
+    auto* btnOpenReadOnly = findChild<QPushButton*>("btnOpenReadOnly");
 
     connect(btnAdd, &QPushButton::clicked, this, [this]() {
         try {
@@ -329,12 +345,50 @@ void MainWindow::initConnect() {
         setMessage("Raport afisat.");
     });
 
-    connect(btnManageCart, &QPushButton::clicked, this, [this]() {
-        cosWindow->reloadList();
-        cosWindow->show();
-        cosWindow->raise();
-        cosWindow->activateWindow();
-        setMessage("Fereastra cos a fost deschisa.");
+    connect(btnCartAdd, &QPushButton::clicked, this, [this]() {
+        try {
+            const QString titlu = QInputDialog::getText(this, "Adauga in cos", "Titlu de adaugat in cos:");
+            if (titlu.isNull()) {
+                return;
+            }
+
+            service.cosAdauga(titlu.toStdString());
+            setMessage("Film adaugat in cos.");
+        } catch (const std::exception& ex) {
+            setMessage(ex.what());
+        }
+    });
+
+    connect(btnCartEmpty, &QPushButton::clicked, this, [this]() {
+        service.cosGoleste();
+        setMessage("Cos golit.");
+    });
+
+    connect(btnCartGenerate, &QPushButton::clicked, this, [this]() {
+        bool ok = false;
+        const int numarFilme = QInputDialog::getInt(this, "Genereaza cos", "Numar filme in cos:", 0, 0, 1000000, 1, &ok);
+        if (!ok) {
+            return;
+        }
+
+        try {
+            service.cosGenereaza(numarFilme);
+            setMessage("Cos generat.");
+        } catch (const std::exception& ex) {
+            setMessage(ex.what());
+        }
+    });
+
+    connect(btnOpenCrud, &QPushButton::clicked, this, [this]() {
+        auto* cosCrud = new CosCRUDGUI(service, this);
+        cosCrud->show();
+        setMessage("Fereastra CosCRUD a fost deschisa.");
+    });
+
+    connect(btnOpenReadOnly, &QPushButton::clicked, this, [this]() {
+        auto* cosReadOnly = new CosReadOnlyGUI(service, this);
+        cosReadOnly->show();
+        setMessage("Fereastra CosReadOnly a fost deschisa.");
     });
 
 }
@@ -342,8 +396,8 @@ void MainWindow::initConnect() {
 void MainWindow::reloadList(const std::vector<Film>& filme) {
     filmeAfisate = filme;
     listaFilme->clearContents();
-    listaFilme->setRowCount(static_cast<int>(filmeAfisate.size()));
-    for (int i = 0; i < static_cast<int>(filmeAfisate.size()); ++i) {
+    listaFilme->setRowCount(int(filmeAfisate.size()));
+    for (int i = 0; i < int(filmeAfisate.size()); ++i) {
         const auto& film = filmeAfisate[static_cast<std::size_t>(i)];
         listaFilme->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(film.getTitlu())));
         listaFilme->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(film.getGen())));
@@ -355,8 +409,8 @@ void MainWindow::reloadList(const std::vector<Film>& filme) {
 void MainWindow::reloadList(const std::vector<const Film*>& filme) {
     filmeAfisate.clear();
     listaFilme->clearContents();
-    listaFilme->setRowCount(static_cast<int>(filme.size()));
-    for (int i = 0; i < static_cast<int>(filme.size()); ++i) {
+    listaFilme->setRowCount(int(filme.size()));
+    for (int i = 0; i < int(filme.size()); ++i) {
         const auto* film = filme[static_cast<std::size_t>(i)];
         filmeAfisate.push_back(*film);
         listaFilme->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(film->getTitlu())));
@@ -384,7 +438,7 @@ void MainWindow::loadSelectedFilm() {
         return;
     }
 
-    if (index >= static_cast<int>(filmeAfisate.size())) {
+    if (index >= int(filmeAfisate.size())) {
         return;
     }
 

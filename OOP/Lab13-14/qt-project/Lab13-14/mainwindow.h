@@ -10,8 +10,6 @@
 #include "repo.h"
 #include "service.h"
 
-class CartWindow;
-
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -31,7 +29,6 @@ private:
     QTableWidget* listaFilme = nullptr;
     QLabel* labelMesaj = nullptr;
     std::vector<Film> filmeAfisate;
-    CartWindow* cosWindow = nullptr;
 
     void initGui();
     void initConnect();
