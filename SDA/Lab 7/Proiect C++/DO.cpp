@@ -84,6 +84,7 @@ TValoare DO::sterge(TCheie c) {
 	Nod* curent = radacina;
 	Nod* parinte = nullptr;
 
+	// cauta nodul care trebuie sters
 	while (curent != nullptr && curent->elem.first != c) {
 		parinte = curent;
 		if (rel(c, curent->elem.first)) {
@@ -100,6 +101,7 @@ TValoare DO::sterge(TCheie c) {
 
 	TValoare valoareStearsa = curent->elem.second;
 
+	// caz 1 ------ nodul are doi copii
 	if (curent->stanga != nullptr && curent->dreapta != nullptr) {
 		Nod* parinteSuccesor = curent;
 		Nod* succesor = curent->dreapta;
@@ -114,19 +116,24 @@ TValoare DO::sterge(TCheie c) {
 	}
 
 	Nod* copil;
+	// caz 2 ------ nodul are doar copil stang
 	if (curent->stanga != nullptr) {
 		copil = curent->stanga;
 	}
+	// caz 3 ------ nodul are copil drept sau nu are niciun copil
 	else {
 		copil = curent->dreapta;
 	}
 
+	// caz 4 ------ nodul sters este radacina
 	if (parinte == nullptr) {
 		radacina = copil;
 	}
+	// caz 5 ------ nodul sters este fiu stang
 	else if (parinte->stanga == curent) {
 		parinte->stanga = copil;
 	}
+	// caz 6 ------ nodul sters este fiu drept
 	else {
 		parinte->dreapta = copil;
 	}
@@ -168,5 +175,27 @@ DO::~DO() {
 		}
 
 		delete curent;
+	}
+}
+
+
+void DO::inlocuiesteToate(Transformator t){
+	stack<Nod*> stiva;
+	if (radacina != nullptr) {
+		stiva.push(radacina);
+	}
+
+	while (!stiva.empty()) {
+		Nod* curent = stiva.top();
+		stiva.pop();
+
+		if (curent->stanga != nullptr) {
+			stiva.push(curent->stanga);
+		}
+		if (curent->dreapta != nullptr) {
+			stiva.push(curent->dreapta);
+		}
+
+		curent->elem.second = t(curent->elem.first, curent->elem.second);
 	}
 }

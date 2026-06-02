@@ -5,7 +5,8 @@
 #include "Iterator.h"
 #include "DO.h"
 #include "TestExtins.h"
-using namespace std;
+
+using namespace std;
 
 bool cresc(TCheie c1, TCheie c2) {
 	if (c1 <= c2) {
@@ -269,6 +270,23 @@ void testIterator() {
 	testIterator(desc);
 }
 
+TValoare transformaPlusCheie(TCheie c, TValoare v) {
+	return c + v;
+}
+
+void testInlocuiesteToate() {
+	DO d = DO(cresc);
+	d.adauga(1, 10);
+	d.adauga(2, 20);
+	d.adauga(3, 30);
+
+	d.inlocuiesteToate(transformaPlusCheie);
+
+	assert(d.cauta(1) == 11);
+	assert(d.cauta(2) == 22);
+	assert(d.cauta(3) == 33);
+}
+
 void testAllExtins() {
 	testCreeaza();
 	testAdauga();
@@ -276,4 +294,5 @@ void testAllExtins() {
 	testSterge();
 	testIterator();
 	testCantitativ();
+	testInlocuiesteToate();
 }

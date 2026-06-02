@@ -2,6 +2,7 @@
 
 typedef int TCheie;
 typedef int TValoare;
+typedef TValoare(* Transformator) (TCheie, TValoare);
 
 #define NULL_TVALOARE -1
 
@@ -59,6 +60,8 @@ class DO {
 	// iteratorul va returna perechile in ordine dupa relatia de ordine (pe cheie)
 	// complexitate: BC = WC = O(n), construieste iteratorul prin parcurgere inordine
 	Iterator iterator() const;
+
+	void inlocuiesteToate(Transformator t);
 
 
 	// destructorul dictionarului
