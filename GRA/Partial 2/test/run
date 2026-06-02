@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+
+g++ -Wall -Wextra -Wvla -g -o problema problema.cpp
+
+./problema $1 $2
+
+cat $2
