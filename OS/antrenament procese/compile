@@ -1,4 +1,4 @@
 #!/usr/bin/bash
 
-gcc -Wall -Wextra -Wvla -o "program$1" "program$1.c"
-./"program$1" 
+gcc -Wall -Wextra -Wvla -o "exe/program$1" "program$1.c"
+./"exe/program$1" 
