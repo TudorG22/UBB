@@ -1,0 +1,65 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+
+class Main {
+  +main(args: String[]): void
+}
+
+class ComplexNumber {
+  -real: double
+  -imaginary: double
+  +ComplexNumber(real: double, imaginary: double)
+  +toString(): String
+}
+
+interface Operation {
+  +execute(a: ComplexNumber, b: ComplexNumber): ComplexNumber
+}
+
+class Addition
+class Subtraction
+class Multiplication
+class Division
+
+Operation <|.. Addition
+Operation <|.. Subtraction
+Operation <|.. Multiplication
+Operation <|.. Division
+
+class OperationFactory {
+  -{static} instance: OperationFactory
+  -OperationFactory()
+  +{static} getInstance(): OperationFactory
+  +create(symbol: String): Operation
+}
+
+OperationFactory ..> Addition
+OperationFactory ..> Subtraction
+OperationFactory ..> Multiplication
+OperationFactory ..> Division
+
+class ArithmeticExpression {
+  -numbers: List<ComplexNumber>
+  -operation: Operation
+  +evaluate(): ComplexNumber
+}
+
+interface ExpressionParser {
+  +parse(args: String[]): ArithmeticExpression
+}
+
+class CommandLineExpressionParser {
+  -factory: OperationFactory
+  +parse(args: String[]): ArithmeticExpression
+}
+
+ExpressionParser <|.. CommandLineExpressionParser
+CommandLineExpressionParser --> OperationFactory
+CommandLineExpressionParser ..> ArithmeticExpression
+ArithmeticExpression o-- ComplexNumber
+ArithmeticExpression --> Operation
+Main ..> ExpressionParser
+Operation ..> ComplexNumber
+
+@enduml
