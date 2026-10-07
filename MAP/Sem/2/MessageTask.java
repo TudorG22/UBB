@@ -6,7 +6,7 @@ public class MessageTask extends Task {
     private String from;
     private String to;
     private LocalDateTime date;
-    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm");
+    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     public MessageTask(String taskID, String description, String message, String from, String to, LocalDateTime date) {
         super(taskID, description);
@@ -23,6 +23,7 @@ public class MessageTask extends Task {
 
     @Override
     public String toString() {
-        return super.toString() + ' ' + message + " blabla " + date.format(DATE_TIME_FORMATTER);
+        return super.toString() + "|message=" + message + "|from=" + from + "|to=" + to
+                + "|date=" + date.format(DATE_TIME_FORMATTER);
     }
 }

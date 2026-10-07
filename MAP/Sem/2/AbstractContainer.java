@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class AbstractContainer implements Container {
+public abstract class AbstractContainer implements Container {
     protected Task[] tasks;
     protected int size;
 
@@ -23,9 +23,7 @@ public class AbstractContainer implements Container {
     }
 
     @Override
-    public boolean empty() {
+    public boolean isEmpty() {
         return this.size == 0;
     }
-
-
 }
