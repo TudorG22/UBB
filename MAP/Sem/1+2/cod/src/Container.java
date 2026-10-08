@@ -1,6 +1,6 @@
 public interface Container {
     Task remove();
-    void add(Task task);
+    void add(Task t);
     int size();
-    boolean isEmpty();
+    boolean empty();
 }

@@ -23,7 +23,9 @@ public abstract class AbstractContainer implements Container {
     }
 
     @Override
-    public boolean isEmpty() {
+    public boolean empty() {
         return this.size == 0;
     }
+
+
 }

@@ -1,4 +1,4 @@
-public class TaskContainerFactory {
+public class TaskContainerFactory implements ContainerFactory{
     private static final TaskContainerFactory INSTANCE = new TaskContainerFactory();
 
     private TaskContainerFactory(){}
@@ -7,6 +7,7 @@ public class TaskContainerFactory {
         return INSTANCE;
     }
 
+    @Override
     public Container createContainer(Strategy strategy){
         return switch (strategy){
             case FIFO -> new QueueContainer();

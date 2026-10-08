@@ -16,7 +16,7 @@ public abstract class Task {
     public abstract void execute();
 
     public String toString() {
-        return "id=" + taskID + "|description=" + description;
+        return taskID + ' ' + description;
     }
 
     @Override
