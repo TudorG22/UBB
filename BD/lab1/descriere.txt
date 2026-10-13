@@ -1,0 +1,16 @@
+Bolizi - marca, model, an, kilometraj, VIN
+Marci - BMW, Audi, Mercedes etc.
+Modele - modelele fiecarei marci
+Clienti - cine vine sa cumpere masina
+Samsari - de la cine luam masinile
+Achizitii - masina cumparata, pret, data
+Vanzari - masina vanduta, pret, data, client
+Negocieri - pret cerut, oferta primita, pret final
+Investitii - reparatii, polish, detailing, jante
+Tipuri investitii - categorii de cheltuieli
+Dotari - trapa, piele, M Paket, xenon
+BoliziDotari - legatura dintre masini si dotari
+Relatii
+- 1-m: Un samsar poate vinde mai multe masini
+- 1-m: O masina poate avea mai multe negocieri
+- m-n: O masina poate avea mai multe dotari si aceeasi dotare poate exista pe mai multe masinibd
