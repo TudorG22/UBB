@@ -1,7 +1,7 @@
 PROIECTARE - EXPRESII CU NUMERE COMPLEXE
 
 Programul primeste argumentele:
-2 + 3 * i + 5 - 6 * i + -2 + i
+2 + 3 * i + 5 - 6 * i + -2 + 1 * i
 
 CommandLineExpressionParser verifica expresia si grupeaza argumentele care
 formeaza fiecare numar complex. ArithmeticExpression aplica operatia de la

@@ -1,72 +1,44 @@
-import java.util.ArrayList;
-import java.util.List;
-
 public class CommandLineExpressionParser implements ExpressionParser {
     @Override
     public ArithmeticExpression parse(String[] arguments) {
-        if (arguments.length == 0) {
-            throw new IllegalArgumentException("The expression is empty.");
-        }
-
-        List<ComplexNumber> numbers = new ArrayList<>();
-        List<Operation> operations = new ArrayList<>();
+        ComplexNumber[] numbers = new ComplexNumber[arguments.length];
+        Operation[] operations = new Operation[arguments.length];
+        int numberCount = 0;
+        int operationCount = 0;
         int index = 0;
 
+        // validare 
+        if (arguments.length % 6 != 5) {
+        throw new IllegalArgumentException("Invalid expression");
+        }
+
+        for (int i = 0; i < arguments.length; i += 6) {
+            if ((!arguments[i + 1].equals("+") && !arguments[i + 1].equals("-"))
+                    || !arguments[i + 3].equals("*")
+                    || !arguments[i + 4].equals("i")) {
+                throw new IllegalArgumentException("Invalid expression");
+            }
+        }
+
+        //
         while (index < arguments.length) {
-            NumberRead numberRead = readNumber(arguments, index);
-            numbers.add(numberRead.number());
-            index = numberRead.nextIndex();
+            double real = Double.parseDouble(arguments[index]);
+            double imaginary = Double.parseDouble(arguments[index + 2]);
 
-            if (index == arguments.length) {
-                break;
+            if (arguments[index + 1].equals("-")) {
+                imaginary = -imaginary;
             }
 
-            String symbol = arguments[index++];
-            operations.add(OperationFactory.getInstance().createOperation(symbol));
-            if (index == arguments.length) {
-                throw new IllegalArgumentException("A number is missing after " + symbol + ".");
+            numbers[numberCount] = new ComplexNumber(real, imaginary);
+            numberCount++;
+            index += 5;
+
+            if (index < arguments.length) {
+                operations[operationCount] = OperationFactory.getInstance().createOperation(arguments[index]);
+                operationCount++;
+                index++;
             }
         }
-        return new ArithmeticExpression(numbers, operations);
+        return new ArithmeticExpression(numbers, operations, operationCount);
     }
-
-    private NumberRead readNumber(String[] arguments, int index) {
-        if (arguments[index].equals("i")) {
-            return new NumberRead(new ComplexNumber(0, 1), index + 1);
-        }
-
-        double real;
-        try {
-            real = Double.parseDouble(arguments[index]);
-        } catch (NumberFormatException exception) {
-            throw new IllegalArgumentException("Invalid number: " + arguments[index]);
-        }
-
-        if (index + 2 < arguments.length && arguments[index + 1].equals("*") && arguments[index + 2].equals("i")) {
-            return new NumberRead(new ComplexNumber(0, real), index + 3);
-        }
-        if (index + 2 < arguments.length && isSign(arguments[index + 1]) && arguments[index + 2].equals("i")) {
-            double imaginary = arguments[index + 1].equals("-") ? -1 : 1;
-            return new NumberRead(new ComplexNumber(real, imaginary), index + 3);
-        }
-        if (index + 4 < arguments.length && isSign(arguments[index + 1])
-                && arguments[index + 3].equals("*") && arguments[index + 4].equals("i")) {
-            try {
-                double imaginary = Double.parseDouble(arguments[index + 2]);
-                if (arguments[index + 1].equals("-")) {
-                    imaginary = -imaginary;
-                }
-                return new NumberRead(new ComplexNumber(real, imaginary), index + 5);
-            } catch (NumberFormatException exception) {
-                throw new IllegalArgumentException("Invalid number: " + arguments[index + 2]);
-            }
-        }
-        return new NumberRead(new ComplexNumber(real, 0), index + 1);
-    }
-
-    private boolean isSign(String value) {
-        return value.equals("+") || value.equals("-");
-    }
-
-    private record NumberRead(ComplexNumber number, int nextIndex) { }
 }

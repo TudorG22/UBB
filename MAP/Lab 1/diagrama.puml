@@ -1,4 +1,4 @@
-@startuml
+@startuml diagram
 skinparam monochrome true
 skinparam shadowing false
 

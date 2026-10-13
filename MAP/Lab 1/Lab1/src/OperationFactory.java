@@ -6,12 +6,17 @@ public class OperationFactory {
     public static OperationFactory getInstance() { return instance; }
 
     public Operation createOperation(String symbol) {
-        return switch (symbol) {
-            case "+" -> new Addition();
-            case "-" -> new Subtraction();
-            case "*" -> new Multiplication();
-            case "/" -> new Division();
-            default -> throw new IllegalArgumentException("Invalid operation: " + symbol);
-        };
+        switch (symbol) {
+            case "+":
+                return new Addition();
+            case "-":
+                return new Subtraction();
+            case "*":
+                return new Multiplication();
+            case "/":
+                return new Division();
+            default:
+                throw new IllegalArgumentException("Invalid operation: " + symbol);
+        }
     }
 }
