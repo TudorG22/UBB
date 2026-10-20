@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** Pastreaza prieteniile intr-un fisier text. */
-public class FriendshipFileRepository {
+public class FriendshipFileRepository { // facut interfete
     private final Path file;
     private final List<Friendship> friendships = new ArrayList<>();
 

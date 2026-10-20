@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** Contine operatiile specifice retelei de socializare. */
-public class NetworkService {
+public class NetworkService { // service pe user si pe friendship
     private final UserFileRepository userRepository;
     private final FriendshipFileRepository friendshipRepository;
 
