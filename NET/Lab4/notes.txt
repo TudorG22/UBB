@@ -1,0 +1,17 @@
+- chat prin care un client se conecteaza la server
+- fiecare trimite la server un username
+- cei conectati la chat pot trimite mesaje de 2 feluri: pt tot chatul sau un singur utilizator conectat la chat
+- mesag tip "x has left the chat" la deconectare
+
+ce poate primi serverul:
+ - 0 = conectare
+ - 1 = mesaj public
+ - 2 = mesaj privat
+ - 3 = someone left the chat 
+
+raspunsuri:
+- 4 = OK
+- 5 = username already taken 
+- 6 = username de lungime 0
+- 7 = user not in chat (la trimitere mesaj)
+- 8 = prima data trebuie un username 
