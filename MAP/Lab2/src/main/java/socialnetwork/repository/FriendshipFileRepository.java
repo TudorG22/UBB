@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** Pastreaza prieteniile intr-un fisier text. */
-public class FriendshipFileRepository { // facut interfete
+public class FriendshipFileRepository implements FileRepository<Friendship, Friendship> {
     private final Path file;
     private final List<Friendship> friendships = new ArrayList<>();
 
@@ -44,7 +44,7 @@ public class FriendshipFileRepository { // facut interfete
         save();
     }
 
-    private Friendship find(Friendship friendship) {
+    public Friendship find(Friendship friendship) {
         for (Friendship current : friendships) {
             boolean sameOrder = current.getFirstUserId().equals(friendship.getFirstUserId())
                     && current.getSecondUserId().equals(friendship.getSecondUserId());

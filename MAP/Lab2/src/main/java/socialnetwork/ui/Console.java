@@ -2,18 +2,21 @@ package socialnetwork.ui;
 
 import socialnetwork.domain.Friendship;
 import socialnetwork.domain.User;
-import socialnetwork.service.NetworkService;
+import socialnetwork.service.FriendshipService;
+import socialnetwork.service.UserService;
 
 import java.util.List;
 import java.util.Scanner;
 
 /** Reprezinta interfata utilizator de tip consola. */
 public class Console {
-    private final NetworkService service;
+    private final UserService userService;
+    private final FriendshipService friendshipService;
     private final Scanner scanner = new Scanner(System.in);
 
-    public Console(NetworkService service) {
-        this.service = service;
+    public Console(UserService userService, FriendshipService friendshipService) {
+        this.userService = userService;
+        this.friendshipService = friendshipService;
     }
 
     public void run() {
@@ -38,7 +41,7 @@ public class Console {
                         showAll();
                         break;
                     case "6":
-                        System.out.println("Numar comunitati: " + service.numberOfCommunities());
+                        System.out.println("Numar comunitati: " + friendshipService.numberOfCommunities());
                         break;
                     case "7":
                         showMostSociableCommunity();
@@ -60,15 +63,15 @@ public class Console {
 
     private void showAll() {
         System.out.println("Utilizatori:");
-        for (User user : service.getUsers()) System.out.println(user);
+        for (User user : userService.getUsers()) System.out.println(user);
         System.out.println("Prieteni:");
-        for (Friendship friendship : service.getFriendships()) System.out.println(friendship);
+        for (Friendship friendship : friendshipService.getFriendships()) System.out.println(friendship);
         System.out.println("Comunitati:");
-        for (List<Long> community : service.getCommunities()) System.out.println(community);
+        for (List<Long> community : friendshipService.getCommunities()) System.out.println(community);
     }
 
     private void showMostSociableCommunity() {
-        for (User user : service.mostSociableCommunity()) System.out.println(user);
+        for (User user : friendshipService.mostSociableCommunity()) System.out.println(user);
     }
 
     private void addUser() {
@@ -78,17 +81,17 @@ public class Console {
         String firstName = scanner.nextLine();
         System.out.print("Nume: ");
         String lastName = scanner.nextLine();
-        service.addUser(id, firstName, lastName);
+        userService.addUser(id, firstName, lastName);
     }
 
-    private void removeUser() { service.removeUser(readId("Id: ")); }
+    private void removeUser() { userService.removeUser(readId("Id: ")); }
 
     private void addFriendship() {
-        service.addFriendship(readId("Primul id: "), readId("Al doilea id: "));
+        friendshipService.addFriendship(readId("Primul id: "), readId("Al doilea id: "));
     }
 
     private void removeFriendship() {
-        service.removeFriendship(readId("Primul id: "), readId("Al doilea id: "));
+        friendshipService.removeFriendship(readId("Primul id: "), readId("Al doilea id: "));
     }
 
     private Long readId(String message) {

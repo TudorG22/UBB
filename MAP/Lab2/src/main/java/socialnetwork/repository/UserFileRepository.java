@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** Pastreaza utilizatorii intr-un fisier text. */
-public class UserFileRepository {
+public class UserFileRepository implements FileRepository<Long, User> {
     private final Path file;
     private final Validator<User> validator;
     private final List<User> users = new ArrayList<>();
