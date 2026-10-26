@@ -112,4 +112,3 @@ CREATE TABLE BoliziDotari
     FOREIGN KEY (id_dotare) REFERENCES Dotari(id_dotare)
 );
 GO
-

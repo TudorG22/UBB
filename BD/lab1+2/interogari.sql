@@ -129,11 +129,11 @@ join modele mo on mo.id_model = b.id_model
 join marci m on m.id_marca = mo.id_marca
 join achizitii a on a.id_bolid = b.id_bolid
 join vanzari v on v.id_bolid = b.id_bolid
-outer apply (
-    select sum(i.cost) as cost_total
-    from investitii i
-    where i.id_bolid = b.id_bolid
-) inv;
+left join (
+    select id_bolid, sum(cost) as cost_total
+    from investitii
+    group by id_bolid
+) inv on inv.id_bolid = b.id_bolid;
 
 -- istoricul negocierilor
 select n.id_negociere, c.nume as client, m.nume as marca,

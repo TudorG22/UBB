@@ -1,0 +1,6 @@
+USE BDBisnitar;
+GO
+
+SELECT * FROM Bolizi
+SELECT * FROM Marci
+SELECT * FROM Modele
