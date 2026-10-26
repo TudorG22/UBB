@@ -1,0 +1,14 @@
+## 4a 
+substituie([H|T], E, L, R) - (i, i, i, o)
+
+substituie([], E, L) = []
+substituie([H|T], E, L) = L + substituie(T, E, L), daca H == E
+substituie([H|T], E, L) = H + substituie(T, E, L), daca H \== E
+
+
+## 4b 
+sterge(L, N, I, R) - (i, i, i, o)
+
+sterge([], N, I) = []
+sterge([H|T], N, I) = sterge(T, N, I + 1), daca N == I  
+sterge([H|T], N, I) = H + sterge(T, N, I + 1), daca N \== I
