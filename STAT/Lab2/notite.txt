@@ -1,0 +1,7 @@
+frecventa relativa
+
+Fie  A un eveninment asociat unui experiment (nu eveninment). Repetam exp de N ori.
+Fie k_N(A) = nr de rezalizari ale evenimentului A in cele N simulari = FRECVENTA ABSOLUTA
+
+Numarul f_N(A) = k_N(A)/N se numeste FRECVENTA RELATIVA 
+f_N(A) tinde spre probabilitatea teoretica cand N tinde spre infinit
