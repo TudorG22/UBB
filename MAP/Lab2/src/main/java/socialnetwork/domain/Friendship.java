@@ -2,17 +2,11 @@ package socialnetwork.domain;
 
 import java.time.LocalDateTime;
 
-/** A friendship between two users. */
 public class Friendship extends Entity<String> {
     private final Long firstUserId;
     private final Long secondUserId;
     private final LocalDateTime friendshipDate;
 
-    /** Creates a friendship.
-     * @param firstUserId first user ID
-     * @param secondUserId second user ID
-     * @param friendshipDate creation date
-     */
     public Friendship(Long firstUserId, Long secondUserId, LocalDateTime friendshipDate) {
         super(createId(firstUserId, secondUserId));
         this.firstUserId = firstUserId;
@@ -47,7 +41,6 @@ public class Friendship extends Entity<String> {
                 : secondUserId + ";" + firstUserId;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString() { return firstUserId + ";" + secondUserId + ";" + friendshipDate; }
 }

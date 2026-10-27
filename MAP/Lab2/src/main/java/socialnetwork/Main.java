@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-/** Starts the application. */
 public class Main {
     /** Starts the console application.
      * @param args unused command line arguments

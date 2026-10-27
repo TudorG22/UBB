@@ -1,12 +1,8 @@
 package socialnetwork.config;
 
-/** Available storage types. */
 public enum RepositoryType {
-    /** Temporary in-memory storage. */
     MEMORY,
-    /** UTF-8 text files. */
     FILE,
-    /** Database placeholder for Lab 4. */
     DATABASE;
 
     /** Parses the configured type.

@@ -8,22 +8,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Stores entities in memory.
- * @param <ID> ID type
- * @param <E> entity type
- */
 public class InMemoryRepository<ID, E extends Entity<ID>> implements Repository<ID, E> {
     private final Map<ID, E> entities = new LinkedHashMap<>();
     private final Validator<E> validator;
 
-    /** Creates a repository.
-     * @param validator validator used on save and update
-     */
     public InMemoryRepository(Validator<E> validator) {
         this.validator = validator;
     }
 
-    /** {@inheritDoc} */
     @Override
     public E save(E entity) {
         if (entity == null) {
@@ -37,7 +29,6 @@ public class InMemoryRepository<ID, E extends Entity<ID>> implements Repository<
         return null;
     }
 
-    /** {@inheritDoc} */
     @Override
     public E delete(ID id) {
         if (id == null) {
@@ -46,7 +37,6 @@ public class InMemoryRepository<ID, E extends Entity<ID>> implements Repository<
         return entities.remove(id);
     }
 
-    /** {@inheritDoc} */
     @Override
     public E update(E entity) {
         if (entity == null) {
@@ -60,7 +50,6 @@ public class InMemoryRepository<ID, E extends Entity<ID>> implements Repository<
         return null;
     }
 
-    /** {@inheritDoc} */
     @Override
     public E findOne(ID id) {
         if (id == null) {
@@ -69,7 +58,6 @@ public class InMemoryRepository<ID, E extends Entity<ID>> implements Repository<
         return entities.get(id);
     }
 
-    /** {@inheritDoc} */
     @Override
     public List<E> findAll() {
         return new ArrayList<>(entities.values());

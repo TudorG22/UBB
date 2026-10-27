@@ -10,16 +10,11 @@ import socialnetwork.service.UserService;
 import java.util.List;
 import java.util.Scanner;
 
-/** Text console for the application. */
 public class Console {
     private final UserService userService;
     private final FriendshipService friendshipService;
     private final Scanner scanner = new Scanner(System.in);
 
-    /** Creates the console.
-     * @param userService user operations
-     * @param friendshipService friendship operations
-     */
     public Console(UserService userService, FriendshipService friendshipService) {
         this.userService = userService;
         this.friendshipService = friendshipService;

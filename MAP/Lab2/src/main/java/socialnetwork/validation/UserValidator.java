@@ -3,9 +3,7 @@ package socialnetwork.validation;
 import socialnetwork.domain.User;
 import socialnetwork.exceptions.ValidationException;
 
-/** Validates a user. */
 public class UserValidator implements Validator<User> {
-    /** {@inheritDoc} */
     @Override
     public void validate(User user) {
         if (user == null || user.getId() == null || user.getId() <= 0

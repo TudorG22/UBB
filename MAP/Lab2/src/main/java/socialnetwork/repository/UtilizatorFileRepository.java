@@ -6,12 +6,7 @@ import socialnetwork.validation.Validator;
 
 import java.nio.file.Path;
 
-/** Converts user records to and from text. */
 public class UtilizatorFileRepository extends AbstractFileRepository<Long, User> {
-    /** Creates a file repository for users.
-     * @param file text file path
-     * @param validator user validator
-     */
     public UtilizatorFileRepository(Path file, Validator<User> validator) {
         super(file, validator);
     }

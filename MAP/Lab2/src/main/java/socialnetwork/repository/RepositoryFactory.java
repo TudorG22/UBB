@@ -8,13 +8,9 @@ import socialnetwork.validation.Validator;
 import java.nio.file.Path;
 import java.util.Properties;
 
-/** Creates repositories for the configured storage type. */
 public class RepositoryFactory {
     private final Properties properties;
 
-    /** Creates the factory.
-     * @param properties application configuration
-     */
     public RepositoryFactory(Properties properties) {
         this.properties = properties;
     }

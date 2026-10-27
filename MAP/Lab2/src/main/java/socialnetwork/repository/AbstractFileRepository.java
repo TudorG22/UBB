@@ -13,26 +13,16 @@ import java.nio.file.Path;
 import java.nio.charset.StandardCharsets;
 import java.time.format.DateTimeParseException;
 
-/** Stores entities in memory and a UTF-8 text file.
- * @param <ID> ID type
- * @param <E> entity type
- */
 public abstract class AbstractFileRepository<ID, E extends Entity<ID>>
         extends InMemoryRepository<ID, E> {
     private final Path file;
 
-    /** Loads existing data from a file.
-     * @param file text file path
-     * @param validator entity validator
-     * @throws RepositoryException if a line is invalid or reading fails
-     */
     protected AbstractFileRepository(Path file, Validator<E> validator) {
         super(validator);
         this.file = file;
         loadData();
     }
 
-    /** {@inheritDoc} */
     @Override
     public E save(E entity) {
         E result = super.save(entity);
@@ -42,7 +32,6 @@ public abstract class AbstractFileRepository<ID, E extends Entity<ID>>
         return result;
     }
 
-    /** {@inheritDoc} */
     @Override
     public E delete(ID id) {
         E result = super.delete(id);
@@ -52,7 +41,6 @@ public abstract class AbstractFileRepository<ID, E extends Entity<ID>>
         return result;
     }
 
-    /** {@inheritDoc} */
     @Override
     public E update(E entity) {
         E result = super.update(entity);
@@ -104,15 +92,7 @@ public abstract class AbstractFileRepository<ID, E extends Entity<ID>>
         }
     }
 
-    /** Converts one line to an entity.
-     * @param line text line
-     * @return parsed entity
-     */
     protected abstract E extractEntity(String line);
 
-    /** Converts an entity to one line.
-     * @param entity entity to write
-     * @return text line
-     */
     protected abstract String createEntityAsString(E entity);
 }

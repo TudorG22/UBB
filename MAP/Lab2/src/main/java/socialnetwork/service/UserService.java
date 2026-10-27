@@ -7,15 +7,10 @@ import socialnetwork.repository.Repository;
 
 import java.util.List;
 
-/** User operations. */
 public class UserService {
     private final Repository<Long, User> userRepository;
     private final Repository<String, Friendship> friendshipRepository;
 
-    /** Creates the service.
-     * @param userRepository user storage
-     * @param friendshipRepository friendship storage
-     */
     public UserService(Repository<Long, User> userRepository, Repository<String, Friendship> friendshipRepository) {
         this.userRepository = userRepository;
         this.friendshipRepository = friendshipRepository;

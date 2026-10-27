@@ -1,15 +1,9 @@
 package socialnetwork.domain;
 
-/** A social network user. */
 public class User extends Entity<Long> {
     private final String firstName;
     private final String lastName;
 
-    /** Creates a user.
-     * @param id user ID
-     * @param firstName first name
-     * @param lastName last name
-     */
     public User(Long id, String firstName, String lastName) {
         super(id);
         this.firstName = firstName;
@@ -25,7 +19,6 @@ public class User extends Entity<Long> {
      */
     public String getLastName() { return lastName; }
 
-    /** {@inheritDoc} */
     @Override
     public String toString() { return getId() + ";" + firstName + ";" + lastName; }
 }

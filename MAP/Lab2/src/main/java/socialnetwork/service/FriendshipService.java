@@ -9,15 +9,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Friendship and community operations. */
 public class FriendshipService {
     private final Repository<String, Friendship> friendshipRepository;
     private final UserService userService;
 
-    /** Creates the service.
-     * @param friendshipRepository friendship storage
-     * @param userService user service
-     */
     public FriendshipService(Repository<String, Friendship> friendshipRepository, UserService userService) {
         this.friendshipRepository = friendshipRepository;
         this.userService = userService;

@@ -7,12 +7,7 @@ import socialnetwork.validation.Validator;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 
-/** Converts friendship records to and from text. */
 public class PrietenieFileRepository extends AbstractFileRepository<String, Friendship> {
-    /** Creates a file repository for friendships.
-     * @param file text file path
-     * @param validator friendship validator
-     */
     public PrietenieFileRepository(Path file, Validator<Friendship> validator) {
         super(file, validator);
     }

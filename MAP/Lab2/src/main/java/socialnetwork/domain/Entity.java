@@ -2,15 +2,9 @@ package socialnetwork.domain;
 
 import java.util.Objects;
 
-/** Entity identified by an ID.
- * @param <ID> ID type
- */
 public abstract class Entity<ID> {
     private final ID id;
 
-    /** Creates an entity.
-     * @param id entity ID
-     */
     protected Entity(ID id) {
         this.id = id;
     }
