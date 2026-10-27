@@ -1,21 +1,31 @@
 package socialnetwork.domain;
 
-/** Reprezinta un utilizator al retelei de socializare. */
-public class User {
-    private final Long id;
+/** A social network user. */
+public class User extends Entity<Long> {
     private final String firstName;
     private final String lastName;
 
+    /** Creates a user.
+     * @param id user ID
+     * @param firstName first name
+     * @param lastName last name
+     */
     public User(Long id, String firstName, String lastName) {
-        this.id = id;
+        super(id);
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
-    public Long getId() { return id; }
+    /** Returns the first name.
+     * @return first name
+     */
     public String getFirstName() { return firstName; }
+    /** Returns the last name.
+     * @return last name
+     */
     public String getLastName() { return lastName; }
 
+    /** {@inheritDoc} */
     @Override
-    public String toString() { return id + ";" + firstName + ";" + lastName; }
+    public String toString() { return getId() + ";" + firstName + ";" + lastName; }
 }

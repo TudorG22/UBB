@@ -3,47 +3,73 @@ package socialnetwork.service;
 import socialnetwork.domain.Friendship;
 import socialnetwork.domain.User;
 import socialnetwork.exceptions.RepositoryException;
-import socialnetwork.repository.FriendshipFileRepository;
+import socialnetwork.repository.Repository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Contine operatiile specifice prieteniilor si comunitatilor. */
+/** Friendship and community operations. */
 public class FriendshipService {
-    private final FriendshipFileRepository friendshipRepository;
+    private final Repository<String, Friendship> friendshipRepository;
     private final UserService userService;
 
-    public FriendshipService(FriendshipFileRepository friendshipRepository, UserService userService) {
+    /** Creates the service.
+     * @param friendshipRepository friendship storage
+     * @param userService user service
+     */
+    public FriendshipService(Repository<String, Friendship> friendshipRepository, UserService userService) {
         this.friendshipRepository = friendshipRepository;
         this.userService = userService;
     }
 
+    /** Adds a friendship.
+     * @param firstId first user ID
+     * @param secondId second user ID
+     * @throws socialnetwork.exceptions.ValidationException if users or data are invalid
+     * @throws RepositoryException if it exists or storage fails
+     */
     public void addFriendship(Long firstId, Long secondId) {
-        if (!userService.exists(firstId) || !userService.exists(secondId)) {
-            throw new RepositoryException("Utilizator inexistent.");
+        if (friendshipRepository.save(new Friendship(firstId, secondId, LocalDateTime.now())) != null) {
+            throw new RepositoryException("Prietenie existenta.");
         }
-        if (firstId.equals(secondId)) {
-            throw new RepositoryException("Un utilizator nu poate fi propriul prieten.");
-        }
-        friendshipRepository.add(new Friendship(firstId, secondId));
     }
 
+    /** Removes a friendship.
+     * @param firstId first user ID
+     * @param secondId second user ID
+     * @throws RepositoryException if absent or storage fails
+     */
     public void removeFriendship(Long firstId, Long secondId) {
-        friendshipRepository.remove(new Friendship(firstId, secondId));
+        if (friendshipRepository.delete(Friendship.createId(firstId, secondId)) == null) {
+            throw new RepositoryException("Prietenie inexistenta.");
+        }
     }
 
+    /** Lists friendships.
+     * @return all friendships
+     */
     public List<Friendship> getFriendships() {
-        return friendshipRepository.getAll();
+        return friendshipRepository.findAll();
     }
 
+    /** Lists connected communities.
+     * @return communities of user IDs
+     */
     public List<List<Long>> getCommunities() {
         return communities();
     }
 
+    /** Counts connected communities.
+     * @return number of communities
+     */
     public int numberOfCommunities() {
         return communities().size();
     }
 
+    /** Finds the community with the longest shortest path.
+     * @return users in that community
+     */
     public List<User> mostSociableCommunity() {
         List<List<Long>> allCommunities = communities();
         List<Long> mostSociable = new ArrayList<>();
@@ -132,7 +158,7 @@ public class FriendshipService {
 
     private List<Long> friendsOf(Long id) {
         List<Long> result = new ArrayList<>();
-        for (Friendship friendship : friendshipRepository.getAll()) {
+        for (Friendship friendship : friendshipRepository.findAll()) {
             if (friendship.getFirstUserId().equals(id)) {
                 result.add(friendship.getSecondUserId());
             }

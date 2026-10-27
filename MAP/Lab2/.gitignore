@@ -1,2 +1,5 @@
 # Default ignored files
 out/*
+!data/utilizatori.txt
+!data/prietenii.txt
+!data/linii_corupte.txt

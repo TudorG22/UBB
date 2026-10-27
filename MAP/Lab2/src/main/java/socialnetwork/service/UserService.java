@@ -1,39 +1,75 @@
 package socialnetwork.service;
 
 import socialnetwork.domain.User;
-import socialnetwork.repository.FriendshipFileRepository;
-import socialnetwork.repository.UserFileRepository;
+import socialnetwork.domain.Friendship;
+import socialnetwork.exceptions.RepositoryException;
+import socialnetwork.repository.Repository;
 
 import java.util.List;
 
-/** Contine operatiile specifice utilizatorilor. */
+/** User operations. */
 public class UserService {
-    private final UserFileRepository userRepository;
-    private final FriendshipFileRepository friendshipRepository;
+    private final Repository<Long, User> userRepository;
+    private final Repository<String, Friendship> friendshipRepository;
 
-    public UserService(UserFileRepository userRepository, FriendshipFileRepository friendshipRepository) {
+    /** Creates the service.
+     * @param userRepository user storage
+     * @param friendshipRepository friendship storage
+     */
+    public UserService(Repository<Long, User> userRepository, Repository<String, Friendship> friendshipRepository) {
         this.userRepository = userRepository;
         this.friendshipRepository = friendshipRepository;
     }
 
+    /** Adds a user.
+     * @param id user ID
+     * @param firstName first name
+     * @param lastName last name
+     * @throws socialnetwork.exceptions.ValidationException if data is invalid
+     * @throws RepositoryException if the user exists or storage fails
+     */
     public void addUser(Long id, String firstName, String lastName) {
-        userRepository.add(new User(id, firstName, lastName));
+        if (userRepository.save(new User(id, firstName, lastName)) != null) {
+            throw new RepositoryException("Utilizator existent.");
+        }
     }
 
+    /** Removes a user and their friendships.
+     * @param id user ID
+     * @throws RepositoryException if the user is absent or storage fails
+     */
     public void removeUser(Long id) {
-        userRepository.remove(id);
-        friendshipRepository.removeForUser(id);
+        if (userRepository.findOne(id) == null) {
+            throw new RepositoryException("Utilizator inexistent.");
+        }
+        for (Friendship friendship : friendshipRepository.findAll()) {
+            if (friendship.getFirstUserId().equals(id) || friendship.getSecondUserId().equals(id)) {
+                friendshipRepository.delete(friendship.getId());
+            }
+        }
+        userRepository.delete(id);
     }
 
+    /** Checks whether a user exists.
+     * @param id user ID
+     * @return true if present
+     */
     public boolean exists(Long id) {
-        return userRepository.exists(id);
+        return userRepository.findOne(id) != null;
     }
 
+    /** Finds a user.
+     * @param id user ID
+     * @return user, or null if absent
+     */
     public User findUser(Long id) {
-        return userRepository.find(id);
+        return userRepository.findOne(id);
     }
 
+    /** Lists users.
+     * @return all users
+     */
     public List<User> getUsers() {
-        return userRepository.getAll();
+        return userRepository.findAll();
     }
 }

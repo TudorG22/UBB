@@ -2,23 +2,30 @@ package socialnetwork.ui;
 
 import socialnetwork.domain.Friendship;
 import socialnetwork.domain.User;
+import socialnetwork.exceptions.RepositoryException;
+import socialnetwork.exceptions.ValidationException;
 import socialnetwork.service.FriendshipService;
 import socialnetwork.service.UserService;
 
 import java.util.List;
 import java.util.Scanner;
 
-/** Reprezinta interfata utilizator de tip consola. */
+/** Text console for the application. */
 public class Console {
     private final UserService userService;
     private final FriendshipService friendshipService;
     private final Scanner scanner = new Scanner(System.in);
 
+    /** Creates the console.
+     * @param userService user operations
+     * @param friendshipService friendship operations
+     */
     public Console(UserService userService, FriendshipService friendshipService) {
         this.userService = userService;
         this.friendshipService = friendshipService;
     }
 
+    /** Reads commands until exit. */
     public void run() {
         while (true) {
             printMenu();
@@ -51,7 +58,8 @@ public class Console {
                     default:
                         System.out.println("Optiune invalida.");
                 }
-            } catch (RuntimeException exception) {
+            } catch (ValidationException | RepositoryException | IllegalArgumentException
+                     | UnsupportedOperationException exception) {
                 System.out.println(exception.getMessage());
             }
         }
