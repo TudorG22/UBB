@@ -4,32 +4,22 @@ import socialnetwork.domain.Friendship;
 import socialnetwork.domain.User;
 import socialnetwork.exceptions.RepositoryException;
 import socialnetwork.repository.FriendshipFileRepository;
-import socialnetwork.repository.UserFileRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/** Contine operatiile specifice retelei de socializare. */
-public class NetworkService { // service pe user si pe friendship
-    private final UserFileRepository userRepository;
+/** Contine operatiile specifice prieteniilor si comunitatilor. */
+public class FriendshipService {
     private final FriendshipFileRepository friendshipRepository;
+    private final UserService userService;
 
-    public NetworkService(UserFileRepository userRepository, FriendshipFileRepository friendshipRepository) {
-        this.userRepository = userRepository;
+    public FriendshipService(FriendshipFileRepository friendshipRepository, UserService userService) {
         this.friendshipRepository = friendshipRepository;
-    }
-
-    public void addUser(Long id, String firstName, String lastName) {
-        userRepository.add(new User(id, firstName, lastName));
-    }
-
-    public void removeUser(Long id) {
-        userRepository.remove(id);
-        friendshipRepository.removeForUser(id);
+        this.userService = userService;
     }
 
     public void addFriendship(Long firstId, Long secondId) {
-        if (!userRepository.exists(firstId) || !userRepository.exists(secondId)) {
+        if (!userService.exists(firstId) || !userService.exists(secondId)) {
             throw new RepositoryException("Utilizator inexistent.");
         }
         if (firstId.equals(secondId)) {
@@ -42,13 +32,17 @@ public class NetworkService { // service pe user si pe friendship
         friendshipRepository.remove(new Friendship(firstId, secondId));
     }
 
-    public List<User> getUsers() { return userRepository.getAll(); }
+    public List<Friendship> getFriendships() {
+        return friendshipRepository.getAll();
+    }
 
-    public List<Friendship> getFriendships() { return friendshipRepository.getAll(); }
+    public List<List<Long>> getCommunities() {
+        return communities();
+    }
 
-    public List<List<Long>> getCommunities() { return communities(); }
-
-    public int numberOfCommunities() { return communities().size(); }
+    public int numberOfCommunities() {
+        return communities().size();
+    }
 
     public List<User> mostSociableCommunity() {
         List<List<Long>> allCommunities = communities();
@@ -64,7 +58,9 @@ public class NetworkService { // service pe user si pe friendship
         }
 
         List<User> result = new ArrayList<>();
-        for (Long id : mostSociable) result.add(userRepository.find(id));
+        for (Long id : mostSociable) {
+            result.add(userService.findUser(id));
+        }
         return result;
     }
 
@@ -72,7 +68,7 @@ public class NetworkService { // service pe user si pe friendship
         List<List<Long>> result = new ArrayList<>();
         List<Long> visited = new ArrayList<>();
 
-        for (User user : userRepository.getAll()) {
+        for (User user : userService.getUsers()) {
             if (!visited.contains(user.getId())) {
                 List<Long> community = new ArrayList<>();
                 visit(user.getId(), visited, community);
@@ -86,7 +82,9 @@ public class NetworkService { // service pe user si pe friendship
         visited.add(id);
         community.add(id);
         for (Long friendId : friendsOf(id)) {
-            if (!visited.contains(friendId)) visit(friendId, visited, community);
+            if (!visited.contains(friendId)) {
+                visit(friendId, visited, community);
+            }
         }
     }
 
@@ -95,7 +93,9 @@ public class NetworkService { // service pe user si pe friendship
         for (Long firstId : community) {
             for (Long secondId : community) {
                 int distance = distance(firstId, secondId);
-                if (distance > maximum) maximum = distance;
+                if (distance > maximum) {
+                    maximum = distance;
+                }
             }
         }
         return maximum;
@@ -114,7 +114,9 @@ public class NetworkService { // service pe user si pe friendship
         while (position < queue.size()) {
             Long current = queue.get(position);
             int currentDistance = distances.get(position);
-            if (current.equals(finish)) return currentDistance;
+            if (current.equals(finish)) {
+                return currentDistance;
+            }
 
             for (Long friendId : friendsOf(current)) {
                 if (!visited.contains(friendId)) {
@@ -131,8 +133,12 @@ public class NetworkService { // service pe user si pe friendship
     private List<Long> friendsOf(Long id) {
         List<Long> result = new ArrayList<>();
         for (Friendship friendship : friendshipRepository.getAll()) {
-            if (friendship.getFirstUserId().equals(id)) result.add(friendship.getSecondUserId());
-            if (friendship.getSecondUserId().equals(id)) result.add(friendship.getFirstUserId());
+            if (friendship.getFirstUserId().equals(id)) {
+                result.add(friendship.getSecondUserId());
+            }
+            if (friendship.getSecondUserId().equals(id)) {
+                result.add(friendship.getFirstUserId());
+            }
         }
         return result;
     }
