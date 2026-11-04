@@ -8,7 +8,7 @@ import socialnetwork.repository.Repository;
 import java.util.List;
 
 public class UserService {
-    private final Repository<Long, User> userRepository;
+    private final UserRepository userRepository;
     private final Repository<String, Friendship> friendshipRepository;
 
     public UserService(Repository<Long, User> userRepository, Repository<String, Friendship> friendshipRepository) {
@@ -24,6 +24,7 @@ public class UserService {
      * @throws RepositoryException if the user exists or storage fails
      */
     public void addUser(Long id, String firstName, String lastName) {
+        userRepository.findByName();
         if (userRepository.save(new User(id, firstName, lastName)) != null) {
             throw new RepositoryException("Utilizator existent.");
         }

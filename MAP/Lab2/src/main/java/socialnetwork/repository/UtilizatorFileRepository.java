@@ -6,7 +6,7 @@ import socialnetwork.validation.Validator;
 
 import java.nio.file.Path;
 
-public class UtilizatorFileRepository extends AbstractFileRepository<Long, User> {
+public class UtilizatorFileRepository extends AbstractFileRepository<Long, User>  implements UserRepository{
     public UtilizatorFileRepository(Path file, Validator<User> validator) {
         super(file, validator);
     }
@@ -24,4 +24,9 @@ public class UtilizatorFileRepository extends AbstractFileRepository<Long, User>
     protected String createEntityAsString(User user) {
         return user.getId() + ";" + user.getFirstName() + ";" + user.getLastName();
     }
+
+    public void findByName(String name) {
+        
+    }
+
 }
