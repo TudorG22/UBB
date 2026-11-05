@@ -1,0 +1,24 @@
+11. a)
+
+prim(n) =
+    fals, daca n <= 1
+    primAux(n, 2), daca n > 1
+
+primAux(n, d) =
+    adevarat, daca d*d > n
+    fals, daca d*d <= n si n mod d = 0
+    primAux(n, d+1), altfel
+
+dubleaza(l1, ..., ln) =
+    [], daca n = 0
+    l1 (+) l1 (+) dubleaza(l2, ..., ln), daca prim(l1)
+    l1 (+) dubleaza(l2, ..., ln), altfel
+
+
+11. b)
+
+dubleazaSub(l1, ..., ln) =
+    [], daca n = 0
+    dubleaza(l1) (+) dubleazaSub(l2, ..., ln), daca l1 e lista non vida
+    ##([] (+) dubleazaSub(l2, ..., ln), daca l1 e lista vida)
+    l1 (+) dubleazaSub(l2, ..., ln), altfel

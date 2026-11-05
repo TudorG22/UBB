@@ -1,0 +1,21 @@
+De verificat cu documentatia:
+Pentru: Tabel, Mat VIEW, Temp VIEW, CTE (Common Table Expression), Sinonime
+Criterii: 
+- Cat timp persista datele?
+- Cand sunt extrase? 
+- Stocheaza?
+- Update?BB
+- Ce este?
+- Utilitate?
+
+-----------------------------
+
+TABEL:
+- cat: permanent pana la drop sau dispare de pe disc
+- Ce este: instanta de stocat date
+
+Mat VIEW:
+- snapshot 
+- cand sunt extrase: interogare
+- stocheaza un snapshot
+- ce este: o tabela virtuala
