@@ -1,0 +1,11 @@
+- avem voie cu orice vrem noi fara povestit intre noi
+
+PRIMUL CAZ
+- daca avec un client si un server2 care comunica, scriem un client si un server2, dar
+intereseaza functionalitatea unui server1 care se baga intre cei doi, server intermediar 
+    - tot ce trimite client la s1, s1 trimite la s2 devenind astfel client pentru server2
+    - conexiune s1-s2 per client
+
+AL DOILEA CAZ 
+- server intermediar intre un client ssh si un server www.scs.ubbcluj.ro:3389
+    - client scp pt linux?
