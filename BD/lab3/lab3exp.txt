@@ -1,0 +1,260 @@
+-- Explicatie: Alege baza de date BDBisnitar.
+USE BDBisnitar;
+-- Explicatie: GO incheie un lot de instructiuni SQL.
+GO
+
+-- Istoricul retine versiunile aplicate. Versiunea 0 este cea initiala.
+-- Explicatie: OBJECT_ID verifica daca exista tabela; 'U' inseamna tabela obisnuita.
+IF OBJECT_ID('dbo.IstoricVersiuni', 'U') IS NULL
+BEGIN
+    -- Explicatie: Fiecare numar din istoric este o versiune aplicata; PRIMARY KEY nu permite dubluri.
+    CREATE TABLE IstoricVersiuni (numar INT PRIMARY KEY);
+    -- Explicatie: Versiunea 0 exista de la inceput.
+    INSERT INTO IstoricVersiuni VALUES (0);
+END;
+GO
+
+-- Fiecare versiune noua are o procedura pentru aplicare si una pentru anulare.
+-- Explicatie: Creeaza tabela pasilor numai daca nu exista.
+IF OBJECT_ID('dbo.PasiVersiune', 'U') IS NULL
+BEGIN
+    -- Explicatie: Aceasta tabela spune ce proceduri corespund fiecarui numar de versiune.
+    CREATE TABLE PasiVersiune
+    (
+        -- Explicatie: Un singur rand pentru fiecare versiune.
+        numar INT PRIMARY KEY,
+        -- Explicatie: Numele procedurii care aplica modificarea.
+        procedura_aplicare VARCHAR(100),
+        -- Explicatie: Numele procedurii care anuleaza modificarea.
+        procedura_anulare VARCHAR(100)
+    );
+END;
+GO
+
+-- Explicatie: Sterge procedurile vechi daca exista, ca sa le poata recrea mai jos.
+DROP PROCEDURE IF EXISTS SchimbaVersiunea;
+DROP PROCEDURE IF EXISTS VinVarchar;
+DROP PROCEDURE IF EXISTS VinChar;
+DROP PROCEDURE IF EXISTS AdaugaDefault;
+DROP PROCEDURE IF EXISTS StergeDefault;
+DROP PROCEDURE IF EXISTS CreeazaRevizii;
+DROP PROCEDURE IF EXISTS StergeRevizii;
+DROP PROCEDURE IF EXISTS AdaugaDataRevizie;
+DROP PROCEDURE IF EXISTS StergeDataRevizie;
+DROP PROCEDURE IF EXISTS AdaugaCheieStraina;
+DROP PROCEDURE IF EXISTS StergeCheieStraina;
+-- Explicatie: GO permite ca urmatorul CREATE PROCEDURE sa inceapa un lot nou.
+GO
+
+-- 0 -> 1: modifica tipul unei coloane.
+-- Explicatie: Procedura aplica modificarea pentru versiunea 1.
+CREATE PROCEDURE VinVarchar
+-- Explicatie: AS introduce corpul procedurii; BEGIN si END il delimiteaza.
+AS
+BEGIN
+    -- Explicatie: Schimba tipul lui VIN din CHAR(17) in VARCHAR(17).
+    ALTER TABLE Bolizi ALTER COLUMN VIN VARCHAR(17) NULL;
+    -- Explicatie: Dupa schimbare, inregistreaza versiunea 1 in istoric.
+    INSERT INTO IstoricVersiuni VALUES (1);
+END;
+GO
+
+-- 1 -> 0: revine la tipul initial.
+-- Explicatie: Procedura inversa a versiunii 1.
+CREATE PROCEDURE VinChar
+AS
+BEGIN
+    -- Explicatie: Readuce tipul initial CHAR(17).
+    ALTER TABLE Bolizi ALTER COLUMN VIN CHAR(17) NULL;
+    -- Explicatie: Scoate versiunea 1 din istoric dupa anulare.
+    DELETE FROM IstoricVersiuni WHERE numar = 1;
+END;
+GO
+
+-- 1 -> 2: adauga o valoare implicita.
+-- Explicatie: Procedura aplica modificarea pentru versiunea 2.
+CREATE PROCEDURE AdaugaDefault
+AS
+BEGIN
+    -- Explicatie: Indica tabela Bolizi.
+    ALTER TABLE Bolizi
+    -- Explicatie: Adauga o constrangere care da kilometraj 0 la inserare daca nu e specificat.
+    ADD CONSTRAINT DF_Bolizi_Kilometraj DEFAULT 0 FOR kilometraj;
+    -- Explicatie: Inregistreaza versiunea 2 in istoric.
+    INSERT INTO IstoricVersiuni VALUES (2);
+END;
+GO
+
+-- 2 -> 1: sterge valoarea implicita.
+-- Explicatie: Procedura inversa a versiunii 2.
+CREATE PROCEDURE StergeDefault
+AS
+BEGIN
+    -- Explicatie: Sterge constrangerea de valoare implicita.
+    ALTER TABLE Bolizi DROP CONSTRAINT DF_Bolizi_Kilometraj;
+    -- Explicatie: Scoate versiunea 2 din istoric.
+    DELETE FROM IstoricVersiuni WHERE numar = 2;
+END;
+GO
+
+-- 2 -> 3: creeaza o tabela.
+-- Explicatie: Procedura aplica modificarea pentru versiunea 3.
+CREATE PROCEDURE CreeazaRevizii
+AS
+BEGIN
+    -- Explicatie: Creeaza tabela Revizii.
+    CREATE TABLE Revizii
+    (
+        -- Explicatie: Cheie primara numerotata automat de la 1, din 1 in 1.
+        id_revizie INT PRIMARY KEY IDENTITY(1,1),
+        -- Explicatie: Retine identificatorul unui bolid.
+        id_bolid INT
+    );
+    -- Explicatie: Inregistreaza versiunea 3 in istoric.
+    INSERT INTO IstoricVersiuni VALUES (3);
+END;
+GO
+
+-- 3 -> 2: sterge tabela.
+-- Explicatie: Procedura inversa a versiunii 3.
+CREATE PROCEDURE StergeRevizii
+AS
+BEGIN
+    -- Explicatie: Sterge tabela Revizii si datele ei.
+    DROP TABLE Revizii;
+    -- Explicatie: Scoate versiunea 3 din istoric.
+    DELETE FROM IstoricVersiuni WHERE numar = 3;
+END;
+GO
+
+-- 3 -> 4: adauga un camp.
+-- Explicatie: Procedura aplica modificarea pentru versiunea 4.
+CREATE PROCEDURE AdaugaDataRevizie
+AS
+BEGIN
+    -- Explicatie: Adauga campul data_revizie de tip DATE.
+    ALTER TABLE Revizii ADD data_revizie DATE;
+    -- Explicatie: Inregistreaza versiunea 4 in istoric.
+    INSERT INTO IstoricVersiuni VALUES (4);
+END;
+GO
+
+-- 4 -> 3: sterge campul.
+-- Explicatie: Procedura inversa a versiunii 4.
+CREATE PROCEDURE StergeDataRevizie
+AS
+BEGIN
+    -- Explicatie: Sterge campul data_revizie si valorile lui.
+    ALTER TABLE Revizii DROP COLUMN data_revizie;
+    -- Explicatie: Scoate versiunea 4 din istoric.
+    DELETE FROM IstoricVersiuni WHERE numar = 4;
+END;
+GO
+
+-- 4 -> 5: creeaza o cheie straina.
+-- Explicatie: Procedura aplica modificarea pentru versiunea 5.
+CREATE PROCEDURE AdaugaCheieStraina
+AS
+BEGIN
+    -- Explicatie: Modifica tabela Revizii.
+    ALTER TABLE Revizii
+    -- Explicatie: Da un nume constrangerii de cheie straina.
+    ADD CONSTRAINT FK_Revizii_Bolizi
+    -- Explicatie: Un id_bolid nenul din Revizii trebuie sa existe in Bolizi.
+    FOREIGN KEY (id_bolid) REFERENCES Bolizi(id_bolid);
+    -- Explicatie: Inregistreaza versiunea 5 in istoric.
+    INSERT INTO IstoricVersiuni VALUES (5);
+END;
+GO
+
+-- 5 -> 4: sterge cheia straina.
+-- Explicatie: Procedura inversa a versiunii 5.
+CREATE PROCEDURE StergeCheieStraina
+AS
+BEGIN
+    -- Explicatie: Sterge constrangerea de cheie straina.
+    ALTER TABLE Revizii DROP CONSTRAINT FK_Revizii_Bolizi;
+    -- Explicatie: Scoate versiunea 5 din istoric.
+    DELETE FROM IstoricVersiuni WHERE numar = 5;
+END;
+GO
+
+-- Explicatie: Inregistreaza perechea de proceduri pentru pasul 1 daca nu exista; la fel pentru pasii 2-5.
+IF NOT EXISTS (SELECT 1 FROM PasiVersiune WHERE numar = 1)
+    -- Explicatie: La versiunea 1, aplicarea este VinVarchar, iar anularea este VinChar.
+    INSERT INTO PasiVersiune VALUES (1, 'VinVarchar', 'VinChar');
+IF NOT EXISTS (SELECT 1 FROM PasiVersiune WHERE numar = 2)
+    -- Explicatie: Perechea de proceduri pentru versiunea 2.
+    INSERT INTO PasiVersiune VALUES (2, 'AdaugaDefault', 'StergeDefault');
+IF NOT EXISTS (SELECT 1 FROM PasiVersiune WHERE numar = 3)
+    -- Explicatie: Perechea de proceduri pentru versiunea 3.
+    INSERT INTO PasiVersiune VALUES (3, 'CreeazaRevizii', 'StergeRevizii');
+IF NOT EXISTS (SELECT 1 FROM PasiVersiune WHERE numar = 4)
+    -- Explicatie: Perechea de proceduri pentru versiunea 4.
+    INSERT INTO PasiVersiune VALUES (4, 'AdaugaDataRevizie', 'StergeDataRevizie');
+IF NOT EXISTS (SELECT 1 FROM PasiVersiune WHERE numar = 5)
+    -- Explicatie: Perechea de proceduri pentru versiunea 5.
+    INSERT INTO PasiVersiune VALUES (5, 'AdaugaCheieStraina', 'StergeCheieStraina');
+GO
+
+-- Apeleaza procedurile necesare pana la versiunea ceruta.
+-- Explicatie: Primeste numarul versiunii dorite.
+CREATE PROCEDURE SchimbaVersiunea @versiune INT
+AS
+BEGIN
+    -- Explicatie: Respinge o valoare NULL sau negativa.
+    IF @versiune IS NULL OR @versiune < 0 OR
+       -- Explicatie: Ultima versiune posibila este MAX(numar) din PasiVersiune.
+       @versiune > (SELECT MAX(numar) FROM PasiVersiune)
+    BEGIN
+        -- Explicatie: Afiseaza eroarea pentru o versiune necunoscuta; RETURN opreste procedura.
+        RAISERROR('Versiune necunoscuta.', 16, 1);
+        RETURN;
+    END;
+
+    -- Explicatie: Variabila pentru versiunea curenta.
+    DECLARE @curenta INT;
+    -- Explicatie: Variabila pentru numele procedurii care trebuie apelata.
+    DECLARE @procedura VARCHAR(100);
+    -- Explicatie: Cea mai mare versiune din istoric este versiunea curenta.
+    SELECT @curenta = MAX(numar) FROM IstoricVersiuni;
+
+    -- Explicatie: Cat timp versiunea curenta este prea mica, aplica pasul urmator.
+    WHILE @curenta < @versiune
+    BEGIN
+        -- Explicatie: Cauta numele procedurii de aplicare pentru pasul urmator.
+        SET @procedura = (SELECT procedura_aplicare FROM PasiVersiune
+                         WHERE numar = @curenta + 1);
+        -- Explicatie: Daca lipseste un pas, opreste schimbarea versiunii.
+        IF @procedura IS NULL
+        BEGIN
+            RAISERROR('Lipseste un pas de versiune.', 16, 1);
+            RETURN;
+        END;
+        -- Explicatie: Apeleaza procedura gasita; ea modifica structura si scrie in istoric.
+        EXEC @procedura;
+        -- Explicatie: Trece la urmatorul numar pentru continuarea buclei.
+        SET @curenta = @curenta + 1;
+    END;
+
+    -- Explicatie: Cat timp versiunea curenta este prea mare, anuleaza ultimul pas.
+    WHILE @curenta > @versiune
+    BEGIN
+        -- Explicatie: Cauta numele procedurii de anulare pentru versiunea curenta.
+        SET @procedura = (SELECT procedura_anulare FROM PasiVersiune
+                         WHERE numar = @curenta);
+        -- Explicatie: Daca lipseste un pas, opreste schimbarea versiunii.
+        IF @procedura IS NULL
+        BEGIN
+            RAISERROR('Lipseste un pas de versiune.', 16, 1);
+            RETURN;
+        END;
+        -- Explicatie: Apeleaza procedura gasita; ea anuleaza modificarea si sterge randul din istoric.
+        EXEC @procedura;
+        -- Explicatie: Scade numarul pentru continuarea buclei.
+        SET @curenta = @curenta - 1;
+    END;
+END;
+GO
+
+
