@@ -6,7 +6,7 @@ import socialnetwork.validation.Validator;
 
 import java.nio.file.Path;
 
-public class UtilizatorFileRepository extends AbstractFileRepository<Long, User>  implements UserRepository{
+public class UtilizatorFileRepository extends AbstractFileRepository<Long, User> {
     public UtilizatorFileRepository(Path file, Validator<User> validator) {
         super(file, validator);
     }

@@ -1,0 +1,34 @@
+Schimbari in Lab4 (fisier: linii)
+
+src/main/java/socialnetwork/validation/Validator.java: 6, 14-19
+  @FunctionalInterface si metoda default andThen.
+
+src/main/java/socialnetwork/Main.java: 27-33
+  Regula noua de lungime a numelui, scrisa ca lambda si compusa cu UserValidator.
+
+src/main/java/socialnetwork/repository/Repository.java: 52-54
+  findAll(Predicate<E>) filtreaza cu stream.
+
+src/main/java/socialnetwork/service/CriteriiUtilizator.java: 8-20
+  Predicate-uri statice pentru prefixul numelui si utilizatori fara prieteni.
+
+src/main/java/socialnetwork/service/UserService.java: 44-50, 65-66, 77-90
+  Stergere cu stream, cautare Optional, combinare de Predicate-uri, sortare.
+
+src/main/java/socialnetwork/service/FriendshipService.java: 58-62, 68-77, 82-161
+  Prieteni, comunitati si drumuri calculate cu stream-uri si recursie, fara bucle.
+
+src/main/java/socialnetwork/repository/RepositoryFactory.java: 27-35, 43-51
+  Map<RepositoryType, Supplier<...>> pentru ambele repository-uri.
+
+src/main/java/socialnetwork/repository/AbstractFileRepository.java: 60-76, 80-88
+  Files.lines in try-with-resources si Files.write cu linii obtinute din stream.
+
+src/main/java/socialnetwork/ui/Console.java: 49-54, 68-90
+  Optiunile 8 si 9; afisare cu referinte la metode si Collectors.joining.
+
+src/main/java/socialnetwork/repository/UtilizatorFileRepository.java: 9-28
+  Eliminata metoda goala findByName.
+
+src/main/java/socialnetwork/repository/UserRepository.java: elim
+
